@@ -1,10 +1,15 @@
-import React from 'react';
-
+import React, { Fragment } from 'react';
+import { GithubIcon } from '../UI/Icons';
+import '../css/footer.css';
 
 const Footer = () => {
 
     return (
-        <div>Footer Component</div>
+        <Fragment>
+            <div className="footer_container">
+                <GithubIcon cssClass="footer_icon" />
+            </div>
+        </Fragment>
     )
 
 };
