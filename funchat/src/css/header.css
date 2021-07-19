@@ -1,0 +1,70 @@
+.header_container
+{
+    padding: 10px 25px;
+    display: flex;
+    align-items: center;
+    position: fixed;
+    justify-content: space-between;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    background-color: var(--header-bg);
+    box-shadow: 0px 4px 4px rgba(14, 13, 13, 0.25),0px 4px 4px rgba(22, 21, 21, 0.3);
+}
+.header_container a
+{
+    text-decoration: none;
+}
+.header_intro_container
+{
+    display: flex;
+    align-items: center;
+}
+.header_logo_icon
+{
+    width: 20px;
+    height: 20px;
+    color : var(--header-logo-bg);
+}
+.header_logo_name
+{
+    padding-left: 10px;
+    font-family: var(--inter-text);
+    font-size: 1rem;
+    font-weight: 400;
+    letter-spacing: 0.015rem;
+    color: white;
+}
+
+.header_right_container
+{
+    display: flex;
+}
+.header_signup_name
+{
+    border-radius: 6px;
+    padding: 8px 15px;
+    font-family: var(--inter-text);
+    font-size: .960rem;
+    font-weight: 500;
+    letter-spacing: 0.030rem;
+    color: var(--text-color-three);
+    cursor: pointer;
+    transition: 0.4s all ease-in-out; 
+}
+.header_signup_name:hover
+{
+    color : var(--text-highlight);
+}
+.header_login_name
+{
+    border-radius: 6px;
+    padding: 8px 15px;
+    font-family: var(--inter-text);
+    font-size: .950rem;
+    letter-spacing: 0.010rem;
+    color: var(--text-color-one);
+    cursor: pointer;
+    background-color: var(--btn-hightlight-bg);
+    transition: 0.4s all ease-in-out;
+}
