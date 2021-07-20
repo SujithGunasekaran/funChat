@@ -8,11 +8,14 @@ const HeadTags = (props) => {
     const { title, keyword, description } = props;
 
     return (
-        <Helmet>
-            <title>FunChat | {title}</title>
-            <meta name="description" content={description} />
-            <meta name="keyword" content={keyword.join(', ')} />
-        </Helmet>
+        <div>
+            <Helmet >
+                <title>FunChat | {title}</title>
+                <meta name="description" content={description} />
+                <meta name="keyword" content={keyword.join(', ')} />
+            </Helmet>
+        </div>
+
     )
 
 };

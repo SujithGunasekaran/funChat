@@ -1,12 +1,12 @@
 import React, { Fragment } from 'react';
-import Stores from './router/index';
+import Routes from './routes/index';
 import './css/global.css';
 
 const App = () => {
 
   return (
     <Fragment>
-      <Stores />
+      <Routes />
     </Fragment>
   )
 
