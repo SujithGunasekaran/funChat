@@ -1,8 +1,8 @@
 
 :root {
 
-    --header-bg : #1a1b1b;
-    --header-logo-bg : #198CFF;
+    --header-bg : #161B22;
+    --header-logo-bg : #2C98FF;
 
     --text-bg : #2B2D2E;
     --text-color-one : #ffffff;
@@ -13,12 +13,15 @@
     --text-color-six: #9199a1;
     --text-color-seven: #848d95;
     --text-color-eight: #6a737c;
-    --text-highlight : #198CFF;
-    --btn-hightlight-bg : #198CFF;
+    --text-highlight : #2C98FF;
+    --btn-hightlight-bg : #1F6FEB;
 
-    --body-bg : #111315;
+    --body-bg : #0D1117;
 
-    --border-color : #212222;
+    --box-bg : #161B22;
+    --border-color : #161B22;
+    --border-color-light : #363636;
+    --border-hightlight-color : #1F6FEB;
 
     --inter-text : 'Inter', sans-serif;
 
@@ -31,8 +34,14 @@
 
 .app_body
 {
+    margin-top: 57px;
+    padding : 25px;
     min-height: 100vh !important;
     background-color: var(--body-bg);
+}
+.text-highlight
+{
+    color : var(--text-highlight) !important;
 }
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800;900&display=swap');

@@ -1,0 +1,58 @@
+.form_container
+{
+    margin: 15px 0px;
+    padding : 20px 15px;
+    border-radius: 6px;
+    background-color: var(--box-bg);
+}
+.form_heading
+{
+    padding-bottom: 25px;
+    font-size: 1.7rem;
+    word-spacing: 1px;
+    font-weight: 700;
+    letter-spacing: 0.020rem;
+    color : var(--text-color-one);
+    text-align: center;
+}
+.form_icon
+{
+    width: 24px;
+    height: 24px;
+}
+.form_google_btn
+{
+    background-color: var(--body-bg);
+    margin: 10px 10px;
+    padding: 10px 0px;
+    font-family: var(--inter-text);
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 0.015rem;
+    color: var(--text-color-four);
+    border: none;
+    width: 94%;
+    border-radius: 6px;
+}
+.form_google_btn .text
+{
+    padding-left: 12px;
+}
+.form_github_btn
+{
+    background-color: var(--body-bg);
+    margin: 20px 10px;
+    padding: 10px 0px;
+    font-family: var(--inter-text);
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 0.015rem;
+    color: var(--text-color-four);
+    border: none;
+    width: 94%;
+    border-radius: 6px;
+}
+.form_github_btn .text
+{
+    padding-left: 12px;
+}
