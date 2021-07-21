@@ -1,6 +1,5 @@
 import React, { Fragment } from 'react';
 import { GithubIcon } from '../UI/Icons';
-import '../css/footer.css';
 
 const Footer = () => {
 

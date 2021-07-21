@@ -1,13 +1,17 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment, useEffect, useRef, useState } from 'react';
 import { ChatIcon } from '../UI/Icons';
 import PageLink from '../UI/PageLink';
 import useUserAxios from '../hooks/useUserAxios';
 import { useSelector, useDispatch } from 'react-redux';
 import { prettyUserName } from '../utils';
-import '../css/header.css';
+import { PersonIcon, LogoutIcon } from '../UI/Icons';
+import ConfirmModel from '../UI/model/confirmModel';
+import { withRouter } from 'react-router-dom';
 
+const Header = (props) => {
 
-const Header = () => {
+    // state
+    const [showConfirmModel, setShowConfirModel] = useState(false);
 
     // dispatch
     const dispatch = useDispatch();
@@ -17,15 +21,36 @@ const Header = () => {
     const { isUserLoggedIn, loggedUserInfo } = userReducer;
 
     // hooks
-    const { getUserData } = useUserAxios();
+    const { getAction } = useUserAxios();
+
+    // refs
+    const profileDropdown = useRef();
+
+
+    useEffect(() => {
+
+        const hideProfileDropdown = (e) => {
+            if (profileDropdown.current && profileDropdown.current.classList.contains('show')) {
+                profileDropdown.current.classList.remove('show');
+            }
+        }
+        document.body.addEventListener('click', hideProfileDropdown);
+
+        return () => {
+            document.body.removeEventListener('click', hideProfileDropdown);
+        }
+
+    }, [])
+
 
     useEffect(() => {
         getLoggedUser();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
+
     const getLoggedUser = async () => {
-        const { data, error } = await getUserData('/');
+        const { data, error } = await getAction('/');
         if (error) return;
         dispatch({
             type: 'SET_USER_LOGGED_IN',
@@ -35,6 +60,20 @@ const Header = () => {
             type: 'SET_USER_INFO',
             userInfo: data.data.userInfo
         })
+    }
+
+    const showDropdown = (e) => {
+        e.stopPropagation();
+        profileDropdown.current.classList.toggle('show');
+    }
+
+    const handleCancelModel = () => {
+        setShowConfirModel(false);
+    }
+
+    const handleLogoutUser = () => {
+        setShowConfirModel(false);
+        props.history.push('/logout');
     }
 
     return (
@@ -56,9 +95,32 @@ const Header = () => {
                 }
                 {
                     isUserLoggedIn && Object.keys(loggedUserInfo).length > 0 &&
-                    <div className="header_right_container">
-                        <div className="header_user_name">{prettyUserName(loggedUserInfo.username)}</div>
-                        <img src={loggedUserInfo.profile} className="header_user_profile" loading="lazy" alt={loggedUserInfo?.username} />
+                    <Fragment>
+                        <div className="header_right_container">
+                            <div className="header_user_name">{prettyUserName(loggedUserInfo.username)}</div>
+                            <img onClick={(e) => showDropdown(e)} src={loggedUserInfo.profile} className="header_user_profile" loading="lazy" alt={loggedUserInfo?.username} />
+                        </div>
+                        <div className="header_user_dropdown_container" ref={profileDropdown}>
+                            <div className="header_user_dropdown_list">
+                                <PersonIcon cssClass="header_user_dropdown_list_icon" />
+                                <div className="header_user_dropdown_list_name">Profile</div>
+                            </div>
+                            <div className="header_user_dropdown_list" onClick={() => setShowConfirModel(true)}>
+                                <LogoutIcon cssClass="header_user_dropdown_list_icon" />
+                                <div className="header_user_dropdown_list_name">Logout</div>
+                            </div>
+                        </div>
+                    </Fragment>
+                }
+                {
+                    showConfirmModel &&
+                    <div className="overlay">
+                        <ConfirmModel
+                            title={'Are you sure you want to Logout'}
+                            cancelAction={handleCancelModel}
+                            successAction={handleLogoutUser}
+                            confirmBtnText={'Logout'}
+                        />
                     </div>
                 }
             </div>
@@ -67,4 +129,4 @@ const Header = () => {
 
 };
 
-export default Header;
+export default withRouter(Header);

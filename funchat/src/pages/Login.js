@@ -1,6 +1,5 @@
 import React, { Fragment } from 'react';
 import { redirectURL } from '../config';
-import '../css/form.css';
 
 
 const Login = () => {

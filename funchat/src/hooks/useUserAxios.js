@@ -5,7 +5,7 @@ const useUserAxios = () => {
 
     const [loading, setLoading] = useState(false);
 
-    const getUserData = async (url) => {
+    const getAction = async (url) => {
         setLoading(true);
         try {
             const response = await userAxios.get(`${url}`);
@@ -20,7 +20,7 @@ const useUserAxios = () => {
         }
     };
 
-    return { getUserData, loading };
+    return { getAction, loading };
 
 };
 
