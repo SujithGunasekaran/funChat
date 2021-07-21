@@ -15,6 +15,16 @@
     color : var(--text-color-one);
     text-align: center;
 }
+.form_sub_heading
+{
+    padding-bottom: 25px;
+    font-size: 1rem;
+    word-spacing: 1px;
+    font-weight: 400;
+    letter-spacing: 0.020rem;
+    color : var(--text-color-three);
+    text-align: center;
+}
 .form_icon
 {
     width: 24px;
