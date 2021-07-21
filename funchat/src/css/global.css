@@ -16,10 +16,17 @@
     --text-highlight : #2C98FF;
 
     --dark-btn-bg : #0D1117;
-    --danger-btn-bg : #da3633;
     --btn-hightlight-bg : #1F6FEB;
+    --btn-hightlight-hover-bg : #1a63cf;
 
     --body-bg : #0D1117;
+
+    --error-alert-text : #ff5a4e;
+    --error-alert-bg : rgba(248,81,73,0.1);
+    --error-alert-border : rgba(248,81,73,0.4);
+    --success-alert-text : #4cbb59;
+    --success-alert-bg : rgba(46,160,67,0.1);
+    --success-alert-border : rgb(52, 180, 76);
 
     --box-bg : #161B22;
     --dropdown-box-bg : #1c2128;
@@ -62,5 +69,32 @@
     z-index: 120;
     transition: 0.5s all ease-in-out;
 }
+.failure_container
+{
+    margin: 8px 0px;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 10px 10px;
+    border-radius: 6px;
+    background-color: var(--error-alert-bg);
+    border: 1px solid var(--error-alert-border);
+}
+.failure_text
+{
+    font-family: var(--inter-text);
+    font-size: .9rem;
+    font-weight: 500;
+    color: var(--error-alert-text);
+}
+.failure_cancle_icon
+{
+    margin-left: auto;
+    color: var(--error-alert-text);
+    width: 11px;
+    height: 11px;
+    cursor: pointer;
+}
+
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800;900&display=swap');

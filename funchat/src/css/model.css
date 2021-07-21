@@ -47,3 +47,102 @@
     border-radius: 6px;
     background-color: var(--btn-hightlight-bg);
 }
+
+
+/* form model */
+
+.form_model_container
+{
+    margin-top: 100px;
+    padding: 10px 20px;
+    width: 100%;
+    border-radius: 6px;
+    max-height: 550px;
+    overflow-y: scroll;
+    background-color: var(--box-bg);
+}
+
+.form_model_container::-webkit-scrollbar 
+{
+    width: 4px;
+    border-radius: 0px;
+    background-color: var(--header-bg);
+}
+
+.form_model_container::-webkit-scrollbar-track 
+{
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+    -webkit-border-radius: 10px;
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    border-radius: 10px;
+}
+
+.form_model_container::-webkit-scrollbar-thumb 
+{
+    -webkit-border-radius: 10px;
+    border-radius: 20px;
+    background: var(--black-600); 
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+}
+
+.form_model_header
+{
+    padding: 8px 0px 15px 0px;
+    display: flex;
+    align-items: center;
+}
+.form_model_header_title
+{
+    font-family: var(--ff-san);
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: var(--text-color-one);
+}
+.form_model_header_cancel_icon
+{
+    margin-left: auto;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    color: var(--text-color-seven);
+}
+.form_model_header_input
+{
+    margin: 15px 0px;
+    padding: 10px 10px;
+    border: none;
+    border: 1px solid var(--body-bg);
+    width: 100%;
+    border-radius: 6px;
+    background-color: var(--body-bg);
+    color: var(--text-color-three);
+    letter-spacing: 0.010rem;
+    transition: 0.4s all ease-in-out;
+}
+.form_model_header_input:focus
+{
+    outline: none;
+    border: 1px solid var(--border-hightlight-color);
+}
+.form_model_header_input::placeholder
+{
+    font-size: .9rem;
+    font-weight: 500;
+    color: var(--text-color-eight);
+}
+.form_model_header_create_btn
+{
+    margin: 10px 0px 10px auto;
+    padding: 8px 10px;
+    display: flex;
+    border: none;
+    font-family: var(--inter-text);
+    font-size: .9rem;
+    font-weight: 400;
+    color: var(--text-color-one);
+    border-radius: 6px;
+    background-color: var(--btn-hightlight-bg);
+}
+
+/* form model */

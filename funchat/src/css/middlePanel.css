@@ -1,0 +1,36 @@
+
+/* Home Middle */
+
+.home_middle_header
+{
+    display: flex;
+    align-items: center;
+}
+.home_middle_header_title
+{
+    font-family: var(--ff-san);
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 0.010rem;
+    color: var(--text-color-one);
+}
+.home_middle_header_room_btn
+{
+    margin-left: auto;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    background-color: var(--btn-hightlight-bg);
+    font-family: var(--inter-text);
+    font-size: .950rem;
+    font-weight: 500;
+    color: var(--text-color-one);
+    transition: 0.4s all ease-in-out;
+}
+.home_middle_header_room_btn:hover
+{
+    background-color: var(--btn-hightlight-hover-bg);
+}
+
+/* Home Middle */
+
