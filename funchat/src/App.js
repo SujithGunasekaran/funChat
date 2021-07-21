@@ -5,6 +5,7 @@ import './css/footer.css';
 import './css/form.css';
 import './css/header.css';
 import './css/model.css';
+import './css/middlePanel.css';
 
 const App = () => {
 

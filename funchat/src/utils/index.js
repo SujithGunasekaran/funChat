@@ -17,3 +17,34 @@ export const prettyUserName = (userName) => {
 
 }
 
+/**
+ * will return isFormValid or not ( Boolean )
+ * It accepts 3 parameter fieldNames ( array of name ), formValue ( Object ), setState ( useState function )
+ * If any of the given name in array not present in formValue object form is not valid retutn false and setError in callback setState
+ * @param {fieldNames} fieldNames 
+ * @param {formvalues} formValues 
+ * @param {useState} setState 
+ * @returns 
+ */
+
+
+export const validateForm = (fieldNames, formValues, setState) => {
+
+    let isFormValid = true;
+
+    fieldNames.forEach(names => {
+        if (!formValues[names]) {
+            isFormValid = false;
+            setState(prevState => {
+                return [
+                    ...prevState,
+                    names
+                ]
+            })
+        }
+    })
+
+    return isFormValid;
+
+}
+
