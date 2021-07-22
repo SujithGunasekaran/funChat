@@ -6,6 +6,7 @@ import Footer from '../components/Footer';
 const Home = lazy(() => import('../pages/Home'));
 const Login = lazy(() => import('../pages/Login'));
 const Logout = lazy(() => import('../pages/Logout'));
+const ChatRoom = lazy(() => import('../pages/ChatRoom'));
 
 const Routes = () => {
 
@@ -18,6 +19,7 @@ const Routes = () => {
                         <Route path='/' exact component={Home} />
                         <Route path='/login' exact component={Login} />
                         <Route path='/logout' exact component={Logout} />
+                        <Route path='/room/:roomID' exact component={ChatRoom} />
                     </Suspense>
                 </Switch>
             </div>

@@ -1,22 +1,45 @@
 import React, { Fragment, useState } from 'react';
 import useForm from '../../hooks/useForm';
 import { validateForm } from '../../utils';
+import { useSelector } from 'react-redux';
 import ErrorMessage from '../message/ErrorMessage';
+import useRoomAxios from '../../hooks/useRoomAxios';
+import { withRouter } from 'react-router-dom';
 
-const CreateRoom = () => {
+const CreateRoom = (props) => {
 
     // state
     const [showError, setShowError] = useState(false);
 
     // hooks
     const { formData, formError, handleFormData, setFormError } = useForm();
+    const { postAction, loading } = useRoomAxios();
 
-    const handleFormSubmit = (e) => {
+    // selector
+    const userReducer = useSelector(state => state.userReducer);
+    const { loggedUserInfo } = userReducer;
+
+    const handleFormSubmit = async (e) => {
         e.preventDefault();
         const isValidForm = validateForm(['username', 'roomname'], formData, setFormError);
         if (!isValidForm) {
             setShowError(true);
             return;
+        }
+        try {
+            const requestData = {
+                users: loggedUserInfo._id,
+                roomname: formData.roomname.trim().toLowerCase(),
+                roomtype: formData?.roomtype ?? 'private'
+            }
+            const { data, error } = await postAction('/createRoom', requestData);
+            if (error) throw new Error('Error while Creating room');
+            if (data.status === 'Success' && data.data.roomInfo) {
+                props.history.push(`/room/${data.data.roomInfo._id}`)
+            }
+        }
+        catch (err) {
+            console.log(err);
         }
     }
 
@@ -66,4 +89,5 @@ const CreateRoom = () => {
 
 }
 
-export default CreateRoom;
+
+export default withRouter(CreateRoom);
