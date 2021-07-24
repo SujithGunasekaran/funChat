@@ -48,3 +48,18 @@ export const validateForm = (fieldNames, formValues, setState) => {
 
 }
 
+/**
+ * function gets two parameter valueArray ( array of object ) and valueKey ( object key name )
+ * returns comma seperated value.
+ * @param {valueArray} valueArray 
+ * @param {valueKey} valueKey 
+ */
+
+export const getCommaSeperatedName = (valueArray = [], valueKey) => {
+    let result = [];
+    if (valueArray.length > 0) {
+        result = valueArray.map(info => info[valueKey]);
+    }
+    else return '';
+    return result.join(', ');
+}

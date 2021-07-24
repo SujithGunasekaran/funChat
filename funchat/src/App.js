@@ -6,6 +6,7 @@ import './css/form.css';
 import './css/header.css';
 import './css/model.css';
 import './css/middlePanel.css';
+import './css/rightPanel.css';
 
 const App = () => {
 

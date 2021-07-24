@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from 'react';
 import useForm from '../../hooks/useForm';
 import { validateForm } from '../../utils';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import ErrorMessage from '../message/ErrorMessage';
 import useRoomAxios from '../../hooks/useRoomAxios';
 import { withRouter } from 'react-router-dom';
@@ -14,6 +14,9 @@ const CreateRoom = (props) => {
     // hooks
     const { formData, formError, handleFormData, setFormError } = useForm();
     const { postAction, loading } = useRoomAxios();
+
+    // dispatch
+    const dispatch = useDispatch();
 
     // selector
     const userReducer = useSelector(state => state.userReducer);
@@ -35,6 +38,12 @@ const CreateRoom = (props) => {
             const { data, error } = await postAction('/createRoom', requestData);
             if (error) throw new Error('Error while Creating room');
             if (data.status === 'Success' && data.data.roomInfo) {
+                dispatch({
+                    type: 'SET_ROOM_INFO',
+                    roomInfo: {
+                        [data.data.roomInfo._id]: data.data.roomInfo
+                    }
+                })
                 props.history.push(`/room/${data.data.roomInfo._id}`)
             }
         }

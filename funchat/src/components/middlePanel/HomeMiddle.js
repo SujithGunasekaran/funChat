@@ -1,11 +1,36 @@
-import React, { Fragment, useState, lazy, Suspense } from 'react';
+import React, { Fragment, useState, lazy, Suspense, useEffect } from 'react';
 import { CancelIcon } from '../../UI/Icons';
+import useRoomAxios from '../../hooks/useRoomAxios';
 
 const FormModel = lazy(() => import('../../UI/model/CreateRoom'));
+const RoomList = lazy(() => import('../../UI/card/Room/RoomList'));
 
-const HomeMiddle = () => {
+const HomeMiddle = (props) => {
 
+    // state
     const [showFormModel, setShowFormModel] = useState(false);
+    const [roomList, setRoomList] = useState([]);
+
+    // hooks
+    const { getAction } = useRoomAxios();
+
+    useEffect(() => {
+        getPublicRooms();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+    const getPublicRooms = async () => {
+        try {
+            const { data, error } = await getAction(`/getByRoomType?roomType=public`);
+            if (error) throw new Error('Error while getting room list');
+            if (data.status === 'Success') {
+                setRoomList(data.data.roomList)
+            }
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
 
     return (
         <Fragment>
@@ -33,6 +58,15 @@ const HomeMiddle = () => {
                     </div>
                 </Suspense>
             }
+            <div className="home_middle_room_container">
+                {
+                    roomList.length > 0 &&
+                    <RoomList
+                        history={props.history}
+                        roomList={roomList}
+                    />
+                }
+            </div>
         </Fragment>
     )
 
