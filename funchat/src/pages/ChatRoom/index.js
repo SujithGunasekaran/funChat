@@ -3,6 +3,7 @@ import useRoomAxios from '../../hooks/useRoomAxios';
 import { withRouter } from 'react-router-dom';
 import io from 'socket.io-client';
 import { unstable_batchedUpdates } from 'react-dom';
+import { useSelector } from 'react-redux';
 
 const Message = lazy(() => import('../../components/middlePanel/MessageMiddle'));
 const RoomUser = lazy(() => import('../../components/rightPanel/RoomUser'));
@@ -15,12 +16,16 @@ const ChatRoom = (props) => {
     const { roomID } = params;
 
     // hooks
-    const { getAction, loading } = useRoomAxios();
+    const { getAction } = useRoomAxios();
 
     // state
     const [welcomeMessage, setWelcomeMessage] = useState({});
     const [roomName, setRoomName] = useState('');
     const [userList, setUserList] = useState([]);
+    const [chatMessage, setChatMessage] = useState([]);
+
+    // redux state
+    const { loggedUserInfo } = useSelector(state => state.userReducer)
 
     useEffect(() => {
 
@@ -30,6 +35,7 @@ const ChatRoom = (props) => {
     }, [])
 
     useEffect(() => {
+
         getRoomUserList();
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -84,14 +90,40 @@ const ChatRoom = (props) => {
 
     const getStartMessage = (roomInfo) => {
         batchedUpdateState(roomInfo);
-        socket.on('message', message => {
-            setWelcomeMessage(prevWelcomeMessage => {
-                let welcomeMessage = JSON.parse(JSON.stringify(prevWelcomeMessage));
-                welcomeMessage = { ...message };
-                return welcomeMessage;
-            });
+        socket.on('chatMessage', message => {
+            if (message.type === 'Welcome') {
+                setWelcomeMessage(prevMessage => {
+                    let welcomeMessage = JSON.parse(JSON.stringify(prevMessage));
+                    welcomeMessage = message;
+                    return welcomeMessage;
+                });
+            }
+            else {
+                setChatMessage(prevChatMessage => {
+                    let chatMessage = prevChatMessage.slice();
+                    chatMessage = [
+                        ...chatMessage,
+                        message
+                    ];
+                    return chatMessage;
+                })
+            }
         })
     }
+
+
+    const sendMessage = (message) => {
+        try {
+            socket.emit('sendMessage', { roomName, userId: loggedUserInfo._id, userName: loggedUserInfo.username, message }, (err) => {
+                if (err) throw new Error('Error while sending the messages');
+            });
+        }
+        catch (err) {
+            console.log(err);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }
+
 
     return (
         <Fragment>
@@ -120,6 +152,8 @@ const ChatRoom = (props) => {
                             <Suspense fallback={<div>Loading...</div>}>
                                 <Message
                                     welcomeMessage={welcomeMessage}
+                                    sendMessage={sendMessage}
+                                    chatMessage={chatMessage}
                                 />
                             </Suspense>
                         </div>

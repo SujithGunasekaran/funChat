@@ -19,8 +19,12 @@ const useForm = () => {
         if (formError.length > 0) setFormError([]);
     };
 
+    const resetForm = () => {
+        setFormData({});
+    }
 
-    return { formData, formError, handleFormData, setFormError }
+
+    return { formData, formError, handleFormData, setFormError, resetForm }
 
 };
 

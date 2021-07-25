@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, memo } from 'react';
 
 const RoomUser = (props) => {
 
@@ -24,4 +24,4 @@ const RoomUser = (props) => {
 };
 
 
-export default RoomUser;
+export default memo(RoomUser);
