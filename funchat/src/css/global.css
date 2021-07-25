@@ -51,7 +51,7 @@
 .app_body
 {
     margin-top: 55px;
-    padding : 25px;
+    padding : 25px 15px;
     min-height: 100vh !important;
     background-color: var(--body-bg);
 }
