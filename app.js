@@ -78,7 +78,7 @@ io.on('connection', (socket) => {
         try {
             socket.join(roomname);
             socket.emit('message', { user: 'admin', text: `${username} Welcome to the room ${roomname}` });
-            socket.broadcast.to(roomname).emit('message', { user: 'admin', text: `${username}, has joined` });
+            socket.broadcast.to(roomname).emit('chatMessage', { type: 'Welcome', user: 'admin', text: `${username}, has joined` });
             callback(null, 'Success');
         }
         catch (err) {
@@ -87,11 +87,14 @@ io.on('connection', (socket) => {
         }
     })
 
-    socket.on('sendMessage', (message, callback) => {
-        const user = getUser(socket.id);
-        io.to(user.room).emit('message', { user: user.name, text: message });
-
-        callback();
+    socket.on('sendMessage', ({ roomName, userId, userName, message }, callback) => {
+        try {
+            io.to(roomName).emit('chatMessage', { type: 'Normal', user: userName, userId, text: message });
+            callback(null);
+        }
+        catch (err) {
+            callback(err.message);
+        }
     })
 
     socket.on('disconnect', () => {
