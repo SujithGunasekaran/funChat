@@ -6,7 +6,7 @@ import { unstable_batchedUpdates } from 'react-dom';
 import { useSelector } from 'react-redux';
 
 const Message = lazy(() => import('../../components/middlePanel/MessageMiddle'));
-const RoomUser = lazy(() => import('../../components/rightPanel/RoomUser'));
+const RoomUser = lazy(() => import('../../components/leftPanel/RoomUser'));
 const UserProfile = lazy(() => import('../../components/rightPanel/UserProfile'));
 
 let socket;
@@ -14,7 +14,7 @@ let socket;
 const ChatRoom = (props) => {
 
     const { match: { params } } = props;
-    const { roomID } = params;
+    const { groupID } = params;
 
     // hooks
     const { getAction } = useRoomAxios();
@@ -45,7 +45,7 @@ const ChatRoom = (props) => {
 
     const getRoomUserList = async () => {
         try {
-            const { data, error } = await getAction(`/getRoomUser?roomID=${roomID}`);
+            const { data, error } = await getAction(`/getRoomUser?roomID=${groupID}`);
             if (error) throw new Error('Error while getting user list');
             if (data && data.status === 'Success') {
                 setUserList(prevUserList => {
@@ -63,7 +63,7 @@ const ChatRoom = (props) => {
 
     const getRoomInfoById = async () => {
         try {
-            const { data, error } = await getAction(`getByRoomId/?roomID=${roomID}`);
+            const { data, error } = await getAction(`getByRoomId/?roomID=${groupID}`);
             if (error) throw new Error('Error while getting roomInfo');
             if (data.status === 'Success' && data.data.roomInfo) {
                 const { roomInfo } = data.data;
@@ -131,9 +131,9 @@ const ChatRoom = (props) => {
             <div className="container-fluid">
                 <div className="row">
                     <div className="col-md-2">
-                        <div className="message_right_container">
-                            <div className="message_right_header_container">
-                                <div className="message_right_header_heading">Users</div>
+                        <div className="message_left_container">
+                            <div className="message_left_header_container">
+                                <div className="message_left_header_heading">Users</div>
                             </div>
                             {
                                 userList.length > 0 &&

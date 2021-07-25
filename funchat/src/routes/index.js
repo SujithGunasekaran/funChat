@@ -19,7 +19,7 @@ const Routes = () => {
                         <Route path='/' exact component={Home} />
                         <Route path='/login' exact component={Login} />
                         <Route path='/logout' exact component={Logout} />
-                        <Route path='/room/:roomID' exact component={ChatRoom} />
+                        <Route path='/group/:groupID' exact component={ChatRoom} />
                     </Suspense>
                 </Switch>
             </div>

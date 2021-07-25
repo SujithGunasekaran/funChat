@@ -11,7 +11,6 @@ const mongodb = require('./funchat_server/mongodb');
 const middleware = require('./funchat_server/middleware');
 const { LOCAL_REDIRECT_URL, PRODUCTION_REDIRECT_URL = '', LOCAL_URL } = require('./funchat_server/config');
 
-const { addUser, removeUser, getUserInRoom, getUser } = require('./funchat_server/user');
 
 // router
 const userRoute = require('./funchat_server/router/userRoute');

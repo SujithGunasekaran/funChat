@@ -3,6 +3,7 @@ import { withRouter } from 'react-router-dom';
 
 const MiddlePanel = lazy(() => import('../components/middlePanel/HomeMiddle'));
 const UserProfile = lazy(() => import('../components/rightPanel/UserProfile'));
+const HomeInfo = lazy(() => import('../components/leftPanel/HomeInfo'));
 
 const Home = (props) => {
 
@@ -10,10 +11,14 @@ const Home = (props) => {
         <Fragment>
             <div className="container-fluid">
                 <div className="row">
-                    <div className="col-md-2">
-                        Right Panel
+                    <div className="col-md-3">
+                        <div className="home_left_container">
+                            <Suspense fallback={<div>Loading...</div>}>
+                                <HomeInfo />
+                            </Suspense>
+                        </div>
                     </div>
-                    <div className="col-md-7">
+                    <div className="col-md-6">
                         <Suspense fallback={<div>Loading...</div>}>
                             <MiddlePanel
                                 history={props.history}

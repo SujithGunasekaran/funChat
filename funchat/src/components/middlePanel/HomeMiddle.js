@@ -2,14 +2,14 @@ import React, { Fragment, useState, lazy, Suspense, useEffect } from 'react';
 import { CancelIcon } from '../../UI/Icons';
 import useRoomAxios from '../../hooks/useRoomAxios';
 
-const FormModel = lazy(() => import('../../UI/model/CreateRoom'));
-const RoomList = lazy(() => import('../../UI/card/Room/RoomList'));
+const CreateGroupForm = lazy(() => import('../../UI/model/CreateGroup'));
+const GroupList = lazy(() => import('../../UI/card/Group/GroupList'));
 
 const HomeMiddle = (props) => {
 
     // state
     const [showFormModel, setShowFormModel] = useState(false);
-    const [roomList, setRoomList] = useState([]);
+    const [groupList, setGroupList] = useState([]);
 
     // hooks
     const { getAction } = useRoomAxios();
@@ -24,7 +24,7 @@ const HomeMiddle = (props) => {
             const { data, error } = await getAction(`/getByRoomType?roomType=public`);
             if (error) throw new Error('Error while getting room list');
             if (data.status === 'Success') {
-                setRoomList(data.data.roomList)
+                setGroupList(data.data.roomList)
             }
         }
         catch (err) {
@@ -35,8 +35,8 @@ const HomeMiddle = (props) => {
     return (
         <Fragment>
             <div className="home_middle_header">
-                <div className="home_middle_header_title">Rooms</div>
-                <button className="home_middle_header_room_btn" onClick={() => setShowFormModel(true)}>Create Room</button>
+                <div className="home_middle_header_title">Groups</div>
+                <button className="home_middle_header_room_btn" onClick={() => setShowFormModel(true)}>Create Group</button>
             </div>
             {
                 showFormModel &&
@@ -47,10 +47,10 @@ const HomeMiddle = (props) => {
                                 <div className="col-md-5 mx-auto">
                                     <div className="form_model_container">
                                         <div className="form_model_header">
-                                            <div className="form_model_header_title">Create Room</div>
+                                            <div className="form_model_header_title">Create Group</div>
                                             <CancelIcon cssClass={'form_model_header_cancel_icon'} handleEvent={() => setShowFormModel(false)} />
                                         </div>
-                                        <FormModel />
+                                        <CreateGroupForm />
                                     </div>
                                 </div>
                             </div>
@@ -60,10 +60,10 @@ const HomeMiddle = (props) => {
             }
             <div className="home_middle_room_container">
                 {
-                    roomList.length > 0 &&
-                    <RoomList
+                    groupList.length > 0 &&
+                    <GroupList
                         history={props.history}
-                        roomList={roomList}
+                        groupList={groupList}
                     />
                 }
             </div>
