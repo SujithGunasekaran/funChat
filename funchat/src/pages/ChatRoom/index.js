@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 
 const Message = lazy(() => import('../../components/middlePanel/MessageMiddle'));
 const RoomUser = lazy(() => import('../../components/rightPanel/RoomUser'));
+const UserProfile = lazy(() => import('../../components/rightPanel/UserProfile'));
 
 let socket;
 
@@ -159,7 +160,11 @@ const ChatRoom = (props) => {
                         </div>
                     </div>
                     <div className="col-md-3">
-                        Left Panel
+                        <div className="user_right_profile_container">
+                            <Suspense fallback={<div>Loading...</div>}>
+                                <UserProfile />
+                            </Suspense>
+                        </div>
                     </div>
                 </div>
             </div>

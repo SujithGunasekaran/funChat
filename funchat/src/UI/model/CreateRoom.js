@@ -32,7 +32,7 @@ const CreateRoom = (props) => {
         try {
             const requestData = {
                 users: loggedUserInfo._id,
-                roomname: formData.roomname.trim().toLowerCase(),
+                roomname: formData.roomname,
                 roomtype: formData?.roomtype ?? 'private'
             }
             const { data, error } = await postAction('/createRoom', requestData);
