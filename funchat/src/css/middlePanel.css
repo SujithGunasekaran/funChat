@@ -130,8 +130,8 @@
 .message_middle_header_heading
 {
     font-family: var(--ff-san);
-    font-size: 1.5rem;
-    font-weight: 500;
+    font-size: 1.4rem;
+    font-weight: 700;
     letter-spacing: 0.010rem;
     color: var(--text-color-three);
 }

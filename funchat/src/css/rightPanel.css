@@ -11,8 +11,8 @@
 .message_right_header_heading
 {
     font-family: var(--ff-san);
-    font-size: 1.5rem;
-    font-weight: 500;
+    font-size: 1.4rem;
+    font-weight: 700;
     letter-spacing: 0.010rem;
     color: var(--text-color-three);
 }
@@ -74,3 +74,39 @@
 }
 
 /* message right panel */
+
+
+/* user Profile panel */
+
+.user_right_profile_container
+{
+    position: sticky;
+    position: -webkit-sticky;
+    top: 80px;
+    bottom: 0px;
+    padding: 20px 15px;
+    background-color: var(--box-bg);
+    border-radius: 6px;
+}
+.user_right_profile_header
+{
+    display: flex;
+    align-items: center;
+}
+.user_right_profile_header > .profile
+{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+.user_right_profile_header > .user_name
+{
+    padding-left: 10px;
+    font-family: var(--ff-san);
+    font-size: 1.150rem;
+    font-weight: 700;
+    letter-spacing: 0.007rem;
+    color: var(--text-color-two);
+}
+
+/* user profile panel */
