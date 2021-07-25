@@ -23,11 +23,12 @@ passport.use(new GitHubStrategy({
 },
     async (accessToken, refreshToken, profile, done) => {
         const { id, displayName, photos } = profile;
+        const username = displayName.slice(' ').map(name => `${name[0].toUpperCase()}${name.slice(1).toLowerCase()}`).join(' ');
         try {
             const user = await User.findOne({ userid: id, authType: 'Github' });
             if (user) done(null, user);
             if (!user) {
-                const newUser = new User({ userid: id, username: displayName, profile: photos[0].value, authType: 'Github' });
+                const newUser = new User({ userid: id, username, profile: photos[0].value, authType: 'Github' });
                 const savedUser = await newUser.save();
                 done(null, savedUser);
             }

@@ -12,9 +12,16 @@ const UserSchema = new Schema({
     profile: {
         type: String
     },
+    description: {
+        type: String
+    },
     authType: {
         type: String,
         required: true
+    },
+    joined: {
+        type: Date,
+        default: Date.now
     }
 });
 
