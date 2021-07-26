@@ -1,11 +1,15 @@
 /* home left panel */
 
-.home_left_container
+.left_container
 {
     position: sticky;
     position: -webkit-sticky;
     top: 80px;
     bottom: 0px;
+}
+
+.home_left_container
+{
     padding: 5px 15px;
     border-radius: 6px;
     background-color: var(--box-bg);
@@ -144,7 +148,7 @@
 {
     padding-left: 8px;
     font-family: var(--inter-text);
-    font-size: .770rem;
+    font-size: .800rem;
     font-weight: 500;
     letter-spacing: 0.020rem;
     color: var(--text-color-four);

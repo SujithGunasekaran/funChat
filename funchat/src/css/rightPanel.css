@@ -1,11 +1,15 @@
 /* user Profile panel */
 
-.user_right_profile_container
+.right_panel
 {
     position: sticky;
     position: -webkit-sticky;
     top: 80px;
     bottom: 0px;
+}
+
+.user_right_profile_container
+{
     padding: 20px 15px;
     background-color: var(--box-bg);
     border-radius: 6px;
@@ -32,3 +36,57 @@
 }
 
 /* user profile panel */
+
+/* message right panel */
+
+.message_right_panel_container
+{
+    margin: 20px 0px;
+    padding: 15px 15px;
+    background-color: var(--box-bg);
+    border-radius: 6px;
+}
+.message_right_panel_group_info_heading
+{
+    padding: 8px 0px 8px 0px;
+    font-family: var(--ff-san);
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 25px;
+    color: var(--text-color-four);
+}
+.message_right_panel_group_id_container
+{
+    margin: 15px 0px;
+    padding: 10px 8px;
+    border-radius: 6px;
+    background-color: var(--body-bg);
+    display: flex;
+    align-items: center;
+}
+.message_right_panel_group_id_name
+{
+    width: 130px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: var(--ff-san);
+    font-size: .9rem;
+    letter-spacing: 0.015rem;
+    font-weight: 500;
+    color: var(--text-color-six);
+}
+.message_right_panel_group_id_container .icon
+{
+    margin-left: auto;
+    width: 15px;
+    height: 15px;
+    color: var(--text-color-six);
+    transition: 0.4s all ease-in-out;
+}
+.message_right_panel_group_id_container .icon:hover
+{
+    cursor: pointer;
+    color: var(--text-highlight);
+}
+
+/* message right panel */
