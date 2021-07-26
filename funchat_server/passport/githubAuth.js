@@ -23,7 +23,7 @@ passport.use(new GitHubStrategy({
 },
     async (accessToken, refreshToken, profile, done) => {
         const { id, displayName, photos } = profile;
-        const username = displayName.slice(' ').map(name => `${name[0].toUpperCase()}${name.slice(1).toLowerCase()}`).join(' ');
+        const username = displayName.split(' ').map(name => `${name[0].toUpperCase()}${name.slice(1).toLowerCase()}`).join(' ');
         try {
             const user = await User.findOne({ userid: id, authType: 'Github' });
             if (user) done(null, user);

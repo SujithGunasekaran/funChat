@@ -8,10 +8,10 @@ const ChatRoomSchema = new Schema({
         type: [Schema.Types.ObjectId],
         ref: 'funChatUser'
     },
-    roomname: {
+    groupname: {
         type: String
     },
-    roomtype: {
+    grouptype: {
         type: String
     }
 });
