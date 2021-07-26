@@ -83,6 +83,14 @@
     color: var(--text-color-six);
     transition: 0.4s all ease-in-out;
 }
+.message_right_panel_group_id_container .icon2
+{
+    margin-left: auto;
+    width: 15px;
+    height: 15px;
+    color: var(--success-alert-text);
+    transition: 0.4s all ease-in-out;
+}
 .message_right_panel_group_id_container .icon:hover
 {
     cursor: pointer;

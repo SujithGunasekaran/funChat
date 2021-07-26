@@ -144,5 +144,11 @@
     border-radius: 6px;
     background-color: var(--btn-hightlight-bg);
 }
+.form_model_header_create_btn:disabled
+{
+    background-color: var(--btn-disable-bg);
+    color: var(--text-black);
+}
+
 
 /* form model */

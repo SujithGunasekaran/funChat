@@ -5,6 +5,7 @@
     --header-logo-bg : #2C98FF;
 
     --text-bg : #2B2D2E;
+    --text-black : rgb(5, 5, 5);
     --text-color-one : #ffffff;
     --text-color-two : #d6d9dc;
     --text-color-three: #c8ccd0;
@@ -19,6 +20,7 @@
     --dark-btn-bg : #0D1117;
     --btn-hightlight-bg : #1F6FEB;
     --btn-hightlight-hover-bg : #1a63cf;
+    --btn-disable-bg : #bbc0c4;
 
     --body-bg : #0D1117;
 
@@ -84,7 +86,8 @@
 .failure_text
 {
     font-family: var(--inter-text);
-    font-size: .9rem;
+    font-size: .810rem;
+    line-height: 22px;
     font-weight: 500;
     color: var(--error-alert-text);
 }
@@ -97,5 +100,24 @@
     cursor: pointer;
 }
 
+.circular_loading
+{
+    text-align: center !important;
+    
+}
+.circular_loading > .color
+{
+    color : var(--btn-hightlight-bg) !important;
+    width: 27px !important;
+    height: 27px !important;
+}
+.circular_loading > .text
+{
+    font-family: var(--inter-text);
+    color: var(--text-color-seven);
+    font-weight: 500;
+    font-size: .840rem;
+    padding: 8px 0px;
+}
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800;900&display=swap');

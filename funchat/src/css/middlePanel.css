@@ -104,9 +104,15 @@
     color: var(--text-color-three);
     transition: 0.4s all ease-in-out;
 }
+.home_middle_room_card_join_btn:disabled
+{
+    background-color: var(--btn-disable-bg);
+    color: var(--text-black);
+}
 .home_middle_room_card_join_btn:hover
 {
     background-color: var(--btn-hightlight-bg);
+    color: var(--text-color-one);
 }
 
 
