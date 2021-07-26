@@ -76,7 +76,7 @@ io.on('connection', (socket) => {
         try {
             socket.join(groupname);
             socket.emit('message', { user: 'admin', text: `${username} Welcome to the room ${groupname}` });
-            socket.broadcast.to(groupname).emit('chatMessage', { type: 'Welcome', user: 'admin', text: `${username}, has joined` });
+            socket.broadcast.to(groupname).emit('chatMessage', { type: 'Welcome', user: 'admin', text: `${username}, has joined`, date: Date.now() });
             callback(null, 'Success');
         }
         catch (err) {
@@ -87,7 +87,7 @@ io.on('connection', (socket) => {
 
     socket.on('sendMessage', ({ groupname, userId, userName, message }, callback) => {
         try {
-            io.to(groupname).emit('chatMessage', { type: 'Normal', user: userName, userId, text: message });
+            io.to(groupname).emit('chatMessage', { type: 'Normal', user: userName, userId, text: message, date: Date.now() });
             callback(null);
         }
         catch (err) {

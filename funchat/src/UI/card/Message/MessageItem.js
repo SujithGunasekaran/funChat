@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
+import { fromNow } from '../../../utils';
 
 const MessageItem = (props) => {
 
@@ -8,6 +9,8 @@ const MessageItem = (props) => {
 
     // redux-state
     const { loggedUserInfo } = useSelector(state => state.userReducer);
+
+    const time = fromNow(chatInfo.date);
 
     return (
         <Fragment>
@@ -17,6 +20,7 @@ const MessageItem = (props) => {
                         <div className="message_middle_chat_logged_user_container">
                             <div className="message_middle_chat_logged_user_name">{chatInfo.user}</div>
                             <div className="message_middle_chat_logged_user_text">{chatInfo.text}</div>
+                            <div className="message_middle_chat_time">{time}</div>
                         </div>
                     </Fragment>
                     :
@@ -24,6 +28,7 @@ const MessageItem = (props) => {
                         <div className="message_middle_chat_user_container">
                             <div className="message_middle_chat_user_name">{chatInfo.user}</div>
                             <div className="message_middle_chat_user_text">{chatInfo.text}</div>
+                            <div className="message_middle_chat_time">{time}</div>
                         </div>
                     </Fragment>
             }

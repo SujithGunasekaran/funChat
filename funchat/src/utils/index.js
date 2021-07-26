@@ -1,3 +1,36 @@
+import moment from 'moment';
+
+/**
+ *  Function Converts 12/06/2021 or any format To -> Jun 6 ( month, date ) 
+ *  @param {date} date
+ *  @returns
+*/
+
+export const convertFullDateToShort = (date) => {
+    return date ? moment(+date).format('MMM D') : '';
+}
+
+/**
+ * Function Converts 12/06/2021 or any format to -> Jun 6, 2021 ( month, date, year )
+ * @param {date} date 
+ * @returns 
+*/
+
+export const convertFullDateToLong = (date) => {
+    console.log(date);
+    return date ? moment(+date).format('ll') : ''
+}
+
+/**
+ * Function return time like justNow, 6sec ago like this.
+ * @param {*} date 
+ * @returns 
+ */
+
+export const fromNow = (date) => {
+    return moment.unix(date / 1000).fromNow();
+}
+
 
 /**
  * prettyUserName get username as parameter and returned as camel case format 

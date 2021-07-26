@@ -23,6 +23,7 @@ const ChatRoom = (props) => {
 
     // state
     const [welcomeMessage, setWelcomeMessage] = useState({});
+    const [groupInfo, setGroupInfo] = useState(null);
     const [groupName, setGroupName] = useState('');
     const [userList, setUserList] = useState([]);
     const [loading, setShowLoading] = useState(false);
@@ -88,11 +89,8 @@ const ChatRoom = (props) => {
 
     const batchedUpdateState = (groupInfo) => {
         unstable_batchedUpdates(() => {
+            setGroupInfo(groupInfo);
             setGroupName(groupInfo.groupname);
-            setUserList([
-                ...userList,
-                ...groupInfo.users
-            ])
         })
     }
 
@@ -157,6 +155,7 @@ const ChatRoom = (props) => {
                                     <Suspense fallback={<div>Loading...</div>}>
                                         <GroupUser
                                             userList={userList}
+                                            groupInfo={groupInfo}
                                         />
                                     </Suspense>
                                 }
@@ -181,7 +180,10 @@ const ChatRoom = (props) => {
                         <div className="right_panel">
                             <div className="user_right_profile_container">
                                 <Suspense fallback={<div>Loading...</div>}>
-                                    <UserProfile />
+                                    <UserProfile
+                                        groupInfo={groupInfo}
+                                        showLeaveButton={true}
+                                    />
                                 </Suspense>
                             </div>
                             <div className="message_right_panel_container">
