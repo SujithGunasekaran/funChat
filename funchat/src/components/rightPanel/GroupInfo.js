@@ -1,9 +1,35 @@
-import React, { Fragment } from 'react';
-import { CopyIcon } from '../../UI/Icons';
+import React, { Fragment, useState, useEffect, useRef } from 'react';
+import { CopyIcon, CopiedIcon } from '../../UI/Icons';
+import { copyToClipboard } from '../../utils';
 
 const GroupInfo = (props) => {
 
+    // states
+    const [showCopied, setShowCopied] = useState(false);
+
+    // ref
+    const timerRef = useRef();
+
     const { groupID } = props;
+
+    useEffect(() => {
+
+        if (showCopied) {
+            timerRef.current = setTimeout(() => {
+                setShowCopied(false);
+            }, 3500)
+        }
+
+        return () => {
+            clearTimeout(timerRef.current)
+        }
+
+    }, [showCopied])
+
+    const handleCopyId = () => {
+        const result = copyToClipboard(groupID);
+        if (result) setShowCopied(true);
+    }
 
     return (
         <Fragment>
@@ -11,8 +37,10 @@ const GroupInfo = (props) => {
                 FunChat Share roomId with your friends
             </div>
             <div className="message_right_panel_group_id_container">
-                <div className="message_right_panel_group_id_name">{groupID}</div>
-                <CopyIcon cssClass={'icon'} />
+                <div className="message_right_panel_group_id_name" id="group-id">{groupID}</div>
+                {
+                    !showCopied ? <CopyIcon cssClass={'icon'} handleEvent={handleCopyId} /> : <CopiedIcon cssClass={'icon2'} />
+                }
             </div>
         </Fragment>
     )

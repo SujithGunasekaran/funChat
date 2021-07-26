@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment } from 'react';
 import useForm from '../../hooks/useForm';
 import { validateForm } from '../../utils';
 import { useSelector } from 'react-redux';
@@ -8,11 +8,8 @@ import { withRouter } from 'react-router-dom';
 
 const CreateGroup = (props) => {
 
-    // state
-    const [showError, setShowError] = useState(false);
-
     // hooks
-    const { formData, formError, handleFormData, setFormError } = useForm();
+    const { formData, formError, errorMessage, handleFormData, setFormError, setErrorMessage } = useForm();
     const { postAction, loading } = useRoomAxios();
 
     // selector
@@ -23,7 +20,6 @@ const CreateGroup = (props) => {
         e.preventDefault();
         const isValidForm = validateForm(['username', 'groupname'], formData, setFormError);
         if (!isValidForm) {
-            setShowError(true);
             return;
         }
         try {
@@ -33,7 +29,12 @@ const CreateGroup = (props) => {
                 grouptype: formData?.grouptype ?? 'private'
             }
             const { data, error } = await postAction('/createGroup', requestData);
-            if (error) throw new Error('Error while Creating Group');
+            if (error) {
+                if (error.data.status === 'Failed') {
+                    setErrorMessage(error.data.message);
+                }
+                throw new Error(error.data);
+            }
             if (data.status === 'Success' && data.data.groupInfo) {
                 props.history.push(`/group/${data.data.groupInfo._id}`)
             }
@@ -44,12 +45,12 @@ const CreateGroup = (props) => {
     }
 
     const handleCloseErrorMessage = () => {
-        setShowError(false);
+        setErrorMessage(null);
         setFormError([]);
     }
 
 
-    const errorMessage = (content) => (
+    const showErrorMessage = (content) => (
         <ErrorMessage
             message={content}
             handleCloseErrorMessage={handleCloseErrorMessage}
@@ -60,8 +61,12 @@ const CreateGroup = (props) => {
     return (
         <Fragment>
             {
-                showError &&
-                errorMessage(`Please Enter ${formError.join(', ')}`)
+                formError.length > 0 &&
+                showErrorMessage(`Please Enter ${formError.join(', ')}`)
+            }
+            {
+                errorMessage &&
+                showErrorMessage(errorMessage)
             }
             <form onSubmit={handleFormSubmit}>
                 <input
@@ -82,7 +87,7 @@ const CreateGroup = (props) => {
                     <option value="private">Private</option>
                     <option value="public">Public</option>
                 </select>
-                <button type="submit" className="form_model_header_create_btn">Create Room</button>
+                <button disabled={loading} type="submit" className="form_model_header_create_btn">{loading ? 'Creating...' : 'Create Group'}</button>
             </form>
         </Fragment>
     )

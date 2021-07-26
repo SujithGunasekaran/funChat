@@ -10,7 +10,7 @@ exports.checkIsUserAuthenticated = (req, res, next) => {
     catch (err) {
         res.status(404).json({
             status: 'Failed',
-            message: err.message
+            message: 'User Not Authenticated'
         })
     }
 }
@@ -25,7 +25,7 @@ exports.checkIsGroupNameExists = async (req, res, next) => {
     catch (err) {
         res.status(404).json({
             status: 'Failed',
-            message: err.message
+            message: 'Room name already taken'
         })
     }
 }
@@ -46,7 +46,7 @@ exports.createGroup = async (req, res) => {
     catch (err) {
         res.status(404).json({
             status: 'Failed',
-            message: err.message
+            message: 'Error while creating room'
         })
     }
 }
@@ -80,7 +80,7 @@ exports.joinGroup = async (req, res) => {
     catch (err) {
         res.status(404).json({
             status: 'Failed',
-            message: err.message
+            message: 'Error while joining Group, Please check group ID'
         })
     }
 }
@@ -90,7 +90,7 @@ exports.getGroupInfoById = async (req, res) => {
     const { groupID = '' } = req.query;
     try {
         const groupInfo = await Room.findOne({ _id: groupID }).populate('users');
-        if (!groupInfo) throw new Error('Error while getting roomInfo');
+        if (!groupInfo) throw new Error('Error while getting groupInfo');
         res.status(200).json({
             status: 'Success',
             data: {
@@ -104,7 +104,7 @@ exports.getGroupInfoById = async (req, res) => {
     catch (err) {
         res.status(404).json({
             status: 'Failed',
-            message: err.message
+            message: 'Something went wrong, Error while getting Group'
         })
     }
 }
@@ -146,7 +146,7 @@ exports.getGroupUser = async (req, res) => {
     catch (err) {
         res.status(404).json({
             status: 'Failed',
-            message: err.message
+            message: 'Error while getting user list'
         })
     }
 }

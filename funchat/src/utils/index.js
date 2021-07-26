@@ -63,3 +63,18 @@ export const getCommaSeperatedName = (valueArray = [], valueKey) => {
     else return '';
     return result.join(', ');
 }
+
+
+
+
+export const copyToClipboard = (text) => {
+    let result = false;
+    const textAreaElement = document.createElement('textarea');
+    textAreaElement.value = text;
+    document.body.appendChild(textAreaElement);
+    textAreaElement.select();
+    document.execCommand('copy');
+    if (textAreaElement.value) result = true;
+    document.body.removeChild(textAreaElement);
+    return result;
+}

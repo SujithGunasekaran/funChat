@@ -4,6 +4,7 @@ import { withRouter } from 'react-router-dom';
 import io from 'socket.io-client';
 import { unstable_batchedUpdates } from 'react-dom';
 import { useSelector } from 'react-redux';
+import CircularLoading from '../../UI/loading/CircularLoading';
 
 const Message = lazy(() => import('../../components/middlePanel/MessageMiddle'));
 const GroupUser = lazy(() => import('../../components/leftPanel/GroupUser'));
@@ -24,6 +25,7 @@ const ChatRoom = (props) => {
     const [welcomeMessage, setWelcomeMessage] = useState({});
     const [groupName, setGroupName] = useState('');
     const [userList, setUserList] = useState([]);
+    const [loading, setShowLoading] = useState(false);
     const [chatMessage, setChatMessage] = useState([]);
 
     // redux state
@@ -46,6 +48,7 @@ const ChatRoom = (props) => {
 
 
     const getRoomUserList = async () => {
+        setShowLoading(true)
         try {
             const { data, error } = await getAction(`/getGroupUser?groupID=${groupID}`);
             if (error) throw new Error('Error while getting user list');
@@ -59,6 +62,9 @@ const ChatRoom = (props) => {
         }
         catch (err) {
             console.log(err);
+        }
+        finally {
+            setShowLoading(false);
         }
     }
 
@@ -127,6 +133,11 @@ const ChatRoom = (props) => {
     }
 
 
+    const loader = () => (
+        <CircularLoading />
+    )
+
+
     return (
         <Fragment>
             <div className="container-fluid">
@@ -137,6 +148,10 @@ const ChatRoom = (props) => {
                                 <div className="message_left_header_container">
                                     <div className="message_left_header_heading">Users</div>
                                 </div>
+                                {
+                                    loading &&
+                                    loader()
+                                }
                                 {
                                     userList.length > 0 &&
                                     <Suspense fallback={<div>Loading...</div>}>

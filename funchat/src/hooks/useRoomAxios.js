@@ -12,8 +12,7 @@ const useRoomAxios = () => {
             return { data: response.data, error: null }
         }
         catch (err) {
-            console.log(err);
-            return { data: null, error: err.message }
+            return { data: null, error: err.response }
         }
         finally {
             setLoading(false);
@@ -27,8 +26,7 @@ const useRoomAxios = () => {
             return { data: response.data, error: null }
         }
         catch (err) {
-            console.log(err);
-            return { data: null, error: err.message }
+            return { data: null, error: err.response }
         }
         finally {
             setLoading(false);

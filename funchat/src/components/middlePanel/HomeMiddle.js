@@ -1,6 +1,7 @@
 import React, { Fragment, useState, lazy, Suspense, useEffect } from 'react';
 import { CancelIcon } from '../../UI/Icons';
 import useRoomAxios from '../../hooks/useRoomAxios';
+import CircularLoading from '../../UI/loading/CircularLoading';
 
 const CreateGroupForm = lazy(() => import('../../UI/model/CreateGroup'));
 const GroupList = lazy(() => import('../../UI/card/Group/GroupList'));
@@ -12,7 +13,7 @@ const HomeMiddle = (props) => {
     const [groupList, setGroupList] = useState([]);
 
     // hooks
-    const { getAction } = useRoomAxios();
+    const { getAction, loading } = useRoomAxios();
 
     useEffect(() => {
         getPublicRooms();
@@ -31,6 +32,14 @@ const HomeMiddle = (props) => {
             console.log(err);
         }
     }
+
+
+    const showLoading = () => (
+        <CircularLoading
+            text="Loading..."
+        />
+    )
+
 
     return (
         <Fragment>
@@ -59,6 +68,10 @@ const HomeMiddle = (props) => {
                 </Suspense>
             }
             <div className="home_middle_room_container">
+                {
+                    loading &&
+                    showLoading()
+                }
                 {
                     groupList.length > 0 &&
                     <GroupList

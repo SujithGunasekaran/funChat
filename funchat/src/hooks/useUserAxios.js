@@ -13,7 +13,7 @@ const useUserAxios = () => {
         }
         catch (err) {
             console.log(err);
-            return { data: null, error: err.message }
+            return { data: null, error: err.response }
         }
         finally {
             setLoading(false);

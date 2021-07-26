@@ -10,7 +10,7 @@ const GroupItem = (props) => {
     const { groupInfo, history } = props;
 
     // hooks
-    const { postAction } = useRoomAxios();
+    const { postAction, loading } = useRoomAxios();
 
     // redux-state
     const { loggedUserInfo } = useSelector(state => state.userReducer);
@@ -40,7 +40,7 @@ const GroupItem = (props) => {
                 </div>
                 <div className="home_middle_room_card_user">{getCommaSeperatedName(groupInfo.users, 'username')}</div>
             </div>
-            <button className="home_middle_room_card_join_btn" onClick={() => joinRoom(groupInfo._id)}>Join</button>
+            <button disabled={loading} className="home_middle_room_card_join_btn" onClick={() => joinRoom(groupInfo._id)}>{loading ? 'Joining...' : 'Join'}</button>
         </Fragment>
 
     )
