@@ -3,7 +3,6 @@ const Schema = mongoose.Schema;
 
 
 const ChatRoomSchema = new Schema({
-
     users: {
         type: [Schema.Types.ObjectId],
         ref: 'funChatUser'
@@ -13,6 +12,9 @@ const ChatRoomSchema = new Schema({
     },
     grouptype: {
         type: String
+    },
+    groupadmin: {
+        type: Schema.Types.ObjectId
     }
 });
 

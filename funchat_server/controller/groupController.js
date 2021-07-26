@@ -33,7 +33,7 @@ exports.checkIsGroupNameExists = async (req, res, next) => {
 
 exports.createGroup = async (req, res) => {
     try {
-        const createdGroupInfo = await Room.create({ ...req.body });
+        const createdGroupInfo = await Room.create({ ...req.body, groupadmin: req.body.users });
         if (!createdGroupInfo) throw new Error('Error while creating room');
         const groupInfo = await Room.findOne({ _id: createdGroupInfo._id }).populate('users');
         res.status(200).json({
