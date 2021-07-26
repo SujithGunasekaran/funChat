@@ -136,15 +136,20 @@
 {
     display: flex;
     align-items: center;
-    padding: 15px 0px;
+    padding: 2px 0px;
 }
 .message_left_userinfo_container > .profile
 {
-    width: 30px;
-    height: 30px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
 }
-.message_left_userinfo_container > .user_name
+.message_left_userinfo_user_container
+{
+    display: flex;
+    flex-direction: column;
+}
+.message_left_userinfo_user_container > .user_name
 {
     padding-left: 8px;
     font-family: var(--inter-text);
@@ -152,6 +157,22 @@
     font-weight: 500;
     letter-spacing: 0.020rem;
     color: var(--text-color-four);
+}
+.message_left_userinfo_user_container > .admin_text
+{
+    margin: 7px 0px 0px 8px;
+    padding: 2px 0px 2px 5px;
+    border-radius: 8px;
+    background-color: var(--box-bg);
+    font-family: var(--inter-text);
+    font-size: .8rem;
+    color: var(--text-color-seven);
+    letter-spacing: 0.010rem;
+    font-weight: 500;
+}
+.message_left_user_hr
+{
+    color: var(--text-color-eight);
 }
 
 /* message left panel */

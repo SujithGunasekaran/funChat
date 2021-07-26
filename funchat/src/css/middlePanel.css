@@ -191,8 +191,8 @@
 }
 .message_middle_chat_user_name
 {
+    padding: 10px 0px 10px 4px;
     font-family: var(--inter-text);
-    padding-left: 6px;
     font-size: .760rem;
     font-weight: 400;
     letter-spacing: 0.015rem;
@@ -200,7 +200,6 @@
 }
 .message_middle_chat_user_text
 {
-    margin: 10px 0px;
     border-radius: 30px 30px 30px 0px;
     padding: 10px 15px;
     max-width: 500px;
@@ -243,6 +242,15 @@
     letter-spacing: 0.010rem;
     line-height: 25px;
     color: var(--text-color-one);
+}
+.message_middle_chat_time
+{
+    font-size: .6rem;
+    font-family: var(--inter-text);
+    letter-spacing: 0.010rem;
+    color: var(--text-color-six);
+    padding: 5px 0px;
+    
 }
 .message_chat_input_container
 {
