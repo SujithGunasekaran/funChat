@@ -21,10 +21,10 @@ const HomeMiddle = (props) => {
 
     const getPublicRooms = async () => {
         try {
-            const { data, error } = await getAction(`/getByRoomType?roomType=public`);
+            const { data, error } = await getAction(`/getByGroupType?groupType=public`);
             if (error) throw new Error('Error while getting room list');
             if (data.status === 'Success') {
-                setGroupList(data.data.roomList)
+                setGroupList(data.data.groupList)
             }
         }
         catch (err) {

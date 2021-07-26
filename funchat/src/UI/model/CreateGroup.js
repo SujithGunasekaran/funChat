@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from 'react';
 import useForm from '../../hooks/useForm';
 import { validateForm } from '../../utils';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import ErrorMessage from '../message/ErrorMessage';
 import useRoomAxios from '../../hooks/useRoomAxios';
 import { withRouter } from 'react-router-dom';
@@ -15,16 +15,13 @@ const CreateGroup = (props) => {
     const { formData, formError, handleFormData, setFormError } = useForm();
     const { postAction, loading } = useRoomAxios();
 
-    // dispatch
-    const dispatch = useDispatch();
-
     // selector
     const userReducer = useSelector(state => state.userReducer);
     const { loggedUserInfo } = userReducer;
 
     const handleFormSubmit = async (e) => {
         e.preventDefault();
-        const isValidForm = validateForm(['username', 'roomname'], formData, setFormError);
+        const isValidForm = validateForm(['username', 'groupname'], formData, setFormError);
         if (!isValidForm) {
             setShowError(true);
             return;
@@ -32,19 +29,13 @@ const CreateGroup = (props) => {
         try {
             const requestData = {
                 users: loggedUserInfo._id,
-                roomname: formData.roomname,
-                roomtype: formData?.roomtype ?? 'private'
+                groupname: formData.groupname,
+                grouptype: formData?.grouptype ?? 'private'
             }
-            const { data, error } = await postAction('/createRoom', requestData);
-            if (error) throw new Error('Error while Creating room');
-            if (data.status === 'Success' && data.data.roomInfo) {
-                dispatch({
-                    type: 'SET_ROOM_INFO',
-                    roomInfo: {
-                        [data.data.roomInfo._id]: data.data.roomInfo
-                    }
-                })
-                props.history.push(`/group/${data.data.roomInfo._id}`)
+            const { data, error } = await postAction('/createGroup', requestData);
+            if (error) throw new Error('Error while Creating Group');
+            if (data.status === 'Success' && data.data.groupInfo) {
+                props.history.push(`/group/${data.data.groupInfo._id}`)
             }
         }
         catch (err) {
@@ -82,12 +73,12 @@ const CreateGroup = (props) => {
                 />
                 <input
                     className="form_model_header_input"
-                    placeholder="Room Name"
-                    name="roomname"
-                    value={formData?.roomname ?? ''}
+                    placeholder="Group Name"
+                    name="groupname"
+                    value={formData?.groupname ?? ''}
                     onChange={handleFormData}
                 />
-                <select className="form_model_header_input" onChange={handleFormData} name="roomtype">
+                <select className="form_model_header_input" onChange={handleFormData} name="grouptype">
                     <option value="private">Private</option>
                     <option value="public">Public</option>
                 </select>

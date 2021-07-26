@@ -2,7 +2,6 @@ const express = require('express');
 const cors = require('cors');
 const passport = require('passport');
 const socketio = require('socket.io');
-const axios = require('axios');
 
 require('./funchat_server/passport/googleAuth');
 require('./funchat_server/passport/githubAuth');
@@ -14,7 +13,7 @@ const { LOCAL_REDIRECT_URL, PRODUCTION_REDIRECT_URL = '', LOCAL_URL } = require(
 
 // router
 const userRoute = require('./funchat_server/router/userRoute');
-const roomRoute = require('./funchat_server/router/roomRoute');
+const groupRoute = require('./funchat_server/router/groupRoute');
 
 // redirect url
 const url = process.env.NODE_ENV !== 'production' ? LOCAL_REDIRECT_URL : PRODUCTION_REDIRECT_URL
@@ -56,7 +55,7 @@ server.get('/github/callback', passport.authenticate('github', { failureRedirect
 
 // route path
 server.use('/api/v1/user', userRoute);
-server.use('/api/v1/room', roomRoute);
+server.use('/api/v1/group', groupRoute);
 
 // starting the server
 const app = server.listen(PORT, () => {
@@ -73,11 +72,11 @@ const io = socketio(app, corsOptions);
 
 io.on('connection', (socket) => {
 
-    socket.on('join', ({ username, roomname }, callback) => {
+    socket.on('join', ({ username, groupname }, callback) => {
         try {
-            socket.join(roomname);
-            socket.emit('message', { user: 'admin', text: `${username} Welcome to the room ${roomname}` });
-            socket.broadcast.to(roomname).emit('chatMessage', { type: 'Welcome', user: 'admin', text: `${username}, has joined` });
+            socket.join(groupname);
+            socket.emit('message', { user: 'admin', text: `${username} Welcome to the room ${groupname}` });
+            socket.broadcast.to(groupname).emit('chatMessage', { type: 'Welcome', user: 'admin', text: `${username}, has joined` });
             callback(null, 'Success');
         }
         catch (err) {
@@ -86,9 +85,9 @@ io.on('connection', (socket) => {
         }
     })
 
-    socket.on('sendMessage', ({ roomName, userId, userName, message }, callback) => {
+    socket.on('sendMessage', ({ groupname, userId, userName, message }, callback) => {
         try {
-            io.to(roomName).emit('chatMessage', { type: 'Normal', user: userName, userId, text: message });
+            io.to(groupname).emit('chatMessage', { type: 'Normal', user: userName, userId, text: message });
             callback(null);
         }
         catch (err) {

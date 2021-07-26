@@ -14,7 +14,9 @@ const Home = (props) => {
                     <div className="col-md-3">
                         <div className="home_left_container">
                             <Suspense fallback={<div>Loading...</div>}>
-                                <HomeInfo />
+                                <HomeInfo
+                                    history={props.history}
+                                />
                             </Suspense>
                         </div>
                     </div>

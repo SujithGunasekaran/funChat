@@ -7,6 +7,6 @@ export const userAxios = axios.create({
 });
 
 export const roomAxios = axios.create({
-    baseURL: 'http://localhost:5000/api/v1/room',
+    baseURL: 'http://localhost:5000/api/v1/group',
     withCredentials: true
 })

@@ -5,7 +5,7 @@ const useForm = () => {
 
     const [formData, setFormData] = useState({});
     const [formError, setFormError] = useState([]);
-
+    const [errorMessage, setErrorMessage] = useState(null);
 
     const handleFormData = (e) => {
         setFormData(prevData => {
@@ -24,7 +24,7 @@ const useForm = () => {
     }
 
 
-    return { formData, formError, handleFormData, setFormError, resetForm }
+    return { formData, formError, errorMessage, handleFormData, setFormError, resetForm, setErrorMessage }
 
 };
 

@@ -15,12 +15,12 @@ const GroupItem = (props) => {
     // redux-state
     const { loggedUserInfo } = useSelector(state => state.userReducer);
 
-    const joinRoom = async (roomID) => {
+    const joinRoom = async (groupID) => {
         try {
-            const { data, error } = await postAction(`/joinRoom?roomID=${roomID}&userID=${loggedUserInfo._id}`);
+            const { data, error } = await postAction(`/joinGroup?groupID=${groupID}&userID=${loggedUserInfo._id}`);
             if (error) throw new Error('Error while joining the room');
-            if (data.status === 'Success' && data.data.roomID) {
-                history.push(`/group/${data.data.roomID}`)
+            if (data.status === 'Success' && data.data.groupID) {
+                history.push(`/group/${data.data.groupID}`)
             }
         }
         catch (err) {
@@ -32,7 +32,7 @@ const GroupItem = (props) => {
         <Fragment>
             <div className="home_middle_room_card">
                 <div className="home_middle_room_card_header">
-                    <div className="home_middle_room_card_header_title">{groupInfo?.roomname ?? ''}</div>
+                    <div className="home_middle_room_card_header_title">{groupInfo?.groupname ?? ''}</div>
                     <div className="home_middle_room_card_count">
                         <PeoplesIcon cssClass={'icon'} />
                         <div className="count">{Array.isArray(groupInfo.users) ? groupInfo.users.length : 0}</div>
