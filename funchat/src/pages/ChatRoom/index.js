@@ -19,7 +19,7 @@ const ChatRoom = (props) => {
     const { groupID } = params;
 
     // hooks
-    const { getAction } = useRoomAxios();
+    const { getAction, postAction } = useRoomAxios();
 
     // state
     const [welcomeMessage, setWelcomeMessage] = useState({});
@@ -76,10 +76,26 @@ const ChatRoom = (props) => {
             if (error) throw new Error('Error while getting roomInfo');
             if (data.status === 'Success' && data.data.groupInfo) {
                 const { groupInfo } = data.data;
-                socket.emit('join', { username: groupInfo.users[groupInfo.currentUserIndex].username, roomname: groupInfo.roomname }, (err) => {
+                socket.emit('join', { username: groupInfo.users[groupInfo.currentUserIndex].username, groupname: groupInfo.groupname }, (err) => {
                     if (err) throw new Error('Error while connecting room');
                     getStartMessage(groupInfo);
                 });
+            }
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
+
+    const leaveGroup = async ({ userId, userName }) => {
+        try {
+            const { data, error } = await postAction(`/leaveGroup/?userID=${userId}&groupID=${groupInfo._id}`);
+            if (error) throw new Error('Error while leaving the group');
+            if (data.status === 'Success') {
+                socket.emit('leaveGroup', { groupName: groupInfo.groupname, userName }, (err) => {
+                    if (err) throw new Error('Error while leaving the group');
+                    props.history.push('/');
+                })
             }
         }
         catch (err) {
@@ -94,6 +110,17 @@ const ChatRoom = (props) => {
         })
     }
 
+    const chatMessageStateSetter = (message) => {
+        setChatMessage(prevChatMessage => {
+            let chatMessage = prevChatMessage.slice();
+            chatMessage = [
+                ...chatMessage,
+                message
+            ];
+            return chatMessage;
+        })
+    }
+
     const getStartMessage = (groupInfo) => {
         batchedUpdateState(groupInfo);
         socket.on('chatMessage', message => {
@@ -103,16 +130,10 @@ const ChatRoom = (props) => {
                     welcomeMessage = message;
                     return welcomeMessage;
                 });
+                chatMessageStateSetter(message);
             }
             else {
-                setChatMessage(prevChatMessage => {
-                    let chatMessage = prevChatMessage.slice();
-                    chatMessage = [
-                        ...chatMessage,
-                        message
-                    ];
-                    return chatMessage;
-                })
+                chatMessageStateSetter(message);
             }
         })
     }
@@ -131,9 +152,11 @@ const ChatRoom = (props) => {
     }
 
 
+
     const loader = () => (
         <CircularLoading />
-    )
+    );
+
 
 
     return (
@@ -169,7 +192,6 @@ const ChatRoom = (props) => {
                             </div>
                             <Suspense fallback={<div>Loading...</div>}>
                                 <Message
-                                    welcomeMessage={welcomeMessage}
                                     sendMessage={sendMessage}
                                     chatMessage={chatMessage}
                                 />
@@ -183,6 +205,7 @@ const ChatRoom = (props) => {
                                     <UserProfile
                                         groupInfo={groupInfo}
                                         showLeaveButton={true}
+                                        leaveButtonAction={leaveGroup}
                                     />
                                 </Suspense>
                             </div>

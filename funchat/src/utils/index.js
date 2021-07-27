@@ -17,7 +17,6 @@ export const convertFullDateToShort = (date) => {
 */
 
 export const convertFullDateToLong = (date) => {
-    console.log(date);
     return date ? moment(+date).format('ll') : ''
 }
 

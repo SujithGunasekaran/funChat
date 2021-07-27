@@ -15,22 +15,28 @@ const MessageItem = (props) => {
     return (
         <Fragment>
             {
-                loggedUserInfo._id === chatInfo.userId ?
-                    <Fragment>
-                        <div className="message_middle_chat_logged_user_container">
-                            <div className="message_middle_chat_logged_user_name">{chatInfo.user}</div>
-                            <div className="message_middle_chat_logged_user_text">{chatInfo.text}</div>
-                            <div className="message_middle_chat_time">{time}</div>
-                        </div>
-                    </Fragment>
-                    :
-                    <Fragment>
-                        <div className="message_middle_chat_user_container">
-                            <div className="message_middle_chat_user_name">{chatInfo.user}</div>
-                            <div className="message_middle_chat_user_text">{chatInfo.text}</div>
-                            <div className="message_middle_chat_time">{time}</div>
-                        </div>
-                    </Fragment>
+                chatInfo.type === 'Welcome' &&
+                <div className="message_chat_welcome_message">{chatInfo.text}</div>
+            }
+            {
+                chatInfo.type !== 'Welcome' ?
+                    loggedUserInfo._id === chatInfo.userId ?
+                        <Fragment>
+                            <div className="message_middle_chat_logged_user_container">
+                                <div className="message_middle_chat_logged_user_name">{chatInfo.user}</div>
+                                <div className="message_middle_chat_logged_user_text">{chatInfo.text}</div>
+                                <div className="message_middle_chat_time">{time}</div>
+                            </div>
+                        </Fragment>
+                        :
+                        <Fragment>
+                            <div className="message_middle_chat_user_container">
+                                <div className="message_middle_chat_user_name">{chatInfo.user}</div>
+                                <div className="message_middle_chat_user_text">{chatInfo.text}</div>
+                                <div className="message_middle_chat_time">{time}</div>
+                            </div>
+                        </Fragment>
+                    : null
             }
         </Fragment>
     )
