@@ -5,6 +5,7 @@ router.post('/createGroup', groupController.checkIsUserAuthenticated, groupContr
 router.get('/getByGroupId', groupController.checkIsUserAuthenticated, groupController.getGroupInfoById);
 router.get('/getByGroupType', groupController.getGroupInfoByType);
 router.post('/joinGroup', groupController.checkIsUserAuthenticated, groupController.joinGroup);
-router.get('/getGroupUser', groupController.checkIsUserAuthenticated, groupController.getGroupUser)
+router.get('/getGroupUser', groupController.checkIsUserAuthenticated, groupController.getGroupUser);
+router.post('/leaveGroup', groupController.checkIsUserAuthenticated, groupController.leaveGroup)
 
 module.exports = router;

@@ -85,9 +85,9 @@ io.on('connection', (socket) => {
         }
     })
 
-    socket.on('sendMessage', ({ groupname, userId, userName, message }, callback) => {
+    socket.on('sendMessage', ({ groupName, userId, userName, message }, callback) => {
         try {
-            io.to(groupname).emit('chatMessage', { type: 'Normal', user: userName, userId, text: message, date: Date.now() });
+            io.to(groupName).emit('chatMessage', { type: 'Normal', user: userName, userId, text: message, date: Date.now() });
             callback(null);
         }
         catch (err) {
@@ -95,8 +95,14 @@ io.on('connection', (socket) => {
         }
     })
 
-    socket.on('disconnect', () => {
-        console.log("user left");
+    socket.on('leaveGroup', ({ groupName, userName }, callback) => {
+        try {
+            socket.to(groupName).emit('leaveMessage', { type: 'Welcome', user: 'admin', text: `${userName} has left`, data: Date.now() });
+            callback(null);
+        }
+        catch (err) {
+            callback(err.message);
+        }
     })
 
 })

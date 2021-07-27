@@ -150,3 +150,36 @@ exports.getGroupUser = async (req, res) => {
         })
     }
 }
+
+exports.leaveGroup = async (req, res) => {
+    const { groupID, userID } = req.query;
+    try {
+        const updatedGroupInfo = await Room.findOneAndUpdate(
+            {
+                _id: groupID
+            },
+            {
+                $pull: {
+                    users: userID
+                }
+            },
+            {
+                new: true,
+                runValidators: true
+            }
+        );
+        if (updatedGroupInfo.users.length === 0) {
+            await Room.findOneAndDelete({ _id: groupID });
+        }
+        if (!updatedGroupInfo) throw new Error('Error while leaving the group');
+        res.status(200).json({
+            status: 'Success'
+        })
+    }
+    catch (err) {
+        res.status(404).send({
+            status: 'Failed',
+            message: 'Error while leaving the group'
+        })
+    }
+}
