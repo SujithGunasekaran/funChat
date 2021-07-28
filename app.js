@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const passport = require('passport');
 const socketio = require('socket.io');
+const path = require('path');
+// const compression = require('compression');
 
 require('./funchat_server/passport/googleAuth');
 require('./funchat_server/passport/githubAuth');
@@ -37,6 +39,10 @@ server.use(passport.initialize());
 server.use(passport.session());
 
 
+// compression
+// server.use(compression());
+
+
 // google auth
 server.get('/api/google', passport.authenticate('google', { scope: ["profile", "email"] }));
 
@@ -56,6 +62,8 @@ server.get('/github/callback', passport.authenticate('github', { failureRedirect
 // route path
 server.use('/api/v1/user', userRoute);
 server.use('/api/v1/group', groupRoute);
+
+// server.use(express.static(path.join(__dirname, 'build')));
 
 // starting the server
 const app = server.listen(PORT, () => {
@@ -88,6 +96,16 @@ io.on('connection', (socket) => {
     socket.on('sendMessage', ({ groupName, userId, userName, message }, callback) => {
         try {
             io.to(groupName).emit('chatMessage', { type: 'Normal', user: userName, userId, text: message, date: Date.now() });
+            callback(null);
+        }
+        catch (err) {
+            callback(err.message);
+        }
+    })
+
+    socket.on('offlineGroup', ({ groupName, userName, userID }, callback) => {
+        try {
+            socket.to(groupName).emit('leaveMessage', { type: 'offlineMessage', userID, user: 'admin', text: `${userName} went offline`, data: Date.now() });
             callback(null);
         }
         catch (err) {
