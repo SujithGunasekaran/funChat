@@ -28,6 +28,7 @@ const ChatRoom = (props) => {
     const [userList, setUserList] = useState([]);
     const [loading, setShowLoading] = useState(false);
     const [chatMessage, setChatMessage] = useState([]);
+    const [offlineUser, setOfflineUser] = useState([]);
 
     // redux state
     const { loggedUserInfo } = useSelector(state => state.userReducer)
@@ -46,6 +47,18 @@ const ChatRoom = (props) => {
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [welcomeMessage])
+
+
+    useEffect(() => {
+
+        return () => {
+            socket.emit('offlineGroup', { groupName, userName: loggedUserInfo.username, userID: loggedUserInfo._id }, (err) => {
+                if (err) console.log(err);
+            })
+        }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [groupInfo])
 
 
     const getRoomUserList = async () => {
@@ -105,6 +118,12 @@ const ChatRoom = (props) => {
 
     const batchedUpdateState = (groupInfo) => {
         unstable_batchedUpdates(() => {
+            if (offlineUser.includes(groupInfo.users[groupInfo.currentUserIndex]._id)) {
+                setOfflineUser(prevOfflineUser => {
+                    let offlineUser = prevOfflineUser.slice();
+                    let userIndex = offlineUser.find(user => user === groupInfo.users[groupInfo.currentUserIndex]._id);
+                })
+            }
             setGroupInfo(groupInfo);
             setGroupName(groupInfo.groupname);
         })
@@ -136,6 +155,29 @@ const ChatRoom = (props) => {
                 chatMessageStateSetter(message);
             }
         })
+        socket.on('leaveMessage', message => {
+            if (message.type === 'Welcome') {
+                setWelcomeMessage(prevMessage => {
+                    let welcomeMessage = JSON.parse(JSON.stringify(prevMessage));
+                    welcomeMessage = message;
+                    return welcomeMessage;
+                });
+                chatMessageStateSetter(message);
+            }
+            else if (message.type === 'Normal') {
+                chatMessageStateSetter(message);
+            }
+            else if (message.type === 'offlineMessage') {
+                setOfflineUser(prevOfflineUser => {
+                    let offlineUser = prevOfflineUser.slice();
+                    offlineUser = [
+                        ...offlineUser,
+                        message.userID
+                    ]
+                    return offlineUser;
+                })
+            }
+        })
     }
 
 
@@ -156,7 +198,6 @@ const ChatRoom = (props) => {
     const loader = () => (
         <CircularLoading />
     );
-
 
 
     return (
