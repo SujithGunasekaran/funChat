@@ -15,6 +15,9 @@ const ChatRoomSchema = new Schema({
     },
     groupadmin: {
         type: Schema.Types.ObjectId
+    },
+    offlineUser: {
+        type: [Schema.Types.ObjectId]
     }
 });
 

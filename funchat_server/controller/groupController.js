@@ -69,6 +69,20 @@ exports.joinGroup = async (req, res) => {
                 runValidators: true
             }
         );
+        await Room.findOneAndUpdate(
+            {
+                _id: groupID
+            },
+            {
+                $pull: {
+                    offlineUser: mongoose.Types.ObjectId(userID)
+                }
+            },
+            {
+                new: true,
+                runValidators: true
+            }
+        )
         if (!joinedGroupInfo) throw new Error('Error while joining room');
         res.status(200).json({
             status: 'Success',
@@ -87,16 +101,18 @@ exports.joinGroup = async (req, res) => {
 
 
 exports.getGroupInfoById = async (req, res) => {
-    const { groupID = '' } = req.query;
+    const { groupID = '', userID } = req.query;
     try {
         const groupInfo = await Room.findOne({ _id: groupID }).populate('users');
         if (!groupInfo) throw new Error('Error while getting groupInfo');
+        const groupData = groupInfo.toObject();
+        const joinedUserName = userID ? groupData.users.find(user => user._id.toString() === userID.toString()) : {};
         res.status(200).json({
             status: 'Success',
             data: {
                 groupInfo: {
-                    ...groupInfo.toObject(),
-                    currentUserIndex: groupInfo.users.length - 1
+                    ...groupData,
+                    joinedUserName: joinedUserName?.username ?? ''
                 }
             }
         })
@@ -134,12 +150,13 @@ exports.getGroupUser = async (req, res) => {
     const { groupID } = req.query;
     try {
         if (!groupID) throw new Error('Error while getting user list');
-        const userList = await Room.findOne({ _id: groupID }, { users: 1 }).populate('users');
+        const userList = await Room.findOne({ _id: groupID }, { users: 1, offlineUser: 2 }).populate('users');
         if (!userList) throw new Error('Error while getting user list');
         res.status(200).json({
             status: 'Success',
             data: {
-                userList
+                userList: userList.users,
+                offlineUser: userList.offlineUser
             }
         })
     }
@@ -180,6 +197,36 @@ exports.leaveGroup = async (req, res) => {
         res.status(404).send({
             status: 'Failed',
             message: 'Error while leaving the group'
+        })
+    }
+}
+
+exports.setOfflineUser = async (req, res) => {
+    const { groupID, userID } = req.query;
+    try {
+        const updatedGroupInfo = await Room.findOneAndUpdate(
+            {
+                _id: groupID
+            },
+            {
+                $addToSet: {
+                    offlineUser: mongoose.Types.ObjectId(userID)
+                }
+            },
+            {
+                new: true,
+                runValidators: true
+            }
+        );
+        if (!updatedGroupInfo) throw new Error('Errow while updating the offline users');
+        res.status(200).json({
+            status: 'Success'
+        });
+    }
+    catch (err) {
+        res.status(404).json({
+            status: 'Failed',
+            message: err.message
         })
     }
 }
