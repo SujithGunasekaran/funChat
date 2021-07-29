@@ -170,6 +170,20 @@
     letter-spacing: 0.010rem;
     font-weight: 500;
 }
+.message_left_userInfo_dot_icon
+{
+    margin-left: auto;
+    width: 35px;
+    height: 35px;
+}
+.message_left_userInfo_dot_icon.online
+{
+    color: var(--success-alert-text);
+}
+.message_left_userInfo_dot_icon.offline
+{
+    color: var(--text-color-seven);
+}
 .message_left_user_hr
 {
     color: var(--text-color-eight);
