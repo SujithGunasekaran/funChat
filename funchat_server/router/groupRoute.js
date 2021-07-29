@@ -8,5 +8,6 @@ router.post('/joinGroup', groupController.checkIsUserAuthenticated, groupControl
 router.get('/getGroupUser', groupController.checkIsUserAuthenticated, groupController.getGroupUser);
 router.post('/leaveGroup', groupController.checkIsUserAuthenticated, groupController.leaveGroup);
 router.post('/setOfflineUser', groupController.checkIsUserAuthenticated, groupController.checkIsGroupNameExists, groupController.setOfflineUser)
+router.get('/userGroups', groupController.checkIsUserAuthenticated, groupController.getUserGroups);
 
 module.exports = router;

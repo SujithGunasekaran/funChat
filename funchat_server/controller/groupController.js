@@ -230,3 +230,31 @@ exports.setOfflineUser = async (req, res) => {
         })
     }
 }
+
+exports.getUserGroups = async (req, res) => {
+    const { userID } = req.query;
+    try {
+        const userGroupList = await Room.find(
+            {
+                users: {
+                    $in: [
+                        userID
+                    ]
+                }
+            }
+        );
+        if (!userGroupList) throw new Error('Error while getting user groups');
+        res.status(200).json({
+            status: 'Success',
+            data: {
+                userGroupList
+            }
+        })
+    }
+    catch (err) {
+        res.json({
+            status: 'Failed',
+            message: err.message
+        })
+    }
+}

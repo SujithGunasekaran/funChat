@@ -1,12 +1,12 @@
 const express = require('express');
 const cors = require('cors');
 const passport = require('passport');
-const socketio = require('socket.io');
 const path = require('path');
-// const compression = require('compression');
+const compression = require('compression');
 
 require('./funchat_server/passport/googleAuth');
 require('./funchat_server/passport/githubAuth');
+const socketConnection = require('./funchat_server/socket');
 
 const mongodb = require('./funchat_server/mongodb');
 const middleware = require('./funchat_server/middleware');
@@ -26,7 +26,7 @@ const server = express();
 const PORT = process.env.PORT || 5000;
 
 server.use(express.json());
-server.use(cors({ credentials: true, origin: LOCAL_URL }));
+server.use(cors({ credentials: true, origin: LOCAL_URL, }));
 
 // mongodb connection
 mongodb.connectMongodb();
@@ -40,7 +40,7 @@ server.use(passport.session());
 
 
 // compression
-// server.use(compression());
+server.use(compression());
 
 
 // google auth
@@ -76,51 +76,4 @@ const corsOptions = {
 }
 
 // socket
-const io = socketio(app, corsOptions);
-
-io.on('connection', (socket) => {
-
-    socket.on('join', ({ username, groupname }, callback) => {
-        try {
-            socket.join(groupname);
-            socket.emit('message', { user: 'admin', text: `${username} Welcome to the room ${groupname}` });
-            socket.broadcast.to(groupname).emit('chatMessage', { type: 'Welcome', user: 'admin', text: `${username}, has joined`, date: Date.now() });
-            callback(null, 'Success');
-        }
-        catch (err) {
-            callback(err, 'Failed');
-            return;
-        }
-    })
-
-    socket.on('sendMessage', ({ groupName, userId, userName, message }, callback) => {
-        try {
-            io.to(groupName).emit('chatMessage', { type: 'Normal', user: userName, userId, text: message, date: Date.now() });
-            callback(null);
-        }
-        catch (err) {
-            callback(err.message);
-        }
-    })
-
-    socket.on('offlineGroup', ({ groupName, userName, userID, userList }, callback) => {
-        try {
-            socket.to(groupName).emit('leaveMessage', { type: 'Welcome', userID, user: 'admin', text: `${userName} went offline`, data: Date.now() });
-            callback(null);
-        }
-        catch (err) {
-            callback(err.message);
-        }
-    })
-
-    socket.on('leaveGroup', ({ groupName, userName }, callback) => {
-        try {
-            socket.to(groupName).emit('leaveMessage', { type: 'Welcome', user: 'admin', text: `${userName} has left`, data: Date.now() });
-            callback(null);
-        }
-        catch (err) {
-            callback(err.message);
-        }
-    })
-
-})
+socketConnection.connectSocket(app, corsOptions);
