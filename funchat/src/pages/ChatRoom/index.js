@@ -194,22 +194,17 @@ const ChatRoom = (props) => {
             <div className="container-fluid">
                 <div className="row">
                     <div className="col-md-2">
-                        <div className="left_container">
-                            <div className="message_left_container">
-                                <div className="message_left_header_container">
-                                    <div className="message_left_header_heading">Users</div>
-                                </div>
-                                {
-                                    userList.length > 0 &&
-                                    <Suspense fallback={<div>Loading...</div>}>
-                                        <GroupUser
-                                            userList={userList}
-                                            groupInfo={groupInfo}
-                                            offlineUser={offlineUser}
-                                        />
-                                    </Suspense>
-                                }
-                            </div>
+                        <div className="message_left_container">
+                            {
+                                userList.length > 0 &&
+                                <Suspense fallback={<div>Loading...</div>}>
+                                    <GroupUser
+                                        userList={userList}
+                                        groupInfo={groupInfo}
+                                        offlineUser={offlineUser}
+                                    />
+                                </Suspense>
+                            }
                         </div>
                     </div>
                     <div className="col-md-7">

@@ -4,6 +4,7 @@ import { withRouter } from 'react-router-dom';
 const MiddlePanel = lazy(() => import('../components/middlePanel/HomeMiddle'));
 const UserProfile = lazy(() => import('../components/rightPanel/UserProfile'));
 const HomeInfo = lazy(() => import('../components/leftPanel/HomeInfo'));
+const UserGroups = lazy(() => import('../components/rightPanel/UserGroups'));
 
 const Home = (props) => {
 
@@ -31,6 +32,11 @@ const Home = (props) => {
                         <div className="user_right_profile_container">
                             <Suspense fallback={<div>Loading...</div>}>
                                 <UserProfile />
+                            </Suspense>
+                        </div>
+                        <div className="home_right_user_group_container">
+                            <Suspense fallback={<div>Loading...</div>}>
+                                <UserGroups />
                             </Suspense>
                         </div>
                     </div>
