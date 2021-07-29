@@ -24,8 +24,8 @@ FunChat is an chat application
           GITHUB_CLIENTSECRET = Github client secret
           LOCAL_URL = http://localhost:3000
           LOCAL_REDIRECT_URL = http://localhost:3000
-          GOOGLE_CALLBACK_URL = http://localhost:5000/google/callback
-          GITHUB_CALLBACK_URL = http://localhost:5000/github/callback
+          GOOGLE_CALLBACK_URL = Google callback url
+          GITHUB_CALLBACK_URL = Github callback url
       </code>
      </pre>
      
