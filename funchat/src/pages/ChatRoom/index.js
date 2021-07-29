@@ -184,7 +184,6 @@ const ChatRoom = (props) => {
         catch (err) {
             console.log(err);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }
 
 
@@ -225,7 +224,6 @@ const ChatRoom = (props) => {
                             <div className="user_right_profile_container">
                                 <Suspense fallback={<div>Loading...</div>}>
                                     <UserProfile
-                                        groupInfo={groupInfo}
                                         showLeaveButton={true}
                                         leaveButtonAction={leaveGroup}
                                     />
