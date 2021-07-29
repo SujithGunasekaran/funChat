@@ -1,8 +1,9 @@
 import React, { Fragment, memo } from 'react';
+import { DotIcon } from '../../UI/Icons';
 
 const RoomUser = (props) => {
 
-    const { userList, groupInfo } = props;
+    const { userList, groupInfo, offlineUser } = props;
 
     return (
         <Fragment>
@@ -20,6 +21,9 @@ const RoomUser = (props) => {
                                         <div className="admin_text">Admin</div>
                                     }
                                 </div>
+                                <DotIcon
+                                    cssClass={`message_left_userInfo_dot_icon ${offlineUser.has(userInfo._id) ? 'offline' : 'online'}`}
+                                />
                             </div>
                             {
                                 index < (userList.length - 1) &&

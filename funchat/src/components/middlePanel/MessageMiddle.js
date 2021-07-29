@@ -1,7 +1,9 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, lazy, Suspense } from 'react';
 import PropTypes from 'prop-types';
-import ChatForm from '../../UI/form/chatForm';
-import MessageList from '../../UI/card/Message/MessageList';
+
+const ChatForm = lazy(() => import('../../UI/form/chatForm'));
+const MessageList = lazy(() => import('../../UI/card/Message/MessageList'));
+
 
 const MessageMiddle = (props) => {
 
@@ -12,13 +14,17 @@ const MessageMiddle = (props) => {
             <div className="message_middle_chat_container">
                 {
                     chatMessage.length > 0 &&
-                    <MessageList
-                        chatList={chatMessage}
-                    />
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <MessageList
+                            chatList={chatMessage}
+                        />
+                    </Suspense>
                 }
-                <ChatForm
-                    sendMessage={sendMessage}
-                />
+                <Suspense fallback={<div>Loading...</div>}>
+                    <ChatForm
+                        sendMessage={sendMessage}
+                    />
+                </Suspense>
             </div>
         </Fragment>
     )
@@ -26,7 +32,8 @@ const MessageMiddle = (props) => {
 };
 
 MessageMiddle.propTypes = {
-    welcomeMessage: PropTypes.object.isRequired
+    sendMessage: PropTypes.func.isRequired,
+    chatMessage: PropTypes.array.isRequired
 };
 
 export default MessageMiddle;

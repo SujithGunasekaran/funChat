@@ -4,7 +4,6 @@ import { withRouter } from 'react-router-dom';
 import io from 'socket.io-client';
 import { unstable_batchedUpdates } from 'react-dom';
 import { useSelector } from 'react-redux';
-import CircularLoading from '../../UI/loading/CircularLoading';
 
 const Message = lazy(() => import('../../components/middlePanel/MessageMiddle'));
 const GroupUser = lazy(() => import('../../components/leftPanel/GroupUser'));
@@ -26,9 +25,8 @@ const ChatRoom = (props) => {
     const [groupInfo, setGroupInfo] = useState(null);
     const [groupName, setGroupName] = useState('');
     const [userList, setUserList] = useState([]);
-    const [loading, setShowLoading] = useState(false);
     const [chatMessage, setChatMessage] = useState([]);
-    const [offlineUser, setOfflineUser] = useState([]);
+    const [offlineUser, setOfflineUsers] = useState(new Set());
 
     // redux state
     const { loggedUserInfo } = useSelector(state => state.userReducer)
@@ -52,9 +50,7 @@ const ChatRoom = (props) => {
     useEffect(() => {
 
         return () => {
-            socket.emit('offlineGroup', { groupName, userName: loggedUserInfo.username, userID: loggedUserInfo._id }, (err) => {
-                if (err) console.log(err);
-            })
+            leaveMessage();
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -62,14 +58,14 @@ const ChatRoom = (props) => {
 
 
     const getRoomUserList = async () => {
-        setShowLoading(true)
         try {
             const { data, error } = await getAction(`/getGroupUser?groupID=${groupID}`);
             if (error) throw new Error('Error while getting user list');
             if (data && data.status === 'Success') {
+                setOfflineUsers(new Set([...data.data.offlineUser]))
                 setUserList(prevUserList => {
                     let userList = prevUserList.slice();
-                    userList = data.data.userList.users;
+                    userList = data.data.userList;
                     return userList;
                 })
             }
@@ -77,19 +73,16 @@ const ChatRoom = (props) => {
         catch (err) {
             console.log(err);
         }
-        finally {
-            setShowLoading(false);
-        }
     }
 
 
     const getRoomInfoById = async () => {
         try {
-            const { data, error } = await getAction(`getByGroupId/?groupID=${groupID}`);
+            const { data, error } = await getAction(`/getByGroupId/?groupID=${groupID}&userID=${loggedUserInfo._id}`);
             if (error) throw new Error('Error while getting roomInfo');
             if (data.status === 'Success' && data.data.groupInfo) {
                 const { groupInfo } = data.data;
-                socket.emit('join', { username: groupInfo.users[groupInfo.currentUserIndex].username, groupname: groupInfo.groupname }, (err) => {
+                socket.emit('join', { username: groupInfo.joinedUserName, groupname: groupInfo.groupname }, (err) => {
                     if (err) throw new Error('Error while connecting room');
                     getStartMessage(groupInfo);
                 });
@@ -118,12 +111,6 @@ const ChatRoom = (props) => {
 
     const batchedUpdateState = (groupInfo) => {
         unstable_batchedUpdates(() => {
-            if (offlineUser.includes(groupInfo.users[groupInfo.currentUserIndex]._id)) {
-                setOfflineUser(prevOfflineUser => {
-                    let offlineUser = prevOfflineUser.slice();
-                    let userIndex = offlineUser.find(user => user === groupInfo.users[groupInfo.currentUserIndex]._id);
-                })
-            }
             setGroupInfo(groupInfo);
             setGroupName(groupInfo.groupname);
         })
@@ -138,6 +125,23 @@ const ChatRoom = (props) => {
             ];
             return chatMessage;
         })
+    }
+
+    const leaveMessage = async () => {
+        if (groupInfo && loggedUserInfo) {
+            try {
+                const { data, error } = await postAction(`/setOfflineUser?groupID=${groupInfo._id}&userID=${loggedUserInfo._id}`);
+                if (error) throw new Error('Error while setting offline users');
+                if (data.status === 'Success') {
+                    socket.emit('offlineGroup', { groupName, userName: loggedUserInfo.username, userID: loggedUserInfo._id }, (err) => {
+                        if (err) console.log(err);
+                    })
+                }
+            }
+            catch (err) {
+                console.log(err);
+            }
+        }
     }
 
     const getStartMessage = (groupInfo) => {
@@ -164,18 +168,8 @@ const ChatRoom = (props) => {
                 });
                 chatMessageStateSetter(message);
             }
-            else if (message.type === 'Normal') {
+            else {
                 chatMessageStateSetter(message);
-            }
-            else if (message.type === 'offlineMessage') {
-                setOfflineUser(prevOfflineUser => {
-                    let offlineUser = prevOfflineUser.slice();
-                    offlineUser = [
-                        ...offlineUser,
-                        message.userID
-                    ]
-                    return offlineUser;
-                })
             }
         })
     }
@@ -195,11 +189,6 @@ const ChatRoom = (props) => {
 
 
 
-    const loader = () => (
-        <CircularLoading />
-    );
-
-
     return (
         <Fragment>
             <div className="container-fluid">
@@ -211,15 +200,12 @@ const ChatRoom = (props) => {
                                     <div className="message_left_header_heading">Users</div>
                                 </div>
                                 {
-                                    loading &&
-                                    loader()
-                                }
-                                {
                                     userList.length > 0 &&
                                     <Suspense fallback={<div>Loading...</div>}>
                                         <GroupUser
                                             userList={userList}
                                             groupInfo={groupInfo}
+                                            offlineUser={offlineUser}
                                         />
                                     </Suspense>
                                 }

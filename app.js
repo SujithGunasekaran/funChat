@@ -103,9 +103,9 @@ io.on('connection', (socket) => {
         }
     })
 
-    socket.on('offlineGroup', ({ groupName, userName, userID }, callback) => {
+    socket.on('offlineGroup', ({ groupName, userName, userID, userList }, callback) => {
         try {
-            socket.to(groupName).emit('leaveMessage', { type: 'offlineMessage', userID, user: 'admin', text: `${userName} went offline`, data: Date.now() });
+            socket.to(groupName).emit('leaveMessage', { type: 'Welcome', userID, user: 'admin', text: `${userName} went offline`, data: Date.now() });
             callback(null);
         }
         catch (err) {
