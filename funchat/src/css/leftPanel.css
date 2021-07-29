@@ -100,11 +100,11 @@
 
 .message_left_user_container
 {
-    margin: 15px 0px;
+    margin: 0px 0px;
     padding: 15px 0px;
     background-color: var(--body-bg);
     border-radius: 6px;
-    height: 90vh;
+    height: 100vh;
     overflow-y: scroll;
 }
 

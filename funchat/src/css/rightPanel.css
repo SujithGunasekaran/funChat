@@ -109,6 +109,69 @@
 
 /* user profile panel */
 
+
+/* home user group list */
+
+.home_right_user_group_container
+{
+    margin: 20px 0px;
+    padding: 15px 10px;
+    background-color: var(--box-bg);
+    border-radius: 6px;
+}
+
+.home_right_user_group_heading
+{
+    font-family: var(--ff-san);
+    font-size: 1.150rem;
+    font-weight: 600;
+    color: var(--text-color-three);
+    padding-bottom: 10px;
+}
+.home_right_user_group_item
+{
+    margin: 10px 0px;
+    padding: 8px 5px;
+}
+.home-right_user_group_header
+{
+    display: flex;
+    align-items: center;
+}
+.home_right_user_group_name
+{
+    font-family: var(--ff-san);
+    font-size: .860rem;
+    font-weight: 500;
+    width: 100px;
+    color: var(--text-color-six);
+    letter-spacing: 0.010rem;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.home_right_user_group_count
+{
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+}
+.home_right_user_group_count > .count
+{
+    color: var(--text-color-six);
+    font-family: var(--ff-san);
+    font-size: .860rem;
+}
+.home_right_user_group_count > .icon
+{
+    margin-right: 8px;
+    width: 15px;
+    height: 15px;
+    color: var(--text-highlight);
+}
+
+/* home user group list */
+
+
 /* message right panel */
 
 .message_right_panel_container
