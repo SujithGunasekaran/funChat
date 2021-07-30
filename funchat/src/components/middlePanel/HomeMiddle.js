@@ -12,6 +12,9 @@ const HomeMiddle = (props) => {
     const [showFormModel, setShowFormModel] = useState(false);
     const [groupList, setGroupList] = useState([]);
 
+    // props
+    const { history } = props;
+
     // hooks
     const { getAction, loading } = useRoomAxios();
 
@@ -23,7 +26,11 @@ const HomeMiddle = (props) => {
     const getPublicRooms = async () => {
         try {
             const { data, error } = await getAction(`/getByGroupType?groupType=public`);
-            if (error) throw new Error('Error while getting room list');
+            if (error && error.type !== 'Authentication') throw new Error('Error while getting room list');
+            if (error && error.type === 'Authentication') {
+                history.push('/');
+                return;
+            }
             if (data.status === 'Success') {
                 setGroupList(data.data.groupList)
             }
@@ -75,7 +82,7 @@ const HomeMiddle = (props) => {
                 {
                     groupList.length > 0 &&
                     <GroupList
-                        history={props.history}
+                        history={history}
                         groupList={groupList}
                     />
                 }

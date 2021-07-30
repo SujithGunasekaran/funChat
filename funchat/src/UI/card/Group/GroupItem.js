@@ -18,7 +18,11 @@ const GroupItem = (props) => {
     const joinRoom = async (groupID) => {
         try {
             const { data, error } = await postAction(`/joinGroup?groupID=${groupID}&userID=${loggedUserInfo._id}`);
-            if (error) throw new Error('Error while joining the room');
+            if (error && error.type !== 'Authentication') throw new Error('Error while joining the room');
+            if (error && error.type === 'Authentication') {
+                history.push('/');
+                return;
+            }
             if (data.status === 'Success' && data.data.groupID) {
                 history.push(`/group/${data.data.groupID}`)
             }

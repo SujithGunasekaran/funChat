@@ -61,7 +61,13 @@ const ChatRoom = (props) => {
     const getRoomUserList = async () => {
         try {
             const { data, error } = await getAction(`/getGroupUser?groupID=${groupID}`);
-            if (error) throw new Error('Error while getting user list');
+            if (error && error.type !== 'Authentication') {
+                throw new Error('Error while getting user list');
+            }
+            if (error && error.type === 'Authentication') {
+                props.history.push('/');
+                return;
+            }
             if (data && data.status === 'Success') {
                 setOfflineUsers(new Set([...data.data.offlineUser]))
                 setUserList(prevUserList => {
@@ -80,7 +86,13 @@ const ChatRoom = (props) => {
     const getRoomInfoById = async () => {
         try {
             const { data, error } = await getAction(`/getByGroupId/?groupID=${groupID}&userID=${loggedUserInfo._id}`);
-            if (error) throw new Error('Error while getting roomInfo');
+            if (error && error.type !== 'Authentication') {
+                throw new Error('Error while getting roomInfo');
+            }
+            if (error && error.type === 'Authentication') {
+                props.history.push('/');
+                return;
+            }
             if (data.status === 'Success' && data.data.groupInfo) {
                 const { groupInfo } = data.data;
                 socket.emit('join', { username: groupInfo.joinedUserName, groupname: groupInfo.groupname }, (err) => {
@@ -97,7 +109,11 @@ const ChatRoom = (props) => {
     const leaveGroup = async ({ userId, userName }) => {
         try {
             const { data, error } = await postAction(`/leaveGroup/?userID=${userId}&groupID=${groupInfo._id}`);
-            if (error) throw new Error('Error while leaving the group');
+            if (error && error.type !== 'Authentication') throw new Error('Error while leaving the group');
+            if (error && error.type === 'Authentication') {
+                props.history.push('/');
+                return;
+            }
             if (data.status === 'Success') {
                 socket.emit('leaveGroup', { groupName: groupInfo.groupname, userName }, (err) => {
                     if (err) throw new Error('Error while leaving the group');
@@ -132,7 +148,11 @@ const ChatRoom = (props) => {
         if (groupInfo && loggedUserInfo) {
             try {
                 const { data, error } = await postAction(`/setOfflineUser?groupID=${groupInfo._id}&userID=${loggedUserInfo._id}`);
-                if (error) throw new Error('Error while setting offline users');
+                if (error && error.type !== 'Authentication') throw new Error('Error while setting offline users');
+                if (error && error.type === 'Authentication') {
+                    props.history.push('/');
+                    return;
+                }
                 if (data.status === 'Success') {
                     socket.emit('offlineGroup', { groupName, userName: loggedUserInfo.username, userID: loggedUserInfo._id }, (err) => {
                         if (err) console.log(err);
