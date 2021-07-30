@@ -10,6 +10,7 @@ exports.checkIsUserAuthenticated = (req, res, next) => {
     catch (err) {
         res.status(404).json({
             status: 'Failed',
+            type: 'Authentication',
             message: 'User Not Authenticated'
         })
     }
@@ -25,6 +26,7 @@ exports.checkIsGroupNameExists = async (req, res, next) => {
     catch (err) {
         res.status(404).json({
             status: 'Failed',
+            type: 'Normal',
             message: 'Room name already taken'
         })
     }
@@ -46,6 +48,7 @@ exports.createGroup = async (req, res) => {
     catch (err) {
         res.status(404).json({
             status: 'Failed',
+            type: 'Normal',
             message: 'Error while creating room'
         })
     }
@@ -94,6 +97,7 @@ exports.joinGroup = async (req, res) => {
     catch (err) {
         res.status(404).json({
             status: 'Failed',
+            type: 'Normal',
             message: 'Error while joining Group, Please check group ID'
         })
     }
@@ -120,6 +124,7 @@ exports.getGroupInfoById = async (req, res) => {
     catch (err) {
         res.status(404).json({
             status: 'Failed',
+            type: 'Normal',
             message: 'Something went wrong, Error while getting Group'
         })
     }
@@ -140,6 +145,7 @@ exports.getGroupInfoByType = async (req, res) => {
     catch (err) {
         res.status(404).json({
             status: 'Failed',
+            type: 'Normal',
             message: err.message
         })
     }
@@ -163,6 +169,7 @@ exports.getGroupUser = async (req, res) => {
     catch (err) {
         res.status(404).json({
             status: 'Failed',
+            type: 'Normal',
             message: 'Error while getting user list'
         })
     }
@@ -196,6 +203,7 @@ exports.leaveGroup = async (req, res) => {
     catch (err) {
         res.status(404).send({
             status: 'Failed',
+            type: 'Normal',
             message: 'Error while leaving the group'
         })
     }
@@ -226,6 +234,7 @@ exports.setOfflineUser = async (req, res) => {
     catch (err) {
         res.status(404).json({
             status: 'Failed',
+            type: 'Normal',
             message: err.message
         })
     }
@@ -254,6 +263,7 @@ exports.getUserGroups = async (req, res) => {
     catch (err) {
         res.json({
             status: 'Failed',
+            type: 'Normal',
             message: err.message
         })
     }
