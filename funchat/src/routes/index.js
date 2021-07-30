@@ -16,8 +16,8 @@ const Routes = () => {
             <div className="app_body">
                 <Switch>
                     <Suspense fallback={<div>Loading...</div>}>
-                        <Route path='/' exact component={Home} />
-                        <Route path='/login' exact component={Login} />
+                        <Route path='/' exact component={Login} />
+                        <Route path='/home' exact component={Home} />
                         <Route path='/logout' exact component={Logout} />
                         <Route path='/group/:groupID' exact component={ChatRoom} />
                     </Suspense>

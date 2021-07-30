@@ -1,5 +1,6 @@
 import React, { Fragment, lazy, Suspense } from 'react';
 import { withRouter } from 'react-router-dom';
+import withAuth from '../hoc/withAuth';
 
 const MiddlePanel = lazy(() => import('../components/middlePanel/HomeMiddle'));
 const UserProfile = lazy(() => import('../components/rightPanel/UserProfile'));
@@ -47,4 +48,4 @@ const Home = (props) => {
 
 };
 
-export default withRouter(Home);
+export default withRouter(withAuth({ Component: Home, name: 'home' }));

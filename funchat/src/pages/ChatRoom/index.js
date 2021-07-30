@@ -4,6 +4,7 @@ import { withRouter } from 'react-router-dom';
 import io from 'socket.io-client';
 import { unstable_batchedUpdates } from 'react-dom';
 import { useSelector } from 'react-redux';
+import withAuth from '../../hoc/withAuth';
 
 const Message = lazy(() => import('../../components/middlePanel/MessageMiddle'));
 const GroupUser = lazy(() => import('../../components/leftPanel/GroupUser'));
@@ -29,7 +30,7 @@ const ChatRoom = (props) => {
     const [offlineUser, setOfflineUsers] = useState(new Set());
 
     // redux state
-    const { loggedUserInfo } = useSelector(state => state.userReducer)
+    const { loggedUserInfo } = useSelector(state => state.userReducer);
 
     useEffect(() => {
 
@@ -100,7 +101,7 @@ const ChatRoom = (props) => {
             if (data.status === 'Success') {
                 socket.emit('leaveGroup', { groupName: groupInfo.groupname, userName }, (err) => {
                     if (err) throw new Error('Error while leaving the group');
-                    props.history.push('/');
+                    props.history.push('/home');
                 })
             }
         }
@@ -246,4 +247,4 @@ const ChatRoom = (props) => {
 };
 
 
-export default withRouter(ChatRoom);
+export default withRouter(withAuth({ Component: ChatRoom, name: 'chatRoom' }));
