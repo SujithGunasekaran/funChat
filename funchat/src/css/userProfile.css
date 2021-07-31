@@ -1,0 +1,122 @@
+.user_banner_container
+{
+    margin: 25px 0px;
+    width: 100%;
+    padding: 15px 15px;
+    background-color: var(--box-bg);
+    border-radius: 6px;
+}
+.user_banner_profile
+{
+    position: absolute;
+    top: 70px;
+    left: 50%;
+    transform: translate(-50%);
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+}
+.user_banner_sub_container
+{
+    margin: 25px 0px 10px 0px;
+}
+.user_banner_user_name
+{
+    padding: 15px 0px;
+    text-align: center;
+    font-size: 1.7rem;
+    font-weight: 700;
+    font-family: var(--ff-san);
+    color: var(--text-color-one);
+}
+.user_banner_user_description
+{
+    padding: 5px 0 5px 0px;
+    font-size: 1.03rem;
+    line-height: 30px;
+    font-family: var(--ff-san);
+    font-weight: 400;
+    text-align: center;
+    word-spacing: 2px;
+    color: var(--text-color-three);
+}
+.user_banner_hr
+{
+    color: var(--body-bg);
+}
+.user_banner_info_container
+{
+    padding: 15px 0px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+.user_banner_info_sub_container
+{
+    display: flex;
+    align-items: center;
+}
+.user_banner_info_icon
+{
+    margin-right: 9px;
+    width: 15px;
+    height: 15px;
+    color: var(--text-color-five);
+}
+.user_banner_info_name
+{
+    font-size: .9rem;
+    font-family: var(--ff-san);
+    font-weight: 400;
+    color: var(--text-color-four);
+}
+
+
+/* user panel */
+
+.user_panel_container
+{
+    margin: 10px 0px;
+    padding: 5px 15px;
+    background-color: var(--box-bg);
+    border-radius: 6px;
+}
+.user_panel_list
+{
+    display: flex;
+    align-items: center;
+    margin: 20px 0px;
+    transition: 0.4s all ease-in-out;
+}
+.user_panel_list.active > .user_panel_list_item_icon,
+.user_panel_list.active > .user_panel_list_item_name
+{
+    color: var(--text-highlight);
+}
+.user_panel_list_item_icon
+{
+    width: 15px;
+    height: 15px;
+    color: var(--text-color-seven);
+    transition: 0.4s all ease-in-out;
+}
+.user_panel_list_item_name
+{
+    padding-left: 9px;
+    font-size: .9rem;
+    font-weight: 400;
+    font-family: var(--ff-san);
+    letter-spacing: 0.010rem;
+    font-weight: 500;
+    color: var(--text-color-six);
+    transition: 0.4s all ease-in-out;
+}
+.user_panel_list:hover .user_panel_list_item_icon,
+.user_panel_list:hover .user_panel_list_item_name
+{
+    color: var(--text-highlight);
+    cursor: pointer;
+}
+
+/* user panel */
