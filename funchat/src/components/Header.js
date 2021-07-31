@@ -52,14 +52,16 @@ const Header = (props) => {
     const getLoggedUser = async () => {
         const { data, error } = await getAction('/');
         if (error) return;
-        dispatch({
-            type: 'SET_USER_LOGGED_IN',
-            isUserLoggedIn: data.data.isUserLoggedIn
-        })
-        dispatch({
-            type: 'SET_USER_INFO',
-            userInfo: data.data.userInfo
-        })
+        if (data && data.status === "Success") {
+            dispatch({
+                type: 'SET_USER_LOGGED_IN',
+                isUserLoggedIn: data.data.isUserLoggedIn
+            })
+            dispatch({
+                type: 'SET_USER_INFO',
+                userInfo: data.data.userInfo
+            })
+        }
     }
 
     const showDropdown = (e) => {
@@ -101,10 +103,12 @@ const Header = (props) => {
                             <img onClick={(e) => showDropdown(e)} src={loggedUserInfo.profile} className="header_user_profile" loading="lazy" alt={loggedUserInfo?.username} />
                         </div>
                         <div className="header_user_dropdown_container" ref={profileDropdown}>
-                            <div className="header_user_dropdown_list">
-                                <PersonIcon cssClass="header_user_dropdown_list_icon" />
-                                <div className="header_user_dropdown_list_name">Profile</div>
-                            </div>
+                            <PageLink pathname={`/user/${loggedUserInfo._id}`}>
+                                <div className="header_user_dropdown_list">
+                                    <PersonIcon cssClass="header_user_dropdown_list_icon" />
+                                    <div className="header_user_dropdown_list_name">Profile</div>
+                                </div>
+                            </PageLink>
                             <div className="header_user_dropdown_list" onClick={() => setShowConfirModel(true)}>
                                 <LogoutIcon cssClass="header_user_dropdown_list_icon" />
                                 <div className="header_user_dropdown_list_name">Logout</div>

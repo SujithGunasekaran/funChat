@@ -7,6 +7,7 @@ const Home = lazy(() => import('../pages/Home'));
 const Login = lazy(() => import('../pages/Login'));
 const Logout = lazy(() => import('../pages/Logout'));
 const ChatRoom = lazy(() => import('../pages/ChatRoom'));
+const UserProfile = lazy(() => import('../pages/userProfile'));
 
 const Routes = () => {
 
@@ -20,6 +21,7 @@ const Routes = () => {
                         <Route path='/home' exact component={Home} />
                         <Route path='/logout' exact component={Logout} />
                         <Route path='/group/:groupID' exact component={ChatRoom} />
+                        <Route path='/user/:userID' exact component={UserProfile} />
                     </Suspense>
                 </Switch>
             </div>

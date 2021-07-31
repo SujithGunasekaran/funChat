@@ -61,9 +61,7 @@ const UserGroups = () => {
                         }
                     </Fragment>
                 ))
-
             }
-
         </Fragment>
     )
 
