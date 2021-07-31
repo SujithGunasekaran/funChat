@@ -7,6 +7,7 @@ const compression = require('compression');
 require('./funchat_server/passport/googleAuth');
 require('./funchat_server/passport/githubAuth');
 const socketConnection = require('./funchat_server/socket');
+const errorController = require('./funchat_server/controller/ErrorController');
 
 const mongodb = require('./funchat_server/mongodb');
 const middleware = require('./funchat_server/middleware');
@@ -77,3 +78,14 @@ const corsOptions = {
 
 // socket
 socketConnection.connectSocket(app, corsOptions);
+
+
+server.all('*', (req, res, next) => {
+    const error = new Error(`Invalid path`);
+    error.status = 'failed';
+    error.statusCode = 404;
+    next(error);
+})
+
+// error middleware
+server.use(errorController);
