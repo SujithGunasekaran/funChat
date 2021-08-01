@@ -4,8 +4,8 @@ import { withRouter } from 'react-router-dom';
 
 const UserBanner = lazy(() => import('../../components/userProfile/UserBanner'));
 const UserPanel = lazy(() => import('../../components/userProfile/UserPanel'));
-const UserList = lazy(() => import('../../components/userProfile/UserList'));
-
+const UserFollowFollowing = lazy(() => import('../../components/userProfile/UserFollowFollowing'));
+const UserGroups = lazy(() => import('../../components/rightPanel/UserGroups'));
 
 const UserProfile = (props) => {
 
@@ -19,16 +19,38 @@ const UserProfile = (props) => {
         setUserSelectedPage(page);
     }, [])
 
-    console.log(userSelectedPage);
+
 
     const userPage = () => {
         switch (userSelectedPage) {
             case 'follower':
-                return <UserList />
+                return (
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <UserFollowFollowing
+                            type='follower'
+                            visitorId={userID}
+                        />
+                    </Suspense>
+                )
             case 'following':
-                return <UserList />
+                return (
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <UserFollowFollowing
+                            type='following'
+                            visitorId={userID}
+                        />
+                    </Suspense>
+
+                )
             case 'group':
-                return <div>Group Page</div>
+                return (
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <UserGroups
+                            userId={userID}
+                        />
+                    </Suspense>
+
+                )
             default: return null;
         }
     }
@@ -47,6 +69,7 @@ const UserProfile = (props) => {
                         <div className="row">
                             <div className="col-md-3">
                                 <UserPanel
+                                    userID={userID}
                                     selectPage={handlePageChange}
                                     userSelectedPage={userSelectedPage}
                                 />

@@ -1,6 +1,7 @@
 import React, { Fragment, lazy, Suspense } from 'react';
 import { withRouter } from 'react-router-dom';
 import withAuth from '../hoc/withAuth';
+import { useSelector } from 'react-redux';
 
 const MiddlePanel = lazy(() => import('../components/middlePanel/HomeMiddle'));
 const UserProfile = lazy(() => import('../components/rightPanel/UserProfile'));
@@ -8,6 +9,8 @@ const HomeInfo = lazy(() => import('../components/leftPanel/HomeInfo'));
 const UserGroups = lazy(() => import('../components/rightPanel/UserGroups'));
 
 const Home = (props) => {
+
+    const { loggedUserInfo } = useSelector(state => state.userReducer);
 
     return (
         <Fragment>
@@ -37,7 +40,12 @@ const Home = (props) => {
                         </div>
                         <div className="home_right_user_group_container">
                             <Suspense fallback={<div>Loading...</div>}>
-                                <UserGroups />
+                                <Fragment>
+                                    <div className="home_right_user_group_heading">Groups Your are In</div>
+                                    <UserGroups
+                                        userId={loggedUserInfo._id}
+                                    />
+                                </Fragment>
                             </Suspense>
                         </div>
                     </div>

@@ -1,35 +1,34 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import useRoomAxios from '../../hooks/useRoomAxios';
 import { PeoplesIcon } from '../../UI/Icons';
+import PropTypes from 'prop-types';
+import CircularLoading from '../../UI/loading/CircularLoading';
 
-const UserGroups = () => {
+const UserGroups = ({ userId }) => {
 
     // states
     const [userGroupList, setUserGroupList] = useState([]);
 
-    // redux-state
-    const { loggedUserInfo } = useSelector(state => state.userReducer);
-
     // hooks
-    const { getAction } = useRoomAxios();
+    const { getAction, loading } = useRoomAxios();
 
     useEffect(() => {
-        if (loggedUserInfo && loggedUserInfo._id) {
+        if (userId) {
             getUserGroupList();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [loggedUserInfo])
+    }, [userId])
 
     const getUserGroupList = async () => {
         try {
-            const { data, error } = await getAction(`/userGroups?userID=${loggedUserInfo._id}`);
+            const { data, error } = await getAction(`/userGroups?userID=${userId}`);
             if (error) throw new Error('Error while getting user group list');
             if (data.status === 'Success') {
-                setUserGroupList([
-                    ...userGroupList,
-                    ...data.data.userGroupList
-                ])
+                setUserGroupList(prevList => {
+                    let userGroupList = prevList.slice();
+                    userGroupList = data.data.userGroupList;
+                    return userGroupList;
+                })
             }
         }
         catch (err) {
@@ -39,7 +38,9 @@ const UserGroups = () => {
 
     return (
         <Fragment>
-            <div className="home_right_user_group_heading">Groups Your are In</div>
+            {
+                loading && <CircularLoading />
+            }
             {
                 userGroupList.length > 0 &&
                 userGroupList.map((groupInfo, index) => (
@@ -57,7 +58,7 @@ const UserGroups = () => {
                         </div>
                         {
                             index < (groupInfo.length - 1) &&
-                            <hr className=""></hr>
+                            <hr className="home_right_user_group_hr"></hr>
                         }
                     </Fragment>
                 ))
@@ -66,5 +67,9 @@ const UserGroups = () => {
     )
 
 };
+
+UserGroups.propTypes = {
+    userId: PropTypes.string.isRequired
+}
 
 export default UserGroups;
