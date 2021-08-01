@@ -1,9 +1,13 @@
-const route = require('express').Router();
+const router = require('express').Router();
 const userController = require('../controller/userController');
 
-route.get('/', userController.authenticateUser);
-route.get('/logout', userController.logoutUser);
-route.get('/userID', userController.isUserAuthenticated, userController.getUserById)
+router.route('/').get(userController.authenticateUser);
+router.route('/logout').get(userController.logoutUser);
+router.route('/userID').get(userController.isUserAuthenticated, userController.getUserById);
+router.route('/followFollowing')
+    .get(userController.isUserAuthenticated, userController.getuserFollowFollowingList)
+    .patch(userController.isUserAuthenticated, userController.checkIsUserExists, userController.updateFollowFollowing);
+router.route('/getUserPanelCount').get(userController.isUserAuthenticated, userController.getUserPanelCount);
 
 
-module.exports = route;
+module.exports = router;
