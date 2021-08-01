@@ -120,3 +120,67 @@
 }
 
 /* user panel */
+
+
+/* user list */
+
+.user_profile_list_empty_message
+{
+    padding: 10px 0px;
+    font-family: var(--ff-san);
+    font-size: .9rem;
+    font-weight: 500;
+    letter-spacing: 0.013rem;
+    color: var(--text-color-six);
+}
+
+.user_profile_list_container
+{
+    margin: 10px 0px;
+    padding: 8px 5px;
+}
+.user_profile_list_header
+{
+    display: flex;
+    align-items: center;
+}
+.user_profile_list_image
+{
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+}
+.user_profile_list_name
+{
+    font-family: var(--ff-san);
+    font-size: .860rem;
+    font-weight: 500;
+    width: 100px;
+    color: var(--text-color-six);
+    letter-spacing: 0.010rem;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.user_profile_list_btn
+{
+    margin-left: auto;
+    padding: 8px 14px;
+    background-color: var(--box-bg);
+    font-family: var(--ff-san);
+    font-size: .9rem;
+    letter-spacing: 0.010rem;
+    border-radius: 6px;
+    border: none;
+    color: var(--text-color-three);
+}
+.user_profile_list_btn:focus
+{
+    outline: none;
+}
+
+.user_profile_list_hr
+{
+    color: var(--text-color-eight);
+}
+
+/* user list */

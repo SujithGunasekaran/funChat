@@ -168,6 +168,10 @@
     height: 15px;
     color: var(--text-highlight);
 }
+.home_right_user_group_hr
+{
+    color: var(--text-color-eight);
+}
 
 /* home user group list */
 
