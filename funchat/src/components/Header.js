@@ -54,6 +54,10 @@ const Header = (props) => {
         if (error) return;
         if (data && data.status === "Success") {
             dispatch({
+                type: 'SET_LOGGEDUSER_FOLLOWING_LIST',
+                loggedUserFollowingList: new Set(data.data.followingList)
+            })
+            dispatch({
                 type: 'SET_USER_LOGGED_IN',
                 isUserLoggedIn: data.data.isUserLoggedIn
             })

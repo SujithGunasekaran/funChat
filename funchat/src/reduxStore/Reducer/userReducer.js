@@ -3,15 +3,19 @@ import {
     SET_USER_INFO,
     SET_USER_FOLLOWER_COUNT,
     SET_USER_FOLLOWING_COUNT,
-    SET_USER_GROUP_COUNT
+    SET_USER_GROUP_COUNT,
+    SET_LOGGEDUSER_FOLLOWING_LIST,
+    SET_VISITOR_FOLLOW_FOLLOWING_LIST,
 } from '../Types';
 
 const InitialState = {
     loggedUserInfo: {},
     isUserLoggedIn: false,
+    loggedUserFollowingList: new Set(),
     userFollowingCount: 0,
     userFollowerCount: 0,
-    userGroupCount: 0
+    userGroupCount: 0,
+    visitorFollowFollowingList: [],
 }
 
 
@@ -27,6 +31,11 @@ export default function useReducer(state = InitialState, action) {
                 ...state,
                 isUserLoggedIn: action.isUserLoggedIn
             }
+        case SET_LOGGEDUSER_FOLLOWING_LIST:
+            return {
+                ...state,
+                loggedUserFollowingList: action.loggedUserFollowingList
+            }
         case SET_USER_FOLLOWING_COUNT:
             return {
                 ...state,
@@ -41,6 +50,11 @@ export default function useReducer(state = InitialState, action) {
             return {
                 ...state,
                 userGroupCount: action.userGroupCount
+            }
+        case SET_VISITOR_FOLLOW_FOLLOWING_LIST:
+            return {
+                ...state,
+                visitorFollowFollowingList: action.visitorFollowFollowingList
             }
         default: return state;
     }

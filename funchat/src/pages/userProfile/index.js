@@ -64,6 +64,7 @@ const UserProfile = (props) => {
                         <Suspense fallback={<div>Loading...</div>}>
                             <UserBanner
                                 userID={userID}
+                                visitorPageType={userSelectedPage}
                             />
                         </Suspense>
                         <div className="row">

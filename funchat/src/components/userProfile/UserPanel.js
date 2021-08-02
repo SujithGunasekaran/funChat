@@ -17,7 +17,7 @@ const UserPanel = ({ userSelectedPage, selectPage, userID }) => {
     useEffect(() => {
         getUserPanelInfo();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [userID])
 
     const getUserPanelInfo = async () => {
         try {

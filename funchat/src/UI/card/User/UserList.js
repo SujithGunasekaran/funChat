@@ -5,7 +5,7 @@ import UserItem from './UserItem';
 const UserList = (props) => {
 
     // props
-    const { userData } = props
+    const { userData, visitorId, visitorPageType } = props
 
     return (
         <Fragment>
@@ -15,6 +15,8 @@ const UserList = (props) => {
                         <div className="user_profile_list_container">
                             <UserItem
                                 userInfo={userInfo}
+                                visitorId={visitorId}
+                                visitorPageType={visitorPageType}
                             />
                         </div>
                         {
@@ -30,7 +32,9 @@ const UserList = (props) => {
 };
 
 UserList.propTypes = {
-    userData: PropTypes.array.isRequired
+    userData: PropTypes.array.isRequired,
+    visitorId: PropTypes.string.isRequired,
+    visitorPageType: PropTypes.string.isRequired
 }
 
 export default UserList;

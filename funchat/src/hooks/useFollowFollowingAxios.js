@@ -21,10 +21,10 @@ const useFollowFollowingAxios = () => {
         }
     }
 
-    const updateAction = async (url, inputData) => {
+    const postAction = async (url, inputData) => {
         setLoading(true);
         try {
-            const response = await userAxios.patch(`/${url}`, inputData)
+            const response = await userAxios.post(`${url}`, inputData)
             return { data: response.data, error: null };
         }
         catch (err) {
@@ -36,7 +36,7 @@ const useFollowFollowingAxios = () => {
         }
     }
 
-    return { getAction, updateAction, loading }
+    return { getAction, postAction, loading }
 
 };
 
