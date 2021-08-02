@@ -6,7 +6,7 @@ router.route('/logout').get(userController.logoutUser);
 router.route('/userID').get(userController.isUserAuthenticated, userController.getUserById);
 router.route('/followFollowing')
     .get(userController.isUserAuthenticated, userController.getuserFollowFollowingList)
-    .patch(userController.isUserAuthenticated, userController.checkIsUserExists, userController.updateFollowFollowing);
+    .post(userController.isUserAuthenticated, userController.checkIsUserExists, userController.updateFollowFollowing);
 router.route('/getUserPanelCount').get(userController.isUserAuthenticated, userController.getUserPanelCount);
 
 

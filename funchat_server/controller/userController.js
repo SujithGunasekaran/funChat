@@ -20,7 +20,7 @@ exports.isUserAuthenticated = async (req, res, next) => {
 
 const createUser = async (userId) => {
     const createdUser = await UserFollowFollowing.create({ userid: userId });
-    if (createdUser) throw new Error('Error while creating user');
+    if (!createdUser) throw new Error('Error while creating user');
     return createdUser;
 }
 
@@ -60,10 +60,12 @@ exports.authenticateUser = async (req, res) => {
             return;
         }
         const userInfo = req.user;
+        const loggedUserFollowingList = await UserFollowFollowing.findOne({ userid: userInfo._id }, { following: 1 });
         res.status(200).json({
             status: 'Success',
             data: {
                 userInfo,
+                followingList: loggedUserFollowingList?.following ?? [],
                 isUserLoggedIn: true
             }
         })
@@ -150,8 +152,8 @@ exports.getuserFollowFollowingList = async (req, res) => {
     const validTypeQuery = ['follower', 'following'];
     try {
         if (!validTypeQuery.includes(type.toLowerCase())) throw new Error('Invalid query');
-        const userList = type.toLowerCase() === 'follower' ? await UserFollowFollowing({ userid: userID }, { userid: 1, follower: 2 }).populate('follower')
-            : await UserFollowFollowing({ userid: userID }, { userid: 1, following: 2 }).populate('following');
+        const userList = type.toLowerCase() === 'follower' ? await UserFollowFollowing.findOne({ userid: userID }, { userid: 1, follower: 2 }).populate('follower')
+            : await UserFollowFollowing.findOne({ userid: userID }, { userid: 1, following: 2 }).populate('following');
         if (!userList) throw new Error('Error while getting the userList list');
         res.status(200).json({
             status: 'Success',
@@ -256,15 +258,19 @@ const unFollowUser = async (input) => {
 }
 
 exports.updateFollowFollowing = async (req, res) => {
-    const { visitorUserId, loggedUserId, followerId, type } = req.query;
+    const { visitorUserId, loggedUserId, followerId, type, visitorPageType } = req.query;
     const validTypeQuery = ['follow', 'unfollow'];
     try {
         if (!validTypeQuery.includes(type.toLowerCase())) throw new Error('Invalid Query');
         const userList = type === 'follow' ? await followUser({ visitorUserId, loggedUserId, followerId }) : await unFollowUser({ visitorUserId, loggedUserId, followerId });
+        const loggedUserFollowingList = await UserFollowFollowing.findOne({ userid: loggedUserId }, { following: 1 });
         res.status(200).json({
             status: 'Success',
             data: {
-                userList
+                userList: visitorPageType === 'follower' ? userList.follower : userList.following,
+                userFollowingCount: userList.following.length,
+                userFollowerCount: userList.follower.length,
+                loggedUserFollowingList: loggedUserFollowingList.following
             }
         })
 
