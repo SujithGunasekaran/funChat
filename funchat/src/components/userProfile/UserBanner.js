@@ -1,9 +1,13 @@
-import React, { Fragment, memo, useEffect, useState } from 'react';
+import React, { Fragment, memo, useEffect, useState, Suspense, lazy } from 'react';
 import useUserAxios from '../../hooks/useUserAxios';
 import useFollowFollowingAxios from '../../hooks/useFollowFollowingAxios';
 import { CalenderIcon } from '../../UI/Icons';
 import { convertFullDateToLong } from '../../utils';
 import { useSelector, useDispatch } from 'react-redux';
+import { followUnfollowApi } from '../../utils/APIUtil';
+import { EditIcon, CancelIcon } from '../../UI/Icons';
+
+const ProfileEdit = lazy(() => import('../../UI/model/ProfileEdit'));
 
 const UserBanner = (props) => {
 
@@ -12,6 +16,7 @@ const UserBanner = (props) => {
 
     // stats
     const [userInfo, setUserInfo] = useState(null);
+    const [showEditModel, setShowEditModel] = useState(false);
 
     // hooks
     const { getAction } = useUserAxios();
@@ -24,9 +29,14 @@ const UserBanner = (props) => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        getUserInfo();
+        if (loggedUserInfo._id !== userID) {
+            getUserInfo();
+        }
+        else {
+            setUserInfo(loggedUserInfo);
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [userID])
+    }, [userID, loggedUserInfo])
 
     const getUserInfo = async () => {
         try {
@@ -41,61 +51,23 @@ const UserBanner = (props) => {
         }
     }
 
-    const followUser = async () => {
+    const followUnfollowUser = async (type) => {
+        const inputObj = {
+            visitorId: userID,
+            loggedUserInfoId: loggedUserInfo._id,
+            followerId: userID,
+            type,
+            visitorPageType
+        }
         try {
-            const { data, error } = await postAction(`/followFollowing?visitorUserId=${userID}&loggedUserId=${loggedUserInfo._id}&followerId=${userID}&type=follow&visitorPageType=${visitorPageType}`)
-            if (error) throw new Error(error.message);
-            if (data && data.status === 'Success') {
-                dispatch({
-                    type: 'SET_USER_FOLLOWER_COUNT',
-                    userFollowerCount: data.data.userFollowerCount,
-                })
-                dispatch({
-                    type: 'SET_USER_FOLLOWING_COUNT',
-                    userFollowingCount: data.data.userFollowingCount,
-                })
-                dispatch({
-                    type: 'SET_LOGGEDUSER_FOLLOWING_LIST',
-                    loggedUserFollowingList: new Set(data.data.loggedUserFollowingList)
-                });
-                dispatch({
-                    type: 'SET_VISITOR_FOLLOW_FOLLOWING_LIST',
-                    visitorFollowFollowingList: data.data.userList
-                })
-            }
+            await followUnfollowApi(inputObj, postAction, dispatch);
         }
         catch (err) {
             console.log(err);
         }
     }
 
-    const unFollowUser = async () => {
-        try {
-            const { data, error } = await postAction(`/followFollowing?visitorUserId=${userID}&loggedUserId=${loggedUserInfo._id}&followerId=${userID}&type=unFollow&visitorPageType=${visitorPageType}`)
-            if (error) throw new Error(error.message);
-            if (data && data.status === 'Success') {
-                dispatch({
-                    type: 'SET_USER_FOLLOWER_COUNT',
-                    userFollowerCount: data.data.userFollowerCount,
-                })
-                dispatch({
-                    type: 'SET_USER_FOLLOWING_COUNT',
-                    userFollowingCount: data.data.userFollowingCount,
-                })
-                dispatch({
-                    type: 'SET_LOGGEDUSER_FOLLOWING_LIST',
-                    loggedUserFollowingList: new Set(data.data.loggedUserFollowingList)
-                });
-                dispatch({
-                    type: 'SET_VISITOR_FOLLOW_FOLLOWING_LIST',
-                    visitorFollowFollowingList: data.data.userList
-                })
-            }
-        }
-        catch (err) {
-            console.log(err);
-        }
-    }
+    console.log("user Banner render");
 
     return (
         <Fragment>
@@ -107,13 +79,19 @@ const UserBanner = (props) => {
                         {
                             loggedUserInfo._id !== userID ?
                                 loggedUserFollowingList.has(userID) ?
-                                    <button className="user_banner_user_follow_btn" onClick={() => unFollowUser()}>UnFollow</button>
+                                    <button className="user_banner_user_follow_btn" onClick={() => followUnfollowUser('unfollow')}>UnFollow</button>
                                     :
-                                    <button className="user_banner_user_follow_btn" onClick={() => followUser()}>Follow</button>
+                                    <button className="user_banner_user_follow_btn" onClick={() => followUnfollowUser('follow')}>Follow</button>
                                 : null
                         }
                         <div className="user_banner_sub_container">
-                            <div className="user_banner_user_name">{userInfo?.username ?? ''}</div>
+                            <div className="user_banner_name_container">
+                                <div className="user_banner_user_name">{userInfo?.username ?? ''}</div>
+                                {
+                                    loggedUserInfo._id === userID &&
+                                    <EditIcon cssClass="user_banner_name_edit_icon" handleEvent={() => setShowEditModel(true)} />
+                                }
+                            </div>
                             <div className="user_banner_user_description">{userInfo?.description ?? ''}</div>
                             <hr className="user_banner_hr" />
                             <div className="user_banner_info_container">
@@ -125,8 +103,27 @@ const UserBanner = (props) => {
                         </div>
                     </Fragment>
                 }
-
             </div>
+            {
+                showEditModel &&
+                <Suspense fallback={<div>Loading...</div>}>
+                    <div className="overlay">
+                        <div className="container-fluid">
+                            <div className="row">
+                                <div className="col-md-5 mx-auto">
+                                    <div className="form_model_container">
+                                        <div className="form_model_header">
+                                            <div className="form_model_header_title">Edit Profile</div>
+                                            <CancelIcon cssClass={'form_model_header_cancel_icon'} handleEvent={() => setShowEditModel(false)} />
+                                        </div>
+                                        <ProfileEdit />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </Suspense>
+            }
         </Fragment>
     )
 

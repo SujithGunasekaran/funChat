@@ -7,6 +7,14 @@ const useForm = () => {
     const [formError, setFormError] = useState([]);
     const [errorMessage, setErrorMessage] = useState(null);
 
+    const setInitialValue = (value) => {
+        setFormData(prevData => {
+            let formData = JSON.parse(JSON.stringify(prevData));
+            formData = value;
+            return formData;
+        })
+    }
+
     const handleFormData = (e) => {
         setFormData(prevData => {
             let formData = JSON.parse(JSON.stringify(prevData));
@@ -24,7 +32,7 @@ const useForm = () => {
     }
 
 
-    return { formData, formError, errorMessage, handleFormData, setFormError, resetForm, setErrorMessage }
+    return { formData, formError, errorMessage, handleFormData, setFormError, resetForm, setErrorMessage, setInitialValue }
 
 };
 

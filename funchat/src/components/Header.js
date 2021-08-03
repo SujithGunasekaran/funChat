@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useRef, useState } from 'react';
 import { ChatIcon } from '../UI/Icons';
 import PageLink from '../UI/PageLink';
 import useUserAxios from '../hooks/useUserAxios';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch, batch } from 'react-redux';
 import { prettyUserName } from '../utils';
 import { PersonIcon, LogoutIcon } from '../UI/Icons';
 import ConfirmModel from '../UI/model/confirmModel';
@@ -53,17 +53,19 @@ const Header = (props) => {
         const { data, error } = await getAction('/');
         if (error) return;
         if (data && data.status === "Success") {
-            dispatch({
-                type: 'SET_LOGGEDUSER_FOLLOWING_LIST',
-                loggedUserFollowingList: new Set(data.data.followingList)
-            })
-            dispatch({
-                type: 'SET_USER_LOGGED_IN',
-                isUserLoggedIn: data.data.isUserLoggedIn
-            })
-            dispatch({
-                type: 'SET_USER_INFO',
-                userInfo: data.data.userInfo
+            batch(() => {
+                dispatch({
+                    type: 'SET_LOGGEDUSER_FOLLOWING_LIST',
+                    loggedUserFollowingList: new Set(data.data.followingList)
+                })
+                dispatch({
+                    type: 'SET_USER_LOGGED_IN',
+                    isUserLoggedIn: data.data.isUserLoggedIn
+                })
+                dispatch({
+                    type: 'SET_USER_INFO',
+                    userInfo: data.data.userInfo
+                })
             })
         }
     }
