@@ -24,7 +24,7 @@ const createUser = async (userId) => {
     return createdUser;
 }
 
-exports.checkIsUserExists = async (req, res, next) => {
+exports.checkIsUserExistsOrCreate = async (req, res, next) => {
     const { loggedUserId, followerId } = req.query;
     try {
         const isLoggedUserExists = await UserFollowFollowing.findOne({ userid: loggedUserId });
@@ -45,6 +45,20 @@ exports.checkIsUserExists = async (req, res, next) => {
     }
 }
 
+exports.checkIsUserExists = async (req, res, next) => {
+    const { userID } = req.query;
+    try {
+        const user = await User.findOne({ _id: userID });
+        if (!user) throw new Error('User does not exist');
+        next();
+    }
+    catch (err) {
+        res.status(404).json({
+            status: 'Failed',
+            message: err.message
+        })
+    }
+}
 
 exports.authenticateUser = async (req, res) => {
     try {
@@ -282,5 +296,38 @@ exports.updateFollowFollowing = async (req, res) => {
         })
     }
 };
+
+
+exports.editProfile = async (req, res) => {
+    const { userID } = req.query;
+    try {
+        const updatedProfile = await User.findOneAndUpdate(
+            {
+                _id: userID
+            },
+            {
+                username: req.body.username,
+                description: req.body.description
+            },
+            {
+                new: true,
+                runValidators: true
+            }
+        );
+        if (!updatedProfile) throw new Error('Error while updating user data');
+        res.status(200).json({
+            status: 'Success',
+            data: {
+                userInfo: updatedProfile
+            }
+        })
+    }
+    catch (err) {
+        res.status(404).json({
+            status: 'Failed',
+            message: err.message
+        })
+    }
+}
 
 
