@@ -85,7 +85,25 @@
     font-weight: 400;
     color: var(--text-color-four);
 }
-
+.user_banner_name_container
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.user_banner_name_edit_icon
+{
+    margin-left: 10px;
+    width: 15px;
+    height: 15px;
+    color: var(--text-color-six);
+    transition: 0.4s all ease-in-out;
+}
+.user_banner_name_edit_icon:hover
+{
+    cursor: pointer;
+    color: var(--text-highlight);
+}
 
 /* user panel */
 
@@ -158,6 +176,10 @@
     display: flex;
     align-items: center;
 }
+.user_profile_list_header a
+{
+    text-decoration: none;
+}
 .user_profile_list_image
 {
     width: 30px;
@@ -175,6 +197,18 @@
     letter-spacing: 0.010rem;
     text-overflow: ellipsis;
     overflow: hidden;
+    transition: 0.4s all ease-in-out;
+}
+.user_profile_name_edit_icon
+{
+    width: 20px;
+    height: 20px;
+    color: var(--text-color-six);
+}
+.user_profile_list_name:hover
+{
+    cursor: pointer;
+    color: var(--text-highlight);
 }
 .user_profile_list_btn
 {
