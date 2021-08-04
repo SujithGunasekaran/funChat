@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import useForm from '../../hooks/useForm';
 import { validateForm } from '../../utils';
 import SendIcon from '@material-ui/icons/Send';
-import Tooltip from '@material-ui/core/Tooltip';
 
 const ChatForm = (props) => {
 
@@ -38,9 +37,7 @@ const ChatForm = (props) => {
                             </div>
                             <div className="col-2 col-sm-2 col-md-1">
                                 <button className="message_send_btn">
-                                    <Tooltip title="Send Message">
-                                        <SendIcon className="icon" />
-                                    </Tooltip>
+                                    <SendIcon className="icon" />
                                 </button>
                             </div>
                         </div>

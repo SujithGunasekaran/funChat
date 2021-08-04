@@ -5,11 +5,13 @@ import io from 'socket.io-client';
 import { unstable_batchedUpdates } from 'react-dom';
 import { useSelector } from 'react-redux';
 import withAuth from '../../hoc/withAuth';
+import { DeleteIcon } from '../../UI/Icons';
 
 const Message = lazy(() => import('../../components/middlePanel/MessageMiddle'));
 const GroupUser = lazy(() => import('../../components/leftPanel/GroupUser'));
 const GroupInfo = lazy(() => import('../../components/rightPanel/GroupInfo'));
 const UserProfile = lazy(() => import('../../components/rightPanel/UserProfile'));
+const InfoMessage = lazy(() => import('../../UI/message/InfoMessage'));
 
 let socket;
 
@@ -19,15 +21,15 @@ const ChatRoom = (props) => {
     const { groupID } = params;
 
     // hooks
-    const { getAction, postAction } = useRoomAxios();
+    const { getAction, postAction, deleteAction } = useRoomAxios();
 
     // state
     const [welcomeMessage, setWelcomeMessage] = useState({});
     const [groupInfo, setGroupInfo] = useState(null);
-    const [groupName, setGroupName] = useState('');
     const [userList, setUserList] = useState([]);
     const [chatMessage, setChatMessage] = useState([]);
     const [offlineUser, setOfflineUsers] = useState(new Set());
+    const [infoMessage, setInfoMessage] = useState(null);
 
     // redux state
     const { loggedUserInfo } = useSelector(state => state.userReducer);
@@ -103,6 +105,7 @@ const ChatRoom = (props) => {
         }
         catch (err) {
             console.log(err);
+            props.history.push('/home');
         }
     }
 
@@ -129,7 +132,6 @@ const ChatRoom = (props) => {
     const batchedUpdateState = (groupInfo) => {
         unstable_batchedUpdates(() => {
             setGroupInfo(groupInfo);
-            setGroupName(groupInfo.groupname);
         })
     }
 
@@ -154,7 +156,7 @@ const ChatRoom = (props) => {
                     return;
                 }
                 if (data.status === 'Success') {
-                    socket.emit('offlineGroup', { groupName, userName: loggedUserInfo.username, userID: loggedUserInfo._id }, (err) => {
+                    socket.emit('offlineGroup', { groupName: groupInfo.groupname, userName: loggedUserInfo.username, userID: loggedUserInfo._id }, (err) => {
                         if (err) console.log(err);
                     })
                 }
@@ -193,12 +195,19 @@ const ChatRoom = (props) => {
                 chatMessageStateSetter(message);
             }
         })
+        socket.on('deleteMessage', message => {
+            setInfoMessage(`${message.message} You will be redirecting to home page`);
+            setTimeout(() => {
+                setInfoMessage('');
+                props.history.push('/home');
+            }, 3000)
+        })
     }
 
 
     const sendMessage = (message) => {
         try {
-            socket.emit('sendMessage', { groupName, userId: loggedUserInfo._id, userName: loggedUserInfo.username, message }, (err) => {
+            socket.emit('sendMessage', { groupName: groupInfo.groupname, userId: loggedUserInfo._id, userName: loggedUserInfo.username, message }, (err) => {
                 if (err) throw new Error('Error while sending the messages');
             });
         }
@@ -208,6 +217,38 @@ const ChatRoom = (props) => {
     }
 
 
+    const deleteGroup = async () => {
+        try {
+            const { data, error } = await deleteAction(`/deleteGroup?groupID=${groupInfo._id}&userID=${loggedUserInfo._id}`);
+            if (error) throw new Error('Error while deleting the user');
+            if (data.status === 'Success') {
+                setInfoMessage('Group deleted Successfully, You will be redirecting to home');
+                setTimeout(() => {
+                    props.history.push('/home');
+                }, 2000)
+                socket.emit('groupDeleted', { groupName: groupInfo.groupname, admin: loggedUserInfo.username }, (err) => {
+                    console.log(err);
+                    if (err) throw new Error('Failed to send message to the user');
+                })
+            }
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
+
+
+
+    // UI
+
+    const displayInfoMessage = () => (
+        <Fragment>
+            <InfoMessage
+                message={infoMessage}
+                handleCloseInfomessage={() => setInfoMessage(false)}
+            />
+        </Fragment>
+    )
 
     return (
         <Fragment>
@@ -229,8 +270,21 @@ const ChatRoom = (props) => {
                     </div>
                     <div className="col-md-7">
                         <div className="message_middle_container">
+                            {
+                                infoMessage && displayInfoMessage()
+                            }
                             <div className="message_middle_header_container">
-                                <div className="message_middle_header_heading">{groupName}</div>
+                                <div className="message_middle_header_heading">{groupInfo && groupInfo.groupname}</div>
+                                <div className="message_middle_icon_container">
+                                    {
+                                        groupInfo &&
+                                        groupInfo.groupadmin === loggedUserInfo._id &&
+                                        <DeleteIcon
+                                            cssClass="message_middle_delete_icon"
+                                            handleEvent={deleteGroup}
+                                        />
+                                    }
+                                </div>
                             </div>
                             <Suspense fallback={<div>Loading...</div>}>
                                 <Message
