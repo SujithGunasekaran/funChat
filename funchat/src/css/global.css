@@ -27,6 +27,9 @@
     --error-alert-text : #ff5a4e;
     --error-alert-bg : rgba(248,81,73,0.1);
     --error-alert-border : rgba(248,81,73,0.4);
+    --info-alert-text : #79c0ff;
+    --info-alert-bg : rgba(56,139,253,0.1);
+    --info-alert-border : rgba(56,139,253,0.4);
     --success-alert-text : #4cbb59;
     --success-alert-bg : rgba(46,160,67,0.1);
     --success-alert-border : rgb(52, 180, 76);
@@ -95,6 +98,34 @@
 {
     margin-left: auto;
     color: var(--error-alert-text);
+    width: 11px;
+    height: 11px;
+    cursor: pointer;
+}
+
+.info_container
+{
+    margin: 8px 0px;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 10px 10px;
+    border-radius: 6px;
+    background-color: var(--info-alert-bg);
+    border: 1px solid var(--info-alert-border);
+}
+.info_text
+{
+    font-family: var(--inter-text);
+    font-size: .810rem;
+    line-height: 22px;
+    font-weight: 500;
+    color: var(--info-alert-text);
+}
+.info_cancle_icon
+{
+    margin-left: auto;
+    color: var(--info-alert-text);
     width: 11px;
     height: 11px;
     cursor: pointer;

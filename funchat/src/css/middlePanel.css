@@ -141,6 +141,24 @@
     letter-spacing: 0.010rem;
     color: var(--text-color-three);
 }
+.message_middle_icon_container
+{
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+}
+.message_middle_delete_icon
+{
+    width: 16px;
+    height: 16px;
+    color: var(--text-color-six);
+    transition: 0.4s all ease-in-out;
+}
+.message_middle_delete_icon:hover
+{
+    cursor: pointer;
+    color: var(--text-highlight);
+}
 .message_middle_chat_container
 {
     margin: 15px 0px;
