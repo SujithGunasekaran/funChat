@@ -9,5 +9,6 @@ router.get('/getGroupUser', groupController.checkIsUserAuthenticated, groupContr
 router.post('/leaveGroup', groupController.checkIsUserAuthenticated, groupController.leaveGroup);
 router.post('/setOfflineUser', groupController.checkIsUserAuthenticated, groupController.checkIsGroupNameExists, groupController.setOfflineUser)
 router.get('/userGroups', groupController.checkIsUserAuthenticated, groupController.getUserGroups);
+router.delete('/deleteGroup', groupController.checkIsUserAuthenticated, groupController.checkIsGroupNameExists, groupController.deleteGroup)
 
 module.exports = router;

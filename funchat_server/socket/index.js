@@ -50,5 +50,15 @@ exports.connectSocket = (app, corsOptions) => {
             }
         })
 
+        socket.on('groupDeleted', ({ groupName, admin }, callback) => {
+            try {
+                socket.to(groupName).emit('deleteMessage', { message: `Group has been deleted by Admin ${admin}` });
+                callback(null);
+            }
+            catch (err) {
+                callback(err.message)
+            }
+        })
+
     })
 }

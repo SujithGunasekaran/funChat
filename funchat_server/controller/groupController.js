@@ -32,7 +32,6 @@ exports.checkIsGroupNameExists = async (req, res, next) => {
     }
 }
 
-
 exports.createGroup = async (req, res) => {
     try {
         const createdGroupInfo = await Room.create({ ...req.body, groupadmin: req.body.users });
@@ -212,6 +211,12 @@ exports.leaveGroup = async (req, res) => {
 exports.setOfflineUser = async (req, res) => {
     const { groupID, userID } = req.query;
     try {
+        const isGroupExist = await Room.findOne({ _id: groupID });
+        if (!isGroupExist) {
+            res.status(201).json({
+                status: 'Success'
+            })
+        }
         const updatedGroupInfo = await Room.findOneAndUpdate(
             {
                 _id: groupID
@@ -264,6 +269,26 @@ exports.getUserGroups = async (req, res) => {
         res.json({
             status: 'Failed',
             type: 'Normal',
+            message: err.message
+        })
+    }
+}
+
+
+exports.deleteGroup = async (req, res) => {
+    const { groupID, userID } = req.query;
+    try {
+        const isUserHasRightsToDelete = await Room.findOne({ _id: groupID, groupadmin: userID });
+        if (!isUserHasRightsToDelete) throw new Error("You don't have a permission to delete group");
+        const deletedGroup = await Room.findOneAndDelete({ _id: groupID });
+        if (!deletedGroup) throw new Error('Error while deleting group');
+        res.status(200).json({
+            status: 'Success'
+        })
+    }
+    catch (err) {
+        res.status(404).json({
+            status: 'Failed',
             message: err.message
         })
     }
