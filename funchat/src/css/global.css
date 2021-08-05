@@ -150,5 +150,14 @@
     font-size: .840rem;
     padding: 8px 0px;
 }
+.empty_message
+{
+    padding: 10px 0px;
+    color: var(--text-color-eight);
+    font-family: var(--ff-san);
+    font-weight: 500;
+    letter-spacing: 0.015rem;
+    font-size: .830rem;
+}
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800;900&display=swap');
