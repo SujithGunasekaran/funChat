@@ -63,6 +63,10 @@ const UserGroups = ({ userId }) => {
                     </Fragment>
                 ))
             }
+            {
+                !loading && userGroupList.length === 0 &&
+                <div className="empty_message">You have not joined in any groups</div>
+            }
         </Fragment>
     )
 

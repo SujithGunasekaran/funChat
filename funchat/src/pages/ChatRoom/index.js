@@ -5,7 +5,6 @@ import io from 'socket.io-client';
 import { unstable_batchedUpdates } from 'react-dom';
 import { useSelector } from 'react-redux';
 import withAuth from '../../hoc/withAuth';
-import { DeleteIcon } from '../../UI/Icons';
 
 const Message = lazy(() => import('../../components/middlePanel/MessageMiddle'));
 const GroupUser = lazy(() => import('../../components/leftPanel/GroupUser'));
@@ -26,63 +25,24 @@ const ChatRoom = (props) => {
     // state
     const [welcomeMessage, setWelcomeMessage] = useState({});
     const [groupInfo, setGroupInfo] = useState(null);
-    const [userList, setUserList] = useState([]);
     const [chatMessage, setChatMessage] = useState([]);
-    const [offlineUser, setOfflineUsers] = useState(new Set());
     const [infoMessage, setInfoMessage] = useState(null);
 
     // redux state
     const { loggedUserInfo } = useSelector(state => state.userReducer);
 
     useEffect(() => {
-
         socket = io('localhost:5000');
         getRoomInfoById();
-
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     useEffect(() => {
-
-        getRoomUserList();
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [welcomeMessage])
-
-
-    useEffect(() => {
-
         return () => {
-            leaveMessage();
+            handleLeaveGroup();
         }
-
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [groupInfo])
-
-
-    const getRoomUserList = async () => {
-        try {
-            const { data, error } = await getAction(`/getGroupUser?groupID=${groupID}`);
-            if (error && error.type !== 'Authentication') {
-                throw new Error('Error while getting user list');
-            }
-            if (error && error.type === 'Authentication') {
-                props.history.push('/');
-                return;
-            }
-            if (data && data.status === 'Success') {
-                setOfflineUsers(new Set([...data.data.offlineUser]))
-                setUserList(prevUserList => {
-                    let userList = prevUserList.slice();
-                    userList = data.data.userList;
-                    return userList;
-                })
-            }
-        }
-        catch (err) {
-            console.log(err);
-        }
-    }
 
 
     const getRoomInfoById = async () => {
@@ -109,26 +69,6 @@ const ChatRoom = (props) => {
         }
     }
 
-    const leaveGroup = async ({ userId, userName }) => {
-        try {
-            const { data, error } = await postAction(`/leaveGroup/?userID=${userId}&groupID=${groupInfo._id}`);
-            if (error && error.type !== 'Authentication') throw new Error('Error while leaving the group');
-            if (error && error.type === 'Authentication') {
-                props.history.push('/');
-                return;
-            }
-            if (data.status === 'Success') {
-                socket.emit('leaveGroup', { groupName: groupInfo.groupname, userName }, (err) => {
-                    if (err) throw new Error('Error while leaving the group');
-                    props.history.push('/home');
-                })
-            }
-        }
-        catch (err) {
-            console.log(err);
-        }
-    }
-
     const batchedUpdateState = (groupInfo) => {
         unstable_batchedUpdates(() => {
             setGroupInfo(groupInfo);
@@ -146,7 +86,7 @@ const ChatRoom = (props) => {
         })
     }
 
-    const leaveMessage = async () => {
+    const handleLeaveGroup = async () => {
         if (groupInfo && loggedUserInfo) {
             try {
                 const { data, error } = await postAction(`/setOfflineUser?groupID=${groupInfo._id}&userID=${loggedUserInfo._id}`);
@@ -171,12 +111,21 @@ const ChatRoom = (props) => {
         batchedUpdateState(groupInfo);
         socket.on('chatMessage', message => {
             if (message.type === 'Welcome') {
-                setWelcomeMessage(prevMessage => {
-                    let welcomeMessage = JSON.parse(JSON.stringify(prevMessage));
-                    welcomeMessage = message;
-                    return welcomeMessage;
-                });
-                chatMessageStateSetter(message);
+                unstable_batchedUpdates(() => {
+                    setWelcomeMessage(prevMessage => {
+                        let welcomeMessage = JSON.parse(JSON.stringify(prevMessage));
+                        welcomeMessage = message;
+                        return welcomeMessage;
+                    });
+                    setChatMessage(prevChatMessage => {
+                        let chatMessage = prevChatMessage.slice();
+                        chatMessage = [
+                            ...chatMessage,
+                            message
+                        ];
+                        return chatMessage;
+                    })
+                })
             }
             else {
                 chatMessageStateSetter(message);
@@ -184,12 +133,21 @@ const ChatRoom = (props) => {
         })
         socket.on('leaveMessage', message => {
             if (message.type === 'Welcome') {
-                setWelcomeMessage(prevMessage => {
-                    let welcomeMessage = JSON.parse(JSON.stringify(prevMessage));
-                    welcomeMessage = message;
-                    return welcomeMessage;
-                });
-                chatMessageStateSetter(message);
+                unstable_batchedUpdates(() => {
+                    setWelcomeMessage(prevMessage => {
+                        let welcomeMessage = JSON.parse(JSON.stringify(prevMessage));
+                        welcomeMessage = message;
+                        return welcomeMessage;
+                    });
+                    setChatMessage(prevChatMessage => {
+                        let chatMessage = prevChatMessage.slice();
+                        chatMessage = [
+                            ...chatMessage,
+                            message
+                        ];
+                        return chatMessage;
+                    })
+                })
             }
             else {
                 chatMessageStateSetter(message);
@@ -202,18 +160,6 @@ const ChatRoom = (props) => {
                 props.history.push('/home');
             }, 3000)
         })
-    }
-
-
-    const sendMessage = (message) => {
-        try {
-            socket.emit('sendMessage', { groupName: groupInfo.groupname, userId: loggedUserInfo._id, userName: loggedUserInfo.username, message }, (err) => {
-                if (err) throw new Error('Error while sending the messages');
-            });
-        }
-        catch (err) {
-            console.log(err);
-        }
     }
 
 
@@ -257,12 +203,12 @@ const ChatRoom = (props) => {
                     <div className="col-md-2">
                         <div className="message_left_container">
                             {
-                                userList.length > 0 &&
                                 <Suspense fallback={<div>Loading...</div>}>
                                     <GroupUser
-                                        userList={userList}
                                         groupInfo={groupInfo}
-                                        offlineUser={offlineUser}
+                                        groupID={groupID}
+                                        welcomeMessage={welcomeMessage}
+                                        history={props.history}
                                     />
                                 </Suspense>
                             }
@@ -273,23 +219,12 @@ const ChatRoom = (props) => {
                             {
                                 infoMessage && displayInfoMessage()
                             }
-                            <div className="message_middle_header_container">
-                                <div className="message_middle_header_heading">{groupInfo && groupInfo.groupname}</div>
-                                <div className="message_middle_icon_container">
-                                    {
-                                        groupInfo &&
-                                        groupInfo.groupadmin === loggedUserInfo._id &&
-                                        <DeleteIcon
-                                            cssClass="message_middle_delete_icon"
-                                            handleEvent={deleteGroup}
-                                        />
-                                    }
-                                </div>
-                            </div>
                             <Suspense fallback={<div>Loading...</div>}>
                                 <Message
-                                    sendMessage={sendMessage}
+                                    groupInfo={groupInfo}
                                     chatMessage={chatMessage}
+                                    infoMessage={infoMessage}
+                                    handleDeleteGroup={deleteGroup}
                                 />
                             </Suspense>
                         </div>
@@ -300,7 +235,9 @@ const ChatRoom = (props) => {
                                 <Suspense fallback={<div>Loading...</div>}>
                                     <UserProfile
                                         showLeaveButton={true}
-                                        leaveButtonAction={leaveGroup}
+                                        groupInfo={groupInfo}
+                                        history={props.history}
+                                        socketNeeded={true}
                                     />
                                 </Suspense>
                             </div>

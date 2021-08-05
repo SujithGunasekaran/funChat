@@ -5,8 +5,8 @@ const useRoomAxios = () => {
 
     const [loading, setLoading] = useState(false);
 
-    const getAction = async (url) => {
-        setLoading(true);
+    const getAction = async (url, isLoaderNeeded = true) => {
+        if (isLoaderNeeded) setLoading(true);
         try {
             const response = await roomAxios.get(`${url}`);
             return { data: response.data, error: null };
@@ -15,7 +15,7 @@ const useRoomAxios = () => {
             return { data: null, error: err.response };
         }
         finally {
-            setLoading(false);
+            if (isLoaderNeeded) setLoading(false);
         }
     };
 

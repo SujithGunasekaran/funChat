@@ -216,6 +216,7 @@ exports.setOfflineUser = async (req, res) => {
             res.status(201).json({
                 status: 'Success'
             })
+            return;
         }
         const updatedGroupInfo = await Room.findOneAndUpdate(
             {
