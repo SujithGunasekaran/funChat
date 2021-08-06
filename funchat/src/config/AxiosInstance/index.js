@@ -10,3 +10,8 @@ export const roomAxios = axios.create({
     baseURL: 'http://localhost:5000/api/v1/group',
     withCredentials: true
 })
+
+export const onlineAxios = axios.create({
+    baseURL: 'http://localhost:5000/api/v1/onlineUser',
+    withCredentials: true
+})

@@ -30,6 +30,16 @@ exports.connectSocket = (app, corsOptions) => {
             }
         })
 
+        // socket.on('setOnlineUser', ({ userName, userID }, callback) => {
+        //     try {
+        //         io.emit('getOnlineUser', { userName, userID });
+        //         callback(null);
+        //     }
+        //     catch (err) {
+        //         callback(err.message);
+        //     }
+        // })
+
         socket.on('offlineGroup', ({ groupName, userName, userID, userList }, callback) => {
             try {
                 socket.to(groupName).emit('leaveMessage', { type: 'Welcome', userID, user: 'admin', text: `${userName} went offline`, data: Date.now() });

@@ -7,9 +7,19 @@ const MiddlePanel = lazy(() => import('../components/middlePanel/HomeMiddle'));
 const UserProfile = lazy(() => import('../components/rightPanel/UserProfile'));
 const HomeInfo = lazy(() => import('../components/leftPanel/HomeInfo'));
 const UserGroups = lazy(() => import('../components/rightPanel/UserGroups'));
+const OnlineUser = lazy(() => import('../components/leftPanel/HomeOnlineUser'));
 
 const Home = (props) => {
 
+    // useEffect(() => {
+    //     socket = io('localhost:5000');
+    //     socket.on('getOnlineUser', response => {
+    //         console.log(response);
+    //     })
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [])
+
+    // redux-state
     const { loggedUserInfo } = useSelector(state => state.userReducer);
 
     return (
@@ -24,6 +34,9 @@ const Home = (props) => {
                                 />
                             </Suspense>
                         </div>
+                        <Suspense fallback={<div>Loading...</div>}>
+                            <OnlineUser />
+                        </Suspense>
                     </div>
                     <div className="col-md-6">
                         <Suspense fallback={<div>Loading...</div>}>
