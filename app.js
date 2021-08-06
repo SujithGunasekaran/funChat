@@ -17,6 +17,7 @@ const { LOCAL_REDIRECT_URL, PRODUCTION_REDIRECT_URL = '', LOCAL_URL } = require(
 // router
 const userRoute = require('./funchat_server/router/userRoute');
 const groupRoute = require('./funchat_server/router/groupRoute');
+const onlineUserRoute = require('./funchat_server/router/onlineUserRoute');
 
 // redirect url
 const url = process.env.NODE_ENV !== 'production' ? LOCAL_REDIRECT_URL : PRODUCTION_REDIRECT_URL
@@ -63,6 +64,7 @@ server.get('/github/callback', passport.authenticate('github', { failureRedirect
 // route path
 server.use('/api/v1/user', userRoute);
 server.use('/api/v1/group', groupRoute);
+server.use('/api/v1/onlineUser', onlineUserRoute);
 
 // server.use(express.static(path.join(__dirname, 'build')));
 

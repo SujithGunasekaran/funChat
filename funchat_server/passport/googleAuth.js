@@ -2,6 +2,7 @@ const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const config = require('../config');
 const User = require('../mongodb/model/userSchema');
+const onlineUser = require('../mongodb/model/OnlineUserSchema');
 
 const { GOOGLE_CLIENTID, GOOGLE_CLIENTSECRET, GOOGLE_CALLBACK_URL } = config;
 
@@ -25,9 +26,23 @@ passport.use(new GoogleStrategy({
         const username = displayName.split(' ').map(name => `${name[0].toUpperCase()}${name.slice(1).toLowerCase()}`).join(' ');
         try {
             const user = await User.findOne({ userid: id, authType: 'Google' });
-            if (user) done(null, user);
+            if (user) {
+                await onlineUser.create({
+                    userid: user._id,
+                    username: user.username,
+                    profile: user.profile,
+                    statusType: 'online'
+                })
+                done(null, user);
+            }
             if (!user) {
                 const newUser = new User({ userid: id, username, profile: photos[0].value, authType: 'Google' });
+                await onlineUser.create({
+                    userid: newUser._id,
+                    username: newUser.username,
+                    profile: user.profile,
+                    statusType: 'online'
+                })
                 const savedUser = await newUser.save();
                 done(null, savedUser);
             }
