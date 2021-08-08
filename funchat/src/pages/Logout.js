@@ -2,6 +2,10 @@ import React, { Fragment, useEffect } from 'react';
 import useUserAxios from '../hooks/useUserAxios';
 import { useDispatch } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import io from 'socket.io-client';
+
+let socket;
 
 const Logout = (props) => {
 
@@ -9,17 +13,24 @@ const Logout = (props) => {
     const { getAction } = useUserAxios();
     const dispatch = useDispatch();
 
+    // redux-state
+    const { loggedUserInfo } = useSelector(state => state.userReducer);
+
     useEffect(() => {
+        socket = io('localhost:5000');
         logoutUser();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const logoutUser = async () => {
-        const { data, error } = await getAction('/logout');
+        const { data, error } = await getAction(`/logout?userID=${loggedUserInfo._id}`);
         if (error) {
             console.log('error');
         }
         if (data.status === 'Success') {
+            socket.emit('setOnlineUser', { userName: loggedUserInfo._id }, (err) => {
+                if (err) throw new Error('Error while getting setting online user');
+            })
             dispatch({
                 type: 'SET_USER_LOGGED_IN',
                 isUserLoggedIn: false

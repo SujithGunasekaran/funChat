@@ -7,6 +7,10 @@ import { prettyUserName } from '../utils';
 import { PersonIcon, LogoutIcon } from '../UI/Icons';
 import ConfirmModel from '../UI/model/confirmModel';
 import { withRouter } from 'react-router-dom';
+import io from 'socket.io-client';
+import useBrowserClose from '../hooks/useBrowserClose';
+
+let socket;
 
 const Header = (props) => {
 
@@ -22,10 +26,16 @@ const Header = (props) => {
 
     // hooks
     const { getAction } = useUserAxios();
+    useBrowserClose();
 
     // refs
     const profileDropdown = useRef();
 
+    useEffect(() => {
+        socket = io('localhost:5000');
+        getLoggedUser();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     useEffect(() => {
 
@@ -43,16 +53,14 @@ const Header = (props) => {
     }, [])
 
 
-    useEffect(() => {
-        getLoggedUser();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
-
 
     const getLoggedUser = async () => {
         const { data, error } = await getAction('/');
         if (error) return;
         if (data && data.status === "Success") {
+            socket.emit('setOnlineUser', { userName: data.data.userInfo._id }, (err) => {
+                if (err) throw new Error('Error while getting setting online user');
+            })
             batch(() => {
                 dispatch({
                     type: 'SET_LOGGEDUSER_FOLLOWING_LIST',

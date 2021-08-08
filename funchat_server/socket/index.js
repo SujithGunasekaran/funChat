@@ -30,15 +30,15 @@ exports.connectSocket = (app, corsOptions) => {
             }
         })
 
-        // socket.on('setOnlineUser', ({ userName, userID }, callback) => {
-        //     try {
-        //         io.emit('getOnlineUser', { userName, userID });
-        //         callback(null);
-        //     }
-        //     catch (err) {
-        //         callback(err.message);
-        //     }
-        // })
+        socket.on('setOnlineUser', ({ userName }, callback) => {
+            try {
+                socket.broadcast.emit('getOnlineUser', { userName });
+                callback(null);
+            }
+            catch (err) {
+                callback(err.message);
+            }
+        })
 
         socket.on('offlineGroup', ({ groupName, userName, userID, userList }, callback) => {
             try {

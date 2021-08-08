@@ -17,16 +17,19 @@ exports.checkIsUserAuthenticated = (req, res, next) => {
 
 exports.setOnlineUser = async (req, res) => {
     try {
-        const savedUser = await OnlineUser.create({
-            userid: req.body.userid,
-            username: req.body.username,
-            statusType: req.body.statusType,
-            profile: req.body.profile
-        });
-        if (!savedUser) throw new Error('Errow while saving the online user');
-        res.status(200).json({
-            status: 'Success'
-        })
+        const user = await OnlineUser.findOne({ userid: req.body.userid });
+        if (!user) {
+            const savedUser = await OnlineUser.create({
+                userid: req.body.userid,
+                username: req.body.username,
+                statusType: req.body.statusType,
+                profile: req.body.profile
+            });
+            if (!savedUser) throw new Error('Errow while saving the online user');
+            res.status(200).json({
+                status: 'Success'
+            })
+        }
     }
     catch (err) {
         res.status(404).json({
@@ -45,6 +48,22 @@ exports.getOnlineUser = async (req, res) => {
             data: {
                 userList
             }
+        })
+    }
+    catch (err) {
+        res.status(404).json({
+            status: 'Failed',
+            message: err.message
+        })
+    }
+}
+
+exports.deleteOnlineUser = async (req, res) => {
+    const { userID } = req.query;
+    try {
+        await OnlineUser.findOneAndDelete({ userid: userID });
+        res.status(200).json({
+            status: 'Success'
         })
     }
     catch (err) {

@@ -1,5 +1,6 @@
 const User = require('../mongodb/model/userSchema');
 const UserFollowFollowing = require('../mongodb/model/userFollowSchema');
+const OnlineUser = require('../mongodb/model/OnlineUserSchema');
 const Group = require('../mongodb/model/chatRoomSchema');
 const mongoose = require('mongoose');
 
@@ -74,6 +75,14 @@ exports.authenticateUser = async (req, res) => {
             return;
         }
         const userInfo = req.user;
+        const user = await OnlineUser.findOne({ userid: userInfo._id });
+        if (!user) {
+            await OnlineUser.create({
+                userid: userInfo._id,
+                username: userInfo.username,
+                profile: userInfo.profile
+            })
+        }
         const loggedUserFollowingList = await UserFollowFollowing.findOne({ userid: userInfo._id }, { following: 1 });
         res.status(200).json({
             status: 'Success',
@@ -94,9 +103,10 @@ exports.authenticateUser = async (req, res) => {
 
 
 exports.logoutUser = async (req, res) => {
+    const { userID } = req.query;
     try {
+        await OnlineUser.findOneAndDelete({ userid: userID });
         req.logout();
-        res.clearCookie('funChatSession');
         res.status(200).json({
             status: 'Success',
         })
