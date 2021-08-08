@@ -8,18 +8,22 @@ const useBrowserClose = () => {
     let socket = io('localhost:5000');
 
     // redux-state
-    const { loggedUserInfo } = useSelector(state => state.userReducer);
+    const { loggedUserInfo, isUserLoggedIn } = useSelector(state => state.userReducer);
+    window.onbeforeunload = async function (event) {
+        event.preventDefault();
+        event.returnValue = '';
+        if (event && isUserLoggedIn) {
+            try {
+                socket.emit('setOnlineUser', { userName: loggedUserInfo.username }, (err) => {
+                    if (err) throw new Error('Error while getting setting online user');
+                })
+                await onlineAxios.delete(`/?userID=${loggedUserInfo._id}`);
+            }
+            catch (err) {
+                console.log(err);
+            }
+        }
 
-    window.onbeforeunload = async function () {
-        try {
-            await onlineAxios.delete(`/?userID=${loggedUserInfo._id}`);
-            socket.emit('setOnlineUser', { userName: loggedUserInfo.username }, (err) => {
-                if (err) throw new Error('Error while getting setting online user');
-            })
-        }
-        catch (err) {
-            console.log(err);
-        }
     }
 
 }

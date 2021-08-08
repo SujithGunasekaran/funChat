@@ -101,14 +101,14 @@ const Header = (props) => {
                         <div className="header_logo_name">FunChat</div>
                     </PageLink>
                 </div>
-                {
+                {/* {
                     !isUserLoggedIn &&
                     <div className="header_right_container">
                         <PageLink pathname={'/login'}>
                             <div className="header_login_name">Login</div>
                         </PageLink>
                     </div>
-                }
+                } */}
                 {
                     isUserLoggedIn && Object.keys(loggedUserInfo).length > 0 &&
                     <Fragment>
