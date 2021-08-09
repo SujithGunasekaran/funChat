@@ -9,7 +9,7 @@ let socket;
 const UserProfile = (props) => {
 
     // redux-state
-    const { loggedUserInfo } = useSelector(state => state.userReducer);
+    const { loggedUserInfo, loggedUserFollowingList, loggedUserFollowerList } = useSelector(state => state.userReducer);
 
     // props
     const { showLeaveButton = false, socketNeeded = false, groupInfo, history = {} } = props;
@@ -53,6 +53,16 @@ const UserProfile = (props) => {
             </div>
             <div className="user_right_profile_body">
                 <div className="user_right_profile_description">{loggedUserInfo?.description ?? ''}</div>
+                <div className="user_right_profile_follow_container">
+                    <div className="user_right_profile_item">
+                        <div className="user_right_profile_follow_count">{loggedUserFollowerList.size}</div>
+                        <div className="user_right_profile_follow_name">Followers</div>
+                    </div>
+                    <div className="user_right_profile_item">
+                        <div className="user_right_profile_follow_count">{loggedUserFollowingList.size}</div>
+                        <div className="user_right_profile_follow_name">Following</div>
+                    </div>
+                </div>
                 <button className="user_right_profile_follow_btn">Follow</button>
                 {
                     showLeaveButton &&

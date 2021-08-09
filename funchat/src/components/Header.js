@@ -67,6 +67,10 @@ const Header = (props) => {
                     loggedUserFollowingList: new Set(data.data.followingList)
                 })
                 dispatch({
+                    type: 'SET_LOGGEDUSER_FOLLOWER_LIST',
+                    loggedUserFollowerList: new Set(data.data.followerList)
+                })
+                dispatch({
                     type: 'SET_USER_LOGGED_IN',
                     isUserLoggedIn: data.data.isUserLoggedIn
                 })

@@ -85,11 +85,17 @@ const RoomUser = (props) => {
 
 };
 
+
+RoomUser.defaultProps = {
+    groupInfo: {}
+}
+
 RoomUser.propTypes = {
     groupInfo: PropTypes.object.isRequired,
     welcomeMessage: PropTypes.object.isRequired,
     groupID: PropTypes.string.isRequired,
     history: PropTypes.object
 }
+
 
 export default memo(RoomUser);

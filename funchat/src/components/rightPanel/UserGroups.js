@@ -1,10 +1,10 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import useRoomAxios from '../../hooks/useRoomAxios';
 import { PeoplesIcon } from '../../UI/Icons';
-import PropTypes from 'prop-types';
 import CircularLoading from '../../UI/loading/CircularLoading';
+import { useSelector } from 'react-redux';
 
-const UserGroups = ({ userId }) => {
+const UserGroups = () => {
 
     // states
     const [userGroupList, setUserGroupList] = useState([]);
@@ -12,16 +12,19 @@ const UserGroups = ({ userId }) => {
     // hooks
     const { getAction, loading } = useRoomAxios();
 
+    // redux-state
+    const { loggedUserInfo } = useSelector(state => state.userReducer);
+
     useEffect(() => {
-        if (userId) {
+        if (loggedUserInfo._id) {
             getUserGroupList();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [userId])
+    }, [])
 
     const getUserGroupList = async () => {
         try {
-            const { data, error } = await getAction(`/userGroups?userID=${userId}`);
+            const { data, error } = await getAction(`/userGroups?userID=${loggedUserInfo._id}`);
             if (error) throw new Error('Error while getting user group list');
             if (data.status === 'Success') {
                 setUserGroupList(prevList => {
@@ -71,9 +74,5 @@ const UserGroups = ({ userId }) => {
     )
 
 };
-
-UserGroups.propTypes = {
-    userId: PropTypes.string.isRequired
-}
 
 export default UserGroups;
