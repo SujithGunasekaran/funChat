@@ -27,22 +27,28 @@ passport.use(new GoogleStrategy({
         try {
             const user = await User.findOne({ userid: id, authType: 'Google' });
             if (user) {
-                await onlineUser.create({
-                    userid: user._id,
-                    username: user.username,
-                    profile: user.profile,
-                    statusType: 'online'
-                })
+                // const onlineUserList = await onlineUser.findOne({ userid: user._id });
+                // if (!onlineUserList) {
+                //     await onlineUser.create({
+                //         userid: user._id,
+                //         username: user.username,
+                //         profile: user.profile,
+                //         statusType: 'online'
+                //     })
+                // }
                 done(null, user);
             }
             if (!user) {
                 const newUser = new User({ userid: id, username, profile: photos[0].value, authType: 'Google' });
-                await onlineUser.create({
-                    userid: newUser._id,
-                    username: newUser.username,
-                    profile: user.profile,
-                    statusType: 'online'
-                })
+                // const onlineUserList = await onlineUser.findOne({ userid: newUser._id });
+                // if (!onlineUserList) {
+                //     await onlineUser.create({
+                //         userid: newUser._id,
+                //         username: newUser.username,
+                //         profile: user.profile,
+                //         statusType: 'online'
+                //     })
+                // }
                 const savedUser = await newUser.save();
                 done(null, savedUser);
             }

@@ -83,12 +83,13 @@ exports.authenticateUser = async (req, res) => {
                 profile: userInfo.profile
             })
         }
-        const loggedUserFollowingList = await UserFollowFollowing.findOne({ userid: userInfo._id }, { following: 1 });
+        const loggedUserFollowFollowingList = await UserFollowFollowing.findOne({ userid: userInfo._id }, { following: 1, follower: 2 });
         res.status(200).json({
             status: 'Success',
             data: {
                 userInfo,
-                followingList: loggedUserFollowingList?.following ?? [],
+                followerList: loggedUserFollowFollowingList?.follower ?? [],
+                followingList: loggedUserFollowFollowingList?.following ?? [],
                 isUserLoggedIn: true
             }
         })
