@@ -49,6 +49,38 @@
     font-family: var(--ff-san);
     color: var(--text-color-four);
 }
+.user_right_profile_follow_container
+{
+    padding: 13px 0px;
+    display: flex;
+    align-items: center;
+
+}
+.user_right_profile_item
+{
+    display: flex;
+    align-items: center;
+}
+.user_right_profile_item:nth-child(n + 2) {
+    margin-left: 10px;
+}
+.user_right_profile_follow_count
+{
+    font-family: var(--ff-san);
+    font-size: .930rem;
+    font-weight: 500;
+    letter-spacing: 0.010rem;
+    color: var(--text-color-four);
+}
+.user_right_profile_follow_name
+{
+    padding-left: 6px;
+    font-family: var(--ff-san);
+    font-size: .930rem;
+    font-weight: 500;
+    letter-spacing: 0.010rem;
+    color: var(--text-color-seven);
+}
 .user_right_profile_follow_btn
 {
     margin: 15px 0px;
