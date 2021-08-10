@@ -69,6 +69,10 @@ const MessageMiddle = (props) => {
 
 };
 
+MessageMiddle.defaultProps = {
+    groupInfo: {}
+}
+
 MessageMiddle.propTypes = {
     groupInfo: PropTypes.object,
     chatMessage: PropTypes.array.isRequired

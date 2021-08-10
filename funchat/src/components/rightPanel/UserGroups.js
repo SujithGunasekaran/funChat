@@ -1,10 +1,14 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState, lazy, Suspense } from 'react';
 import useRoomAxios from '../../hooks/useRoomAxios';
-import { PeoplesIcon } from '../../UI/Icons';
 import CircularLoading from '../../UI/loading/CircularLoading';
 import { useSelector } from 'react-redux';
 
-const UserGroups = () => {
+const GroupList = lazy(() => import('../../UI/groupsList/GroupList'));
+
+const UserGroups = (props) => {
+
+    // props
+    const { history } = props;
 
     // states
     const [userGroupList, setUserGroupList] = useState([]);
@@ -46,25 +50,12 @@ const UserGroups = () => {
             }
             {
                 userGroupList.length > 0 &&
-                userGroupList.map((groupInfo, index) => (
-                    <Fragment key={index}>
-                        <div className="home_right_user_group_item">
-                            <div className="home-right_user_group_header">
-                                <div className="home_right_user_group_name">{groupInfo.groupname}</div>
-                                <div className="home_right_user_group_count">
-                                    <PeoplesIcon cssClass={'icon'} />
-                                    <span className="count">
-                                        {groupInfo.users.length}
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        {
-                            index < (groupInfo.length - 1) &&
-                            <hr className="home_right_user_group_hr"></hr>
-                        }
-                    </Fragment>
-                ))
+                <Suspense fallback={<div></div>}>
+                    <GroupList
+                        userGroupList={userGroupList}
+                        history={history}
+                    />
+                </Suspense>
             }
             {
                 !loading && userGroupList.length === 0 &&

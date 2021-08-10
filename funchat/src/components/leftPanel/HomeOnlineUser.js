@@ -1,6 +1,7 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import useOnlineUserAxios from '../../hooks/useOnlineUserAxios';
 import io from 'socket.io-client';
+import PageLink from '../../UI/PageLink';
 
 let socket;
 
@@ -59,7 +60,9 @@ const HomeOnlineUser = () => {
                             <Fragment key={index}>
                                 <div className="home_left_panel_info_container">
                                     <img src={userInfo.profile} className="home_left_panel_info_profile" alt={userInfo.username} loading="lazy" />
-                                    <div className="home_left_panel_info_name">{userInfo.username}</div>
+                                    <PageLink pathname={`/user/${userInfo.userid}`}>
+                                        <div className="home_left_panel_info_name">{userInfo.username}</div>
+                                    </PageLink>
                                 </div>
                             </Fragment>
                         ))

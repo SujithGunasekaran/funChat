@@ -20,7 +20,7 @@ const UserBanner = (props) => {
 
     // hooks
     const { getAction } = useUserAxios();
-    const { postAction } = useFollowFollowingAxios();
+    const { postAction, loading } = useFollowFollowingAxios();
 
     // redux-state
     const { loggedUserInfo, loggedUserFollowingList } = useSelector(state => state.userReducer);
@@ -67,8 +67,6 @@ const UserBanner = (props) => {
         }
     }
 
-    console.log("user Banner render");
-
     return (
         <Fragment>
             <div className="user_banner_container">
@@ -79,9 +77,9 @@ const UserBanner = (props) => {
                         {
                             loggedUserInfo._id !== userID ?
                                 loggedUserFollowingList.has(userID) ?
-                                    <button className="user_banner_user_follow_btn" onClick={() => followUnfollowUser('unfollow')}>UnFollow</button>
+                                    <button disabled={loading} className="user_banner_user_follow_btn" onClick={() => followUnfollowUser('unfollow')}>{loading ? 'UnFollowing...' : 'UnFollow'}</button>
                                     :
-                                    <button className="user_banner_user_follow_btn" onClick={() => followUnfollowUser('follow')}>Follow</button>
+                                    <button disabled={loading} className="user_banner_user_follow_btn" onClick={() => followUnfollowUser('follow')}>{loading ? 'Following...' : 'Follow'}</button>
                                 : null
                         }
                         <div className="user_banner_sub_container">

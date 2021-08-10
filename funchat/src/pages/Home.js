@@ -43,7 +43,9 @@ const Home = (props) => {
                             <Suspense fallback={<div>Loading...</div>}>
                                 <Fragment>
                                     <div className="home_right_user_group_heading">Groups Your are In</div>
-                                    <UserGroups />
+                                    <UserGroups
+                                        history={props.history}
+                                    />
                                 </Fragment>
                             </Suspense>
                         </div>

@@ -11,7 +11,7 @@ const UserItem = (props) => {
     const { userInfo, visitorId, visitorPageType } = props;
 
     // hooks
-    const { postAction } = useFollowFollowingAxios();
+    const { postAction, loading } = useFollowFollowingAxios();
 
     // redux-state
     const { loggedUserFollowingList, loggedUserInfo } = useSelector(state => state.userReducer);
@@ -45,8 +45,8 @@ const UserItem = (props) => {
                 {
                     loggedUserInfo._id !== userInfo._id ?
                         loggedUserFollowingList.has(userInfo._id) ?
-                            <button className="user_profile_list_btn" onClick={() => followUnfollowUser(userInfo._id, 'unfollow')}>UnFollow</button> :
-                            <button className="user_profile_list_btn" onClick={() => followUnfollowUser(userInfo._id, 'follow')}>Follow</button>
+                            <button disabled={loading} className="user_profile_list_btn" onClick={() => followUnfollowUser(userInfo._id, 'unfollow')}>{loading ? 'UnFollowing...' : 'UnFollow'}</button> :
+                            <button disabled={loading} className="user_profile_list_btn" onClick={() => followUnfollowUser(userInfo._id, 'follow')}>{loading ? 'Following...' : 'Follow'}</button>
                         : null
                 }
 

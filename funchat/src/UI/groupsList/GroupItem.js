@@ -1,13 +1,12 @@
 import React, { Fragment } from 'react';
-import PropTypes from 'prop-types';
-import { PeoplesIcon } from '../../Icons';
-import useRoomAxios from '../../../hooks/useRoomAxios';
+import { PeoplesIcon } from '../Icons';
+import useRoomAxios from '../../hooks/useRoomAxios';
 import { useSelector } from 'react-redux';
-import { getCommaSeperatedName } from '../../../utils';
 
 const GroupItem = (props) => {
 
-    const { groupInfo, history } = props;
+    // props
+    const { history, groupInfo } = props;
 
     // hooks
     const { postAction, loading } = useRoomAxios();
@@ -34,25 +33,18 @@ const GroupItem = (props) => {
 
     return (
         <Fragment>
-            <div className="home_middle_room_card">
-                <div className="home_middle_room_card_header">
-                    <div className="home_middle_room_card_header_title" onClick={() => joinRoom(groupInfo._id)}>{loading ? 'Joining...' : groupInfo?.groupname ?? ''}</div>
-                    <div className="home_middle_room_card_count">
-                        <PeoplesIcon cssClass={'icon'} />
-                        <div className="count">{Array.isArray(groupInfo.users) ? groupInfo.users.length : 0}</div>
-                    </div>
+            <div className="home-right_user_group_header">
+                <div className="home_right_user_group_name" onClick={() => joinRoom(groupInfo._id)}>{loading ? 'Joining...' : groupInfo.groupname}</div>
+                <div className="home_right_user_group_count">
+                    <PeoplesIcon cssClass={'icon'} />
+                    <span className="count">
+                        {groupInfo.users.length}
+                    </span>
                 </div>
-                <div className="home_middle_room_card_user">{getCommaSeperatedName(groupInfo.users, 'username')}</div>
             </div>
         </Fragment>
-
     )
 
 };
-
-GroupItem.propTypes = {
-    groupInfo: PropTypes.object.isRequired
-}
-
 
 export default GroupItem;

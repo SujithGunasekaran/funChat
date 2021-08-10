@@ -63,7 +63,6 @@ const UserProfile = (props) => {
                         <div className="user_right_profile_follow_name">Following</div>
                     </div>
                 </div>
-                <button className="user_right_profile_follow_btn">Follow</button>
                 {
                     showLeaveButton &&
                     <Fragment>
