@@ -126,6 +126,10 @@
     display: flex;
     align-items: center;
 }
+.home_left_panel_info_container a
+{
+    text-decoration: none;
+}
 .home_left_panel_info_profile
 {
     width: 30px;
@@ -140,6 +144,12 @@
     font-weight: 500;
     letter-spacing: 0.010rem;
     color: var(--text-color-four);
+    transition: 0.4s all ease-in-out;
+}
+.home_left_panel_info_name:hover
+{
+    cursor: pointer;
+    color: var(--text-highlight);
 }
 
 /* home left panel */

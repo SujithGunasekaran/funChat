@@ -53,6 +53,12 @@
     font-size: 1.1rem;
     font-weight: 600;
     color: var(--text-color-three);
+    transition: 0.4s all ease-in-out;
+}
+.home_middle_room_card_header_title:hover
+{
+    color: var(--text-highlight);
+    cursor: pointer;
 }
 .home_middle_room_card_count
 {

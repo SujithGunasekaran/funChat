@@ -180,6 +180,12 @@
     letter-spacing: 0.010rem;
     text-overflow: ellipsis;
     overflow: hidden;
+    transition: 0.4s all ease-in-out;
+}
+.home_right_user_group_name:hover
+{
+    cursor: pointer;
+    color: var(--text-highlight);
 }
 .home_right_user_group_count
 {
