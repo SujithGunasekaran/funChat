@@ -138,6 +138,7 @@
 .message_middle_header_container
 {
     display: flex;
+    align-items: center;
 }
 .message_middle_header_heading
 {
@@ -161,6 +162,19 @@
     transition: 0.4s all ease-in-out;
 }
 .message_middle_delete_icon:hover
+{
+    cursor: pointer;
+    color: var(--text-highlight);
+}
+.message_middle_call_icon
+{
+    margin-right: 15px;
+    width: 16px;
+    height: 16px;
+    color: var(--text-color-six);
+    transition: 0.4s all ease-in-out;
+}
+.message_middle_call_icon:hover
 {
     cursor: pointer;
     color: var(--text-highlight);
@@ -335,5 +349,97 @@
 {
     outline: none;
 }
+
+.chat_room_call_container
+{
+    position: fixed;
+    right: 27px;
+    bottom: 10px;
+    padding: 20px 20px;
+    border-radius: 6px;
+    width: 320px;
+    opacity: 0;
+    background-color: var(--body-bg);
+}
+.chat_room_call_container.show
+{
+    opacity: 1;
+    transition: opacity 0.5s ease-in;
+}
+.chat_room_call_subhead
+{
+    padding: 10px 0px;
+    display: flex;
+    align-items: center;
+}
+.chat_room_call_user
+{
+    width: 190px;
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis; 
+    font-family: var(--ff-san);
+    font-size: .940rem;
+    letter-spacing: 0.010rem;
+    color: var(--text-color-four);
+}
+.chat_room_call_cancel
+{
+    margin-left: auto;
+    width: 13px;
+    height: 13px;
+    color: var(--text-color-seven);
+    transition: 0.4s all ease-in-out;
+}
+.chat_room_call_cancel:hover
+{
+    cursor: pointer;
+    color: var(--text-highlight);
+}
+.chat_room_call_footer_container
+{
+    margin: 15px 0px;
+    display: flex;
+    align-items: center;
+}
+.chat_room_call_join
+{
+    background-color: transparent;
+    padding: 8px 15px;
+    border-radius: 6px;
+    font-family: var(--ff-san);
+    font-size: .940rem;
+    font-weight: 500;
+    letter-spacing: 0.010rem;
+    color: var(--text-highlight);
+    border: 1px solid var(--info-alert-border);
+    transition: 0.4s all ease-in-out;
+}
+.chat_room_call_join:hover
+{
+    background-color: var(--btn-hightlight-bg);
+    color: var(--text-color-one);
+}
+.chat_room_call_cut
+{
+    margin-left: 9px;
+    padding: 8px 15px;
+    background-color: transparent;
+    border-radius: 6px;
+    font-family: var(--ff-san);
+    font-size: .940rem;
+    font-weight: 500;
+    letter-spacing: 0.010rem;
+    color: var(--error-alert-text);
+    border: 1px solid var(--error-alert-border);
+    transition: 0.4s all ease-in-out;
+}
+.chat_room_call_cut:hover
+{
+    cursor: pointer;
+    color: white;
+    background-color: var(--error-alert-text);
+}
+
 
 /* message middle panel */
