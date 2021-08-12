@@ -5,6 +5,7 @@ import io from 'socket.io-client';
 import { unstable_batchedUpdates } from 'react-dom';
 import { useSelector } from 'react-redux';
 import withAuth from '../../hoc/withAuth';
+import { CancelIcon, CallCancelIcon } from '../../UI/Icons';
 
 const Message = lazy(() => import('../../components/middlePanel/MessageMiddle'));
 const GroupUser = lazy(() => import('../../components/leftPanel/GroupUser'));
@@ -27,6 +28,7 @@ const ChatRoom = (props) => {
     const [groupInfo, setGroupInfo] = useState(null);
     const [chatMessage, setChatMessage] = useState([]);
     const [infoMessage, setInfoMessage] = useState(null);
+    const [callReceiving, setCallReceiving] = useState(null);
 
     // redux state
     const { loggedUserInfo } = useSelector(state => state.userReducer);
@@ -160,6 +162,12 @@ const ChatRoom = (props) => {
                 props.history.push('/home');
             }, 3000)
         })
+
+        socket.on('calling', response => {
+            if (response) {
+                setCallReceiving(response);
+            }
+        })
     }
 
 
@@ -224,6 +232,7 @@ const ChatRoom = (props) => {
                                     groupInfo={groupInfo}
                                     chatMessage={chatMessage}
                                     infoMessage={infoMessage}
+                                    history={props.history}
                                     handleDeleteGroup={deleteGroup}
                                 />
                             </Suspense>
@@ -251,6 +260,19 @@ const ChatRoom = (props) => {
                         </div>
                     </div>
                 </div>
+                {
+                    callReceiving &&
+                    <div className={`chat_room_call_container ${callReceiving && 'show'}`}>
+                        <div className="chat_room_call_subhead">
+                            <div className="chat_room_call_user">Group call started by {callReceiving.username}</div>
+                            <CancelIcon cssClass="chat_room_call_cancel" handleEvent={() => setCallReceiving(null)} />
+                        </div>
+                        <div className="chat_room_call_footer_container">
+                            <button className="chat_room_call_join">Join</button>
+                            <button className="chat_room_call_cut" onClick={() => setCallReceiving(null)}>Cancel</button>
+                        </div>
+                    </div>
+                }
             </div>
         </Fragment>
     )

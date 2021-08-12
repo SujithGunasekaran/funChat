@@ -2,7 +2,8 @@ import React, { Fragment, lazy, Suspense, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import io from 'socket.io-client';
 import { useSelector } from 'react-redux';
-import { DeleteIcon } from '../../UI/Icons';
+import { DeleteIcon, CallIcon } from '../../UI/Icons';
+import { v4 as uuidv4 } from 'uuid';
 
 const ChatForm = lazy(() => import('../../UI/form/chatForm'));
 const MessageList = lazy(() => import('../../UI/card/Message/MessageList'));
@@ -11,7 +12,7 @@ let socket;
 
 const MessageMiddle = (props) => {
 
-    const { chatMessage, groupInfo, handleDeleteGroup } = props;
+    const { chatMessage, groupInfo, handleDeleteGroup, history } = props;
 
 
     useEffect(() => {
@@ -33,12 +34,28 @@ const MessageMiddle = (props) => {
         }
     }
 
+    const handleGroupCall = () => {
+        let callID = uuidv4();
+        try {
+            socket.emit('groupCall', { groupName: groupInfo.groupname, callID, username: loggedUserInfo.username }, (err) => {
+                if (err) throw new Error('Error while calling');
+            });
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
+
 
     return (
         <Fragment>
             <div className="message_middle_header_container">
                 <div className="message_middle_header_heading">{groupInfo && groupInfo.groupname}</div>
                 <div className="message_middle_icon_container">
+                    <CallIcon
+                        cssClass="message_middle_call_icon"
+                        handleEvent={handleGroupCall}
+                    />
                     {
                         groupInfo &&
                         groupInfo.groupadmin === loggedUserInfo._id &&
