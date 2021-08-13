@@ -35,15 +35,7 @@ const MessageMiddle = (props) => {
     }
 
     const handleGroupCall = () => {
-        let callID = uuidv4();
-        try {
-            socket.emit('groupCall', { groupName: groupInfo.groupname, callID, username: loggedUserInfo.username }, (err) => {
-                if (err) throw new Error('Error while calling');
-            });
-        }
-        catch (err) {
-            console.log(err);
-        }
+        history.push(`/group/${groupInfo.groupname}/caller/call`)
     }
 
 

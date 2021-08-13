@@ -23,7 +23,7 @@ const Routes = () => {
                         <Route path='/logout' exact component={Logout} />
                         <Route path='/group/:groupID' exact component={ChatRoom} />
                         <Route path='/user/:userID' exact component={UserProfile} />
-                        <Route path="/group/:groupID/call" exact component={GroupCall} />
+                        <Route path="/group/:groupName/:type/call" exact component={GroupCall} />
                     </Suspense>
                 </Switch>
             </div>

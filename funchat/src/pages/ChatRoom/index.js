@@ -191,6 +191,9 @@ const ChatRoom = (props) => {
         }
     }
 
+    const joinCall = () => {
+        props.history.push(`/group/${groupInfo.groupname}/joiner/call`);
+    }
 
 
     // UI
@@ -268,7 +271,7 @@ const ChatRoom = (props) => {
                             <CancelIcon cssClass="chat_room_call_cancel" handleEvent={() => setCallReceiving(null)} />
                         </div>
                         <div className="chat_room_call_footer_container">
-                            <button className="chat_room_call_join">Join</button>
+                            <button className="chat_room_call_join" onClick={() => joinCall()}>Join</button>
                             <button className="chat_room_call_cut" onClick={() => setCallReceiving(null)}>Cancel</button>
                         </div>
                     </div>
