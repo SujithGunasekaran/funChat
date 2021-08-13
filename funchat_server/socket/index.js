@@ -70,15 +70,23 @@ exports.connectSocket = (app, corsOptions) => {
             }
         })
 
-        socket.on('groupCall', ({ groupName, callID, username }, callback) => {
+        // socket.emit('joinCall', ({ signalData, username }) => {
+        //     io.to(username).emit('joined', { signalData, username })
+        // })
+
+        socket.on('groupCall', ({ signalData, groupName, callID, username }, callback) => {
             try {
-                socket.broadcast.to(groupName).emit('calling', { groupName, callID, username });
+                socket.broadcast.to(groupName).emit('calling', { signalData, groupName, callID, username });
                 callback(null);
             }
             catch (err) {
                 callback(err);
             }
         })
+
+        socket.on("answerCall", ({ signal, to }) => {
+            socket.to(to).emit("callAccepted", signal)
+        });
 
     })
 }
