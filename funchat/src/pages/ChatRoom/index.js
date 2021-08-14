@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import withAuth from '../../hoc/withAuth';
 import { CancelIcon, CallCancelIcon } from '../../UI/Icons';
 
+
 const Message = lazy(() => import('../../components/middlePanel/MessageMiddle'));
 const GroupUser = lazy(() => import('../../components/leftPanel/GroupUser'));
 const GroupInfo = lazy(() => import('../../components/rightPanel/GroupInfo'));
@@ -192,7 +193,15 @@ const ChatRoom = (props) => {
     }
 
     const joinCall = () => {
-        props.history.push(`/group/${groupInfo.groupname}/joiner/call`);
+        try {
+            socket.emit('callAccepted', { callID: callReceiving.callID, groupName: groupInfo.groupname, userName: loggedUserInfo.username }, (err) => {
+                if (err) throw new Error('Error while adding');
+            })
+            props.history.push(`/group/${groupInfo.groupname}/call/${callReceiving.callID}`);
+        }
+        catch (err) {
+            console.log(err);
+        }
     }
 
 
@@ -267,7 +276,7 @@ const ChatRoom = (props) => {
                     callReceiving &&
                     <div className={`chat_room_call_container ${callReceiving && 'show'}`}>
                         <div className="chat_room_call_subhead">
-                            <div className="chat_room_call_user">Group call started by {callReceiving.username}</div>
+                            <div className="chat_room_call_user">Group call started by {callReceiving.userName}</div>
                             <CancelIcon cssClass="chat_room_call_cancel" handleEvent={() => setCallReceiving(null)} />
                         </div>
                         <div className="chat_room_call_footer_container">
