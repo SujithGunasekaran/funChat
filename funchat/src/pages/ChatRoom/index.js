@@ -193,15 +193,15 @@ const ChatRoom = (props) => {
     }
 
     const joinCall = () => {
-        try {
-            socket.emit('callAccepted', { callID: callReceiving.callID, groupName: groupInfo.groupname, userName: loggedUserInfo.username }, (err) => {
-                if (err) throw new Error('Error while adding');
-            })
-            props.history.push(`/group/${groupInfo.groupname}/call/${callReceiving.callID}`);
-        }
-        catch (err) {
-            console.log(err);
-        }
+        // try {
+        //     socket.emit('callAccepted', { callID: callReceiving.callID, groupName: groupInfo.groupname, userName: loggedUserInfo.username }, (err) => {
+        //         if (err) throw new Error('Error while adding');
+        //     })
+        props.history.push(`/group/${groupInfo.groupname}/call/${callReceiving.callID}`);
+        // }
+        // catch (err) {
+        //     console.log(err);
+        // }
     }
 
 

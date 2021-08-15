@@ -15,7 +15,7 @@ const GroupCall = (props) => {
 
     // props
     const { match: { params } } = props;
-    const { groupName, type } = params;
+    const { groupName, callID } = params;
 
     // ref
     const myVideo = useRef();
@@ -23,11 +23,20 @@ const GroupCall = (props) => {
     // redux-state
     const { loggedUserInfo } = useSelector(state => state.userReducer);
 
+
     // useEffect
     useEffect(() => {
 
         socket = io('localhost:5000');
         getVideo();
+        try {
+            socket.emit('joinGroupCall', { callID, username: loggedUserInfo.username }, (err) => {
+                if (err) throw new Error('Error while joining roomm');
+            });
+        }
+        catch (err) {
+            console.log(err);
+        }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
@@ -49,9 +58,7 @@ const GroupCall = (props) => {
                         addVideoStream(myVideo, userVideoStream)
                     })
                 })
-
-                socket.on('user-connected', ({ userName }) => {
-                    console.log("user connected", userName);
+                socket.on('userConnected', ({ userName }) => {
                     connectToNewUser(userName, stream)
                 })
 
@@ -81,14 +88,16 @@ const GroupCall = (props) => {
 
         setPeers(prevValue => {
             let peers = JSON.parse(JSON.stringify(prevValue));
-            peers[userName] = call;
+            peers[userName] = "hello";
             return peers;
         })
     }
 
+
     return (
         <Fragment>
             Group Call
+            {/* <div style={styles.video_grid} id="video-grid"></div> */}
         </Fragment>
     )
 

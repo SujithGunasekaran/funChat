@@ -70,11 +70,10 @@ exports.connectSocket = (app, corsOptions) => {
             }
         })
 
-        socket.on('groupCall', ({ callID, groupName, userName }, callback) => {
+        socket.on('joinGroupCall', ({ callID, username }, callback) => {
             try {
                 socket.join(callID);
-                socket.broadcast.to(groupName).emit('calling', { groupName, callID, userName });
-                socket.broadcast.to(callID).emit('user-connected', { userName });
+                socket.broadcast.to(callID).emit('userConnected', { userName: username });
                 callback(null);
             }
             catch (err) {
@@ -82,16 +81,27 @@ exports.connectSocket = (app, corsOptions) => {
             }
         })
 
-
-        socket.on('callAccepted', ({ callID, groupName, userName }, callback) => {
+        socket.on('groupCall', ({ callID, groupName, userName }, callback) => {
             try {
-                socket.broadcast.to(groupName).emit('user-connected', { userName });
+                socket.broadcast.to(groupName).emit('calling', { groupName, callID, userName });
                 callback(null);
             }
             catch (err) {
                 callback(err);
             }
         })
+
+
+        // socket.on('callAccepted', ({ callID, groupName, userName }, callback) => {
+        //     try {
+        //         socket.join(callID);
+        //         io.to(callID).emit('userConnected', { userName });
+        //         callback(null);
+        //     }
+        //     catch (err) {
+        //         callback(err);
+        //     }
+        // })
 
     })
 }
