@@ -70,27 +70,40 @@ exports.connectSocket = (app, corsOptions) => {
             }
         })
 
-        socket.on('joinGroupCall', ({ callID, username }, callback) => {
+        // socket.on('joinGroupCall', ({ callID, username }, callback) => {
+        //     try {
+        //         socket.join(callID);
+        //         socket.broadcast.to(callID).emit('userConnected', { userName: username });
+        //         callback(null);
+        //     }
+        //     catch (err) {
+        //         callback(err);
+        //     }
+        // })
+
+        socket.on('groupCall', ({ groupToCall, signalData, fromUser, callID }, callback) => {
+            try {
+                socket.broadcast.to(groupToCall).emit('calling', { groupToCall, signalData, fromUser, callID });
+                callback(null);
+            }
+            catch (err) {
+                callback(err);
+            }
+        })
+
+        socket.on("answerCall", ({ signal, to }) => {
+            io.to(to).emit("callAccepted", signal)
+        });
+
+        socket.on('joinCall', ({ callID }, callback) => {
             try {
                 socket.join(callID);
-                socket.broadcast.to(callID).emit('userConnected', { userName: username });
                 callback(null);
             }
             catch (err) {
                 callback(err);
             }
         })
-
-        socket.on('groupCall', ({ callID, groupName, userName }, callback) => {
-            try {
-                socket.broadcast.to(groupName).emit('calling', { groupName, callID, userName });
-                callback(null);
-            }
-            catch (err) {
-                callback(err);
-            }
-        })
-
 
         // socket.on('callAccepted', ({ callID, groupName, userName }, callback) => {
         //     try {

@@ -3,10 +3,9 @@ import useRoomAxios from '../../hooks/useRoomAxios';
 import { withRouter } from 'react-router-dom';
 import io from 'socket.io-client';
 import { unstable_batchedUpdates } from 'react-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import withAuth from '../../hoc/withAuth';
 import { CancelIcon, CallCancelIcon } from '../../UI/Icons';
-
 
 const Message = lazy(() => import('../../components/middlePanel/MessageMiddle'));
 const GroupUser = lazy(() => import('../../components/leftPanel/GroupUser'));
@@ -29,10 +28,13 @@ const ChatRoom = (props) => {
     const [groupInfo, setGroupInfo] = useState(null);
     const [chatMessage, setChatMessage] = useState([]);
     const [infoMessage, setInfoMessage] = useState(null);
-    const [callReceiving, setCallReceiving] = useState(null);
 
     // redux state
     const { loggedUserInfo } = useSelector(state => state.userReducer);
+    const { receivingCallInfo } = useSelector(state => state.userVideoReducer);
+
+    // redux-dispatch
+    const dispatch = useDispatch();
 
     useEffect(() => {
         socket = io('localhost:5000');
@@ -166,7 +168,10 @@ const ChatRoom = (props) => {
 
         socket.on('calling', response => {
             if (response) {
-                setCallReceiving(response);
+                dispatch({
+                    type: 'SET_RECEIVING_CALL_INFO',
+                    info: response
+                });
             }
         })
     }
@@ -193,15 +198,7 @@ const ChatRoom = (props) => {
     }
 
     const joinCall = () => {
-        // try {
-        //     socket.emit('callAccepted', { callID: callReceiving.callID, groupName: groupInfo.groupname, userName: loggedUserInfo.username }, (err) => {
-        //         if (err) throw new Error('Error while adding');
-        //     })
-        props.history.push(`/group/${groupInfo.groupname}/call/${callReceiving.callID}`);
-        // }
-        // catch (err) {
-        //     console.log(err);
-        // }
+        props.history.push(`/group/${groupInfo.groupname}/call/listener/${receivingCallInfo.callID}`);
     }
 
 
@@ -273,15 +270,15 @@ const ChatRoom = (props) => {
                     </div>
                 </div>
                 {
-                    callReceiving &&
-                    <div className={`chat_room_call_container ${callReceiving && 'show'}`}>
+                    receivingCallInfo &&
+                    <div className={`chat_room_call_container ${receivingCallInfo && 'show'}`}>
                         <div className="chat_room_call_subhead">
-                            <div className="chat_room_call_user">Group call started by {callReceiving.userName}</div>
-                            <CancelIcon cssClass="chat_room_call_cancel" handleEvent={() => setCallReceiving(null)} />
+                            <div className="chat_room_call_user">Group call started by {receivingCallInfo.fromUser}</div>
+                            <CancelIcon cssClass="chat_room_call_cancel" handleEvent={() => dispatch({ type: 'SET_RECEIVING_CALL_INFO', info: null })} />
                         </div>
                         <div className="chat_room_call_footer_container">
                             <button className="chat_room_call_join" onClick={() => joinCall()}>Join</button>
-                            <button className="chat_room_call_cut" onClick={() => setCallReceiving(null)}>Cancel</button>
+                            <button className="chat_room_call_cut" onClick={() => dispatch({ type: 'SET_RECEIVING_CALL_INFO', info: null })}>Cancel</button>
                         </div>
                     </div>
                 }
