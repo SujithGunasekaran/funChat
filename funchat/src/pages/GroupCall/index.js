@@ -1,158 +1,159 @@
-import React, { Fragment, useEffect, useState, useRef } from 'react';
-import Peer from 'simple-peer';
-import io from 'socket.io-client';
-import { withRouter } from 'react-router-dom';
+import React, { useEffect, useRef, useState, Fragment } from "react";
+import io from "socket.io-client";
+import Peer from "simple-peer";
 import { useSelector } from 'react-redux';
-import { Grid, Typography, Paper, makeStyles } from '@material-ui/core';
+import UserVideos from '../../components/video/UserVideo';
 
 
-const useStyles = makeStyles((theme) => ({
-    video: {
-        width: '550px',
-        [theme.breakpoints.down('xs')]: {
-            width: '300px',
-        },
-    },
-    gridContainer: {
-        justifyContent: 'center',
-        [theme.breakpoints.down('xs')]: {
-            flexDirection: 'column',
-        },
-    },
-    paper: {
-        padding: '10px',
-        border: '2px solid black',
-        margin: '10px',
-    },
-}));
-
-
-let socket;
+let socket = io('localhost:5000');
 
 const GroupCall = (props) => {
 
-    // props
-    const { match: { params } } = props;
-    const { groupName, type, callID } = params;
-
-    // state
-    const [callAccepted, setCallAccepted] = useState(false);
-    const [callEnded, setCallEnded] = useState(false);
-    const [stream, setStream] = useState();
-    const [name, setName] = useState('');
-    // const [call, setCall] = useState({});
-    // const [me, setMe] = useState('');
+    // states
+    const [peers, setPeers] = useState([]);
+    const [users, setUsers] = useState([]);
 
     // ref
-    const myVideo = useRef();
     const userVideo = useRef();
-    const connectionRef = useRef();
+    const peersRef = useRef([]);
 
     // redux-state
     const { loggedUserInfo } = useSelector(state => state.userReducer);
-    const { receivingCallInfo } = useSelector(state => state.userVideoReducer);
 
+    const { match: { params } } = props;
+    const { callID } = params;
 
+    // useEffect
     useEffect(() => {
-        socket = io('localhost:5000');
-        navigator.mediaDevices.getUserMedia({ video: true, audio: true })
-            .then((currentStream) => {
-                setStream(currentStream);
-                myVideo.current.srcObject = currentStream;
-            });
-
-        try {
-            socket.emit('join-call', { callID }, (err) => {
-                if (err) throw new Error('errow while joining');
-            })
-        }
-        catch (err) {
-            console.log(err);
-        }
-
-        if (type === 'caller') {
-            callUser();
-        }
-
-        if (type === 'listener') {
-            answerCall();
-        }
-
+        getVideo();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
 
-    const answerCall = () => {
+    const getVideo = () => {
 
-        setCallAccepted(true);
+        navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+            .then(stream => {
+                userVideo.current.srcObject = stream;
+                updateUserList();
+                socket.emit('joinRoom', { callID, userInfo: { ...loggedUserInfo, socketID: socket.id } });
 
-        const peer = new Peer({ initiator: false, trickle: false, stream });
-
-        peer.on('signal', (data) => {
-            socket.emit('answerCall', { signal: data, to: callID });
-        });
-
-        peer.on('stream', stream => {
-            console.log("stream", stream);
-        })
-
-        peer.signal(receivingCallInfo.signalData);
-
-        connectionRef.current = peer;
-    };
-
-    const callUser = () => {
-        const peer = new Peer({ initiator: true, trickle: false, stream });
-
-        peer.on('signal', (data) => {
-            try {
-                socket.emit('groupCall', { groupToCall: groupName, signalData: data, fromUser: loggedUserInfo.username, callID }, (err) => {
-                    if (err) throw new Error("Error while connecting");
+                socket.on("joinedUserInfo", userInfo => {
+                    updateJoinedUserInfo(userInfo, stream);
                 });
-            }
-            catch (err) {
-                console.log(err);
-            }
-        });
 
-        peer.on('stream', stream => {
-            console.log("stream", stream);
+                socket.on('userList', users => {
+                    setUsers(users);
+                });
+
+                socket.on("userJoined", ({ signal, callerID }) => {
+                    const peer = addPeer(signal, callerID, stream);
+                    peersRef.current.push({
+                        peerID: callerID,
+                        peer,
+                    })
+                    setPeers(users => [...users, peer]);
+                });
+
+                socket.on("receivingReturnedSignal", ({ signal, id }) => {
+                    const item = peersRef.current.find(peer => peer.peerID === id);
+                    item.peer.signal(signal);
+                });
+            })
+
+    }
+
+    const updateJoinedUserInfo = (userInfo, stream) => {
+        const peers = [];
+        let userData = [
+            ...users,
+            userInfo
+        ]
+        userData.forEach(user => {
+            const peer = createPeer(user.socketID, socket.id, stream);
+            peersRef.current.push({
+                peerID: user.socketID,
+                peer,
+            })
+            peers.push(peer);
+        });
+        setUsers(prevUsers => {
+            let users = JSON.parse(JSON.stringify(prevUsers));
+            users = [
+                ...users,
+                userInfo
+            ];
+            socket.emit('updateUserList', { users, callID });
+            return users;
+        });
+        setPeers(peers);
+    }
+
+    const updateUserList = () => {
+        setUsers(prevUsers => {
+            let users = JSON.parse(JSON.stringify(prevUsers));
+            const userData = {
+                ...loggedUserInfo,
+                socketID: socket.id
+            }
+            users = [
+                userData
+            ];
+            return users;
         })
+    }
 
-        socket.on('callAccepted', (signal) => {
-            setCallAccepted(true);
-            peer.signal(signal);
+    const createPeer = (userToSignal, callerID, stream) => {
+        const peer = new Peer({
+            initiator: true,
+            trickle: false,
+            stream,
         });
+        peer.on("signal", signal => {
+            socket.emit("sendingSignal", { userToSignal, callerID, signal })
+        })
+        return peer;
+    }
 
-        connectionRef.current = peer;
-    };
-
-    const classes = useStyles();
+    const addPeer = (incomingSignal, callerID, stream) => {
+        const peer = new Peer({
+            initiator: false,
+            trickle: false,
+            stream,
+        })
+        peer.on("signal", signal => {
+            socket.emit("returningSignal", { signal, callerID })
+        })
+        peer.signal(incomingSignal);
+        return peer;
+    }
 
     return (
-        <Fragment>
-            <Grid container className={classes.gridContainer}>
-                {stream && (
-                    <Paper className={classes.paper}>
-                        <Grid item xs={12} md={6}>
-                            <Typography variant="h5" gutterBottom>{name || 'Name'}</Typography>
-                            <video playsInline muted ref={myVideo} autoPlay className={classes.video} />
-                        </Grid>
-                    </Paper>
-                )}
-                {callAccepted && !callEnded && (
-                    <Paper className={classes.paper}>
-                        <Grid item xs={12} md={6}>
-                            <Typography variant="h5" gutterBottom>{'Name'}</Typography>
-                            <video playsInline ref={userVideo} autoPlay className={classes.video} />
-                        </Grid>
-                    </Paper>
-                )}
-            </Grid>
-        </Fragment>
-    )
-
+        <div style={styles.container}>
+            <video style={{ width: '40%', height: '50%' }} muted ref={userVideo} autoPlay playsInline />
+            {
+                peers.map((peer, index) => {
+                    return (
+                        <Fragment key={index}>
+                            <UserVideos userPeers={peer} />
+                        </Fragment>
+                    );
+                })
+            }
+        </div>
+    );
 };
 
 
-export default withRouter(GroupCall);
+const styles = {
+    container: {
+        padding: '20px',
+        display: 'flex',
+        height: '100vh',
+        width: '90%',
+        margin: 'auto',
+        flexWrap: 'wrap',
+    }
+}
+
+export default GroupCall;
