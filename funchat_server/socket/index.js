@@ -1,6 +1,5 @@
 const socketio = require('socket.io');
 
-
 exports.connectSocket = (app, corsOptions) => {
 
     const io = socketio(app, corsOptions);
@@ -70,34 +69,12 @@ exports.connectSocket = (app, corsOptions) => {
             }
         })
 
-        // socket.on('joinGroupCall', ({ callID, username }, callback) => {
-        //     try {
-        //         socket.join(callID);
-        //         socket.broadcast.to(callID).emit('userConnected', { userName: username });
-        //         callback(null);
-        //     }
-        //     catch (err) {
-        //         callback(err);
-        //     }
-        // })
+        // video call information 
 
-        socket.on('groupCall', ({ groupToCall, signalData, fromUser, callID }, callback) => {
-            try {
-                socket.broadcast.to(groupToCall).emit('calling', { groupToCall, signalData, fromUser, callID });
-                callback(null);
-            }
-            catch (err) {
-                callback(err);
-            }
-        })
-
-        socket.on("answerCall", ({ signal, to }) => {
-            io.to(to).emit("callAccepted", signal)
-        });
-
-        socket.on('joinCall', ({ callID }, callback) => {
+        socket.on('groupCall', ({ callID, groupName, userName }, callback) => {
             try {
                 socket.join(callID);
+                socket.broadcast.to(groupName).emit('calling', { callID, groupName, userName });
                 callback(null);
             }
             catch (err) {
@@ -105,16 +82,31 @@ exports.connectSocket = (app, corsOptions) => {
             }
         })
 
-        // socket.on('callAccepted', ({ callID, groupName, userName }, callback) => {
-        //     try {
-        //         socket.join(callID);
-        //         io.to(callID).emit('userConnected', { userName });
-        //         callback(null);
-        //     }
-        //     catch (err) {
-        //         callback(err);
-        //     }
-        // })
+        socket.on("answerCall", ({ to, userInfo }) => {
+            socket.join(to);
+            io.to(to).emit("callAccepted", { userInfo });
+        });
+
+        socket.on('updateUserList', ({ users, callID }) => {
+            socket.broadcast.to(callID).emit('userList', users);
+        })
+
+        socket.on("joinRoom", ({ callID, userInfo }) => {
+            socket.join(callID);
+            socket.broadcast.to(callID).emit("joinedUserInfo", userInfo);
+        });
+
+        socket.on("sendingSignal", ({ userToSignal, signal, callerID }) => {
+            io.to(userToSignal).emit('userJoined', { signal, callerID });
+        });
+
+        socket.on("returningSignal", payload => {
+            io.to(payload.callerID).emit('receivingReturnedSignal', { signal: payload.signal, id: socket.id });
+        });
+
+        socket.on('disconnect', () => {
+            console.log("disconnect");
+        });
 
     })
 }
