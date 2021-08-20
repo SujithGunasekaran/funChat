@@ -3,7 +3,7 @@ import io from "socket.io-client";
 import Peer from "simple-peer";
 import { useSelector } from 'react-redux';
 import UserVideos from '../../components/video/UserVideo';
-
+import { MicIcon, VideoIcon } from '../../UI/Icons';
 
 let socket = io('localhost:5000');
 
@@ -21,7 +21,7 @@ const GroupCall = (props) => {
     const { loggedUserInfo } = useSelector(state => state.userReducer);
 
     const { match: { params } } = props;
-    const { callID } = params;
+    const { callID, groupName } = params;
 
     // useEffect
     useEffect(() => {
@@ -52,7 +52,7 @@ const GroupCall = (props) => {
                         peerID: callerID,
                         peer,
                     })
-                    setPeers(users => [...users, peer]);
+                    setPeers(peers => [...peers, peer]);
                 });
 
                 socket.on("receivingReturnedSignal", ({ signal, id }) => {
@@ -129,31 +129,52 @@ const GroupCall = (props) => {
     }
 
     return (
-        <div style={styles.container}>
-            <video style={{ width: '40%', height: '50%' }} muted ref={userVideo} autoPlay playsInline />
-            {
-                peers.map((peer, index) => {
-                    return (
-                        <Fragment key={index}>
-                            <UserVideos userPeers={peer} />
-                        </Fragment>
-                    );
-                })
-            }
-        </div>
+        <Fragment>
+            <div className="container-fluid">
+                <div className="row">
+                    <div className="col-md-12">
+                        <div className="group_call_header_container">
+                            <div className="group_call_header_name">{groupName} Group Call</div>
+                        </div>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-md-12">
+                        <div className="group_call_video_container">
+                            <div className="row">
+                                <div className="col-md-4">
+                                    <div className="group_call_video_body">
+                                        <video className="group_call_video_item" muted ref={userVideo} autoPlay playsInline />
+                                        <div className="group_call_video_footer">
+                                            <div className="group_call_user_info_container">
+                                                <img src={loggedUserInfo.profile} className="profile" loading="lazy" alt={loggedUserInfo.username} />
+                                                <div className="name">{loggedUserInfo.username}</div>
+                                                <div className="group_call_user_option_container">
+                                                    <MicIcon cssClass="grop_call_user_option_mic" />
+                                                    <VideoIcon cssClass="grop_call_user_option_video" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {
+                                    peers.map((peer, index) => {
+                                        return (
+                                            <Fragment key={index}>
+                                                <div className="col-md-4">
+                                                    <UserVideos userPeers={peer} />
+                                                </div>
+                                            </Fragment>
+                                        );
+                                    })
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </Fragment>
     );
 };
-
-
-const styles = {
-    container: {
-        padding: '20px',
-        display: 'flex',
-        height: '100vh',
-        width: '90%',
-        margin: 'auto',
-        flexWrap: 'wrap',
-    }
-}
 
 export default GroupCall;

@@ -9,6 +9,7 @@ import './css/middlePanel.css';
 import './css/rightPanel.css';
 import './css/leftPanel.css';
 import './css/userProfile.css';
+import './css/groupCall.css';
 
 const App = () => {
 

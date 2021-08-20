@@ -18,7 +18,7 @@ const UserVideos = (props) => {
 
     return (
         <Fragment>
-            <video style={{ width: '40%', height: '50%' }} playsInline autoPlay ref={ref} />
+            <video className="group_call_video_item" playsInline autoPlay ref={ref} />
         </Fragment>
     );
 }
