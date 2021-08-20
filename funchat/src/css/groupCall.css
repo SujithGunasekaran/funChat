@@ -1,0 +1,81 @@
+.group_call_header_container
+{
+    padding: 5px 0px;
+}
+.group_call_header_name
+{
+    padding: 0px 0px 15px 0px;
+    font-family: var(--ff-san);
+    font-size: 1.4rem;
+    letter-spacing: 0.010rem;
+    font-weight: 700;
+    color: var(--text-color-four);
+}
+.group_call_video_container
+{
+    margin: 15px 0px 15px 0px;
+}
+.group_call_video_item
+{
+    width: 100%;
+    border-radius: 6px 6px 0px 0px;
+}
+.group_call_video_body
+{
+    padding: 0px 0px 5px 0px;
+    border-radius: 0px 0px 6px 6px;
+    background-color: var(--box-bg);
+}
+.group_call_video_footer
+{
+    padding: 15px 10px;
+}
+.group_call_user_info_container
+{
+    display: flex;
+    align-items: center;
+}
+.group_call_user_info_container > .profile
+{
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+.group_call_user_info_container > .name
+{
+    padding-left: 8px;
+    font-size: .9rem;
+    font-weight: 500;
+    letter-spacing: 0.010rem;
+    color: var(--text-color-four);
+    font-family: var(--ff-san);
+}
+.group_call_user_option_container
+{
+    margin-left: auto;
+}
+.grop_call_user_option_mic
+{
+    margin-right: 12px;
+    width: 20px;
+    height: 20px;
+    color: var(--text-color-seven);
+    transition: 0.4s all ease-in-out;
+}
+.grop_call_user_option_mic:hover
+{
+    cursor: pointer;
+    color: var(--text-highlight);
+}
+.grop_call_user_option_video
+{
+    width: 20px;
+    height: 20px;
+    color: var(--text-color-seven);
+    transition: 0.4s all ease-in-out;
+}
+.grop_call_user_option_video:hover
+{
+    cursor: pointer;
+    color: var(--text-highlight);
+}
