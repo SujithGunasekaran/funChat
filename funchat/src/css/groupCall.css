@@ -35,6 +35,13 @@
     display: flex;
     align-items: center;
 }
+.group_call_video_profile
+{
+    margin-top : 20px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
 .group_call_user_info_container > .profile
 {
     width: 30px;
@@ -54,7 +61,7 @@
 {
     margin-left: auto;
 }
-.grop_call_user_option_mic
+.group_call_user_option_mic
 {
     margin-right: 12px;
     width: 20px;
@@ -62,19 +69,19 @@
     color: var(--text-color-seven);
     transition: 0.4s all ease-in-out;
 }
-.grop_call_user_option_mic:hover
+.group_call_user_option_mic:hover
 {
     cursor: pointer;
     color: var(--text-highlight);
 }
-.grop_call_user_option_video
+.group_call_user_option_video
 {
     width: 20px;
     height: 20px;
     color: var(--text-color-seven);
     transition: 0.4s all ease-in-out;
 }
-.grop_call_user_option_video:hover
+.group_call_user_option_video:hover
 {
     cursor: pointer;
     color: var(--text-highlight);
