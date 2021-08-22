@@ -1,9 +1,10 @@
-import React, { useEffect, useRef, useState, Fragment } from "react";
+import React, { useEffect, useRef, useState, Fragment, lazy, Suspense } from "react";
 import io from "socket.io-client";
 import Peer from "simple-peer";
 import { useSelector } from 'react-redux';
 import UserVideos from '../../components/video/UserVideo';
-import { MicIcon, VideoIcon } from '../../UI/Icons';
+
+const LoggedUserVideo = lazy(() => import('../../components/video/LoggedUserVideo'));
 
 let socket = io('localhost:5000');
 
@@ -143,26 +144,20 @@ const GroupCall = (props) => {
                         <div className="group_call_video_container">
                             <div className="row">
                                 <div className="col-md-4">
-                                    <div className="group_call_video_body">
-                                        <video className="group_call_video_item" muted ref={userVideo} autoPlay playsInline />
-                                        <div className="group_call_video_footer">
-                                            <div className="group_call_user_info_container">
-                                                <img src={loggedUserInfo.profile} className="profile" loading="lazy" alt={loggedUserInfo.username} />
-                                                <div className="name">{loggedUserInfo.username}</div>
-                                                <div className="group_call_user_option_container">
-                                                    <MicIcon cssClass="grop_call_user_option_mic" />
-                                                    <VideoIcon cssClass="grop_call_user_option_video" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <Suspense fallback={<div>Loading...</div>}>
+                                        <LoggedUserVideo
+                                            ref={userVideo}
+                                        />
+                                    </Suspense>
                                 </div>
                                 {
                                     peers.map((peer, index) => {
                                         return (
                                             <Fragment key={index}>
                                                 <div className="col-md-4">
-                                                    <UserVideos userPeers={peer} />
+                                                    <UserVideos
+                                                        userPeers={peer}
+                                                    />
                                                 </div>
                                             </Fragment>
                                         );
