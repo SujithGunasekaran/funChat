@@ -1,12 +1,10 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, forwardRef } from 'react';
 import { useSelector } from 'react-redux';
 import { MicIcon, VideoIcon, MutedMicIcon, VideoOff } from '../../UI/Icons';
 
 
-const LoggedUserVideo = (props) => {
+const LoggedUserVideo = forwardRef((props, ref) => {
 
-    // props
-    const { userVideo } = props;
 
     // state
     const [isVideoMuted, setIsVideoMuted] = useState(true);
@@ -15,13 +13,25 @@ const LoggedUserVideo = (props) => {
     // redux-state
     const { loggedUserInfo } = useSelector(state => state.userReducer);
 
+    const handleVideo = (input) => {
+        const userVideoElement = document.querySelector('#loggedUser_video');
+        if (input === 'stop') {
+            setIsVideoPaused(true);
+            userVideoElement.pause();
+        }
+        else {
+            setIsVideoPaused(false);
+            userVideoElement.play();
+        }
+    }
+
     return (
         <Fragment>
             <div className="group_call_video_body">
                 {
-                    isVideoPaused ?
-                        <img className="group_call_video_profile" src={loggedUserInfo.profile} loading="lazy" alt={loggedUserInfo.username} /> :
-                        <video className="group_call_video_item" muted={isVideoMuted} ref={userVideo} autoPlay playsInline />
+                    // isVideoPaused ?
+                    // <img className="group_call_video_profile" src={loggedUserInfo.profile} loading="lazy" alt={loggedUserInfo.username} /> :
+                    <video className="group_call_video_item" muted={isVideoMuted} ref={ref} autoPlay playsInline id="loggedUser_video" />
                 }
                 <div className="group_call_video_footer">
                     <div className="group_call_user_info_container">
@@ -35,8 +45,8 @@ const LoggedUserVideo = (props) => {
                             }
                             {
                                 isVideoPaused ?
-                                    <VideoOff cssClass="group_call_user_option_video" handleEvent={() => setIsVideoPaused(false)} /> :
-                                    <VideoIcon cssClass="group_call_user_option_video" handleEvent={() => setIsVideoPaused(true)} />
+                                    <VideoOff cssClass="group_call_user_option_video" handleEvent={() => handleVideo('start')} /> :
+                                    <VideoIcon cssClass="group_call_user_option_video" handleEvent={() => handleVideo('stop')} />
                             }
                         </div>
                     </div>
@@ -45,6 +55,6 @@ const LoggedUserVideo = (props) => {
         </Fragment>
     )
 
-}
+})
 
 export default LoggedUserVideo;

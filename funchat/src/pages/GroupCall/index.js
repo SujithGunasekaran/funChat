@@ -47,13 +47,13 @@ const GroupCall = (props) => {
                     setUsers(users);
                 });
 
-                socket.on("userJoined", ({ signal, callerID }) => {
+                socket.on("userJoined", ({ signal, callerID, userInfo }) => {
                     const peer = addPeer(signal, callerID, stream);
                     peersRef.current.push({
                         peerID: callerID,
                         peer,
                     })
-                    setPeers(peers => [...peers, peer]);
+                    setPeers(peers => [...peers, { userInfo, peer }]);
                 });
 
                 socket.on("receivingReturnedSignal", ({ signal, id }) => {
@@ -69,17 +69,21 @@ const GroupCall = (props) => {
         let userData = [
             ...users,
             userInfo
-        ]
+        ];
         userData.forEach(user => {
-            const peer = createPeer(user.socketID, socket.id, stream);
+            const peer = createPeer(user.socketID, socket.id, stream, userInfo);
             peersRef.current.push({
                 peerID: user.socketID,
                 peer,
             })
-            peers.push(peer);
+            // peers.push(peer);
+            peers.push({
+                userInfo,
+                peer
+            })
         });
         setUsers(prevUsers => {
-            let users = JSON.parse(JSON.stringify(prevUsers));
+            let users = prevUsers.slice();
             users = [
                 ...users,
                 userInfo
@@ -104,14 +108,14 @@ const GroupCall = (props) => {
         })
     }
 
-    const createPeer = (userToSignal, callerID, stream) => {
+    const createPeer = (userToSignal, callerID, stream, userInfo) => {
         const peer = new Peer({
             initiator: true,
             trickle: false,
             stream,
         });
         peer.on("signal", signal => {
-            socket.emit("sendingSignal", { userToSignal, callerID, signal })
+            socket.emit("sendingSignal", { userToSignal, callerID, signal, userInfo })
         })
         return peer;
     }
@@ -128,6 +132,8 @@ const GroupCall = (props) => {
         peer.signal(incomingSignal);
         return peer;
     }
+
+    console.log("users 2 =>", users);
 
     return (
         <Fragment>
@@ -151,12 +157,12 @@ const GroupCall = (props) => {
                                     </Suspense>
                                 </div>
                                 {
-                                    peers.map((peer, index) => {
+                                    peers.map((info, index) => {
                                         return (
                                             <Fragment key={index}>
                                                 <div className="col-md-4">
                                                     <UserVideos
-                                                        userPeers={peer}
+                                                        info={info}
                                                     />
                                                 </div>
                                             </Fragment>

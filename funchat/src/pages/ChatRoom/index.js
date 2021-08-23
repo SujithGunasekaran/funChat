@@ -3,7 +3,7 @@ import useRoomAxios from '../../hooks/useRoomAxios';
 import { withRouter } from 'react-router-dom';
 import io from 'socket.io-client';
 import { unstable_batchedUpdates } from 'react-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import withAuth from '../../hoc/withAuth';
 import { CancelIcon } from '../../UI/Icons';
 
@@ -28,13 +28,10 @@ const ChatRoom = (props) => {
     const [groupInfo, setGroupInfo] = useState(null);
     const [chatMessage, setChatMessage] = useState([]);
     const [infoMessage, setInfoMessage] = useState(null);
+    const [callingInfo, setCallingInfo] = useState(null);
 
     // redux state
     const { loggedUserInfo } = useSelector(state => state.userReducer);
-    const { receivingCallInfo } = useSelector(state => state.userVideoReducer);
-
-    // redux-dispatch
-    const dispatch = useDispatch();
 
     useEffect(() => {
         socket = io('localhost:5000');
@@ -168,10 +165,7 @@ const ChatRoom = (props) => {
 
         socket.on('calling', response => {
             if (response) {
-                dispatch({
-                    type: 'SET_RECEIVING_CALL_INFO',
-                    info: response
-                });
+                setCallingInfo(response);
             }
         })
     }
@@ -198,7 +192,7 @@ const ChatRoom = (props) => {
     }
 
     const joinCall = () => {
-        props.history.push(`/group/${groupInfo.groupname}/call/${receivingCallInfo.callID}`);
+        props.history.push(`/group/${groupInfo.groupname}/call/${callingInfo.callID}`);
     }
 
 
@@ -270,15 +264,15 @@ const ChatRoom = (props) => {
                     </div>
                 </div>
                 {
-                    receivingCallInfo &&
-                    <div className={`chat_room_call_container ${receivingCallInfo && 'show'}`}>
+                    callingInfo &&
+                    <div className={`chat_room_call_container ${callingInfo && 'show'}`}>
                         <div className="chat_room_call_subhead">
-                            <div className="chat_room_call_user">Group call started by {receivingCallInfo.userName}</div>
-                            <CancelIcon cssClass="chat_room_call_cancel" handleEvent={() => dispatch({ type: 'SET_RECEIVING_CALL_INFO', info: null })} />
+                            <div className="chat_room_call_user">Group call started by {callingInfo.userName}</div>
+                            <CancelIcon cssClass="chat_room_call_cancel" handleEvent={() => setCallingInfo(null)} />
                         </div>
                         <div className="chat_room_call_footer_container">
                             <button className="chat_room_call_join" onClick={() => joinCall()}>Join</button>
-                            <button className="chat_room_call_cut" onClick={() => dispatch({ type: 'SET_RECEIVING_CALL_INFO', info: null })}>Cancel</button>
+                            <button className="chat_room_call_cut" onClick={() => setCallingInfo(null)}>Cancel</button>
                         </div>
                     </div>
                 }

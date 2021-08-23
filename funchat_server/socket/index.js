@@ -96,8 +96,8 @@ exports.connectSocket = (app, corsOptions) => {
             socket.broadcast.to(callID).emit("joinedUserInfo", userInfo);
         });
 
-        socket.on("sendingSignal", ({ userToSignal, signal, callerID }) => {
-            io.to(userToSignal).emit('userJoined', { signal, callerID });
+        socket.on("sendingSignal", ({ userToSignal, signal, callerID, userInfo }) => {
+            io.to(userToSignal).emit('userJoined', { signal, callerID, userInfo });
         });
 
         socket.on("returningSignal", payload => {
