@@ -71,7 +71,7 @@ const GroupCall = (props) => {
             userInfo
         ];
         userData.forEach(user => {
-            const peer = createPeer(user.socketID, socket.id, stream, userInfo);
+            const peer = createPeer(user.socketID, socket.id, stream);
             peersRef.current.push({
                 peerID: user.socketID,
                 peer,
@@ -108,14 +108,14 @@ const GroupCall = (props) => {
         })
     }
 
-    const createPeer = (userToSignal, callerID, stream, userInfo) => {
+    const createPeer = (userToSignal, callerID, stream) => {
         const peer = new Peer({
             initiator: true,
             trickle: false,
             stream,
         });
         peer.on("signal", signal => {
-            socket.emit("sendingSignal", { userToSignal, callerID, signal, userInfo })
+            socket.emit("sendingSignal", { userToSignal, callerID, signal, userInfo: loggedUserInfo })
         })
         return peer;
     }
@@ -132,8 +132,6 @@ const GroupCall = (props) => {
         peer.signal(incomingSignal);
         return peer;
     }
-
-    console.log("users 2 =>", users);
 
     return (
         <Fragment>

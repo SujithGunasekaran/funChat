@@ -28,11 +28,7 @@ const LoggedUserVideo = forwardRef((props, ref) => {
     return (
         <Fragment>
             <div className="group_call_video_body">
-                {
-                    // isVideoPaused ?
-                    // <img className="group_call_video_profile" src={loggedUserInfo.profile} loading="lazy" alt={loggedUserInfo.username} /> :
-                    <video className="group_call_video_item" muted={isVideoMuted} ref={ref} autoPlay playsInline id="loggedUser_video" />
-                }
+                <video className="group_call_video_item" muted={isVideoMuted} ref={ref} autoPlay playsInline id="loggedUser_video" />
                 <div className="group_call_video_footer">
                     <div className="group_call_user_info_container">
                         <img src={loggedUserInfo.profile} className="profile" loading="lazy" alt={loggedUserInfo.username} />

@@ -100,8 +100,8 @@ exports.connectSocket = (app, corsOptions) => {
             io.to(userToSignal).emit('userJoined', { signal, callerID, userInfo });
         });
 
-        socket.on("returningSignal", payload => {
-            io.to(payload.callerID).emit('receivingReturnedSignal', { signal: payload.signal, id: socket.id });
+        socket.on("returningSignal", ({ callerID, signal }) => {
+            io.to(callerID).emit('receivingReturnedSignal', { signal: signal, id: socket.id });
         });
 
         socket.on('disconnect', () => {

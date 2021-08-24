@@ -19,7 +19,18 @@ const UserVideos = (props) => {
 
     return (
         <Fragment>
-            <video className="group_call_video_item" playsInline autoPlay ref={ref} />
+            <div className="group_call_video_body">
+                <video className="group_call_video_item" playsInline autoPlay ref={ref} />
+                <div className="group_call_video_footer">
+                    <div className="group_call_user_info_container">
+                        <img src={info.userInfo.profile} className="profile" loading="lazy" alt={info.userInfo.username} />
+                        <div className="name">{info.userInfo.username}</div>
+                        <div className="group_call_user_option_container">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
         </Fragment>
     );
 }

@@ -5,7 +5,7 @@ import useRoomAxios from '../../hooks/useRoomAxios';
 import { unstable_batchedUpdates } from 'react-dom';
 
 
-const RoomUser = (props) => {
+const GroupUser = (props) => {
 
     // state
     const [userList, setUserList] = useState([]);
@@ -86,16 +86,13 @@ const RoomUser = (props) => {
 };
 
 
-RoomUser.defaultProps = {
-    groupInfo: {}
-}
 
-RoomUser.propTypes = {
-    groupInfo: PropTypes.object.isRequired,
+GroupUser.propTypes = {
+    groupInfo: PropTypes.object,
     welcomeMessage: PropTypes.object.isRequired,
     groupID: PropTypes.string.isRequired,
     history: PropTypes.object
 }
 
 
-export default memo(RoomUser);
+export default memo(GroupUser);
