@@ -82,11 +82,6 @@ exports.connectSocket = (app, corsOptions) => {
             }
         })
 
-        socket.on("answerCall", ({ to, userInfo }) => {
-            socket.join(to);
-            io.to(to).emit("callAccepted", { userInfo });
-        });
-
         socket.on('updateUserList', ({ users, callID }) => {
             socket.broadcast.to(callID).emit('userList', users);
         })
@@ -103,6 +98,10 @@ exports.connectSocket = (app, corsOptions) => {
         socket.on("returningSignal", ({ callerID, signal }) => {
             io.to(callerID).emit('receivingReturnedSignal', { signal: signal, id: socket.id });
         });
+
+        socket.on('updateAudio', ({ callID, userID, audioType }) => {
+            socket.broadcast.to(callID).emit('receivingAudioType', { userID, audioType });
+        })
 
         socket.on('disconnect', () => {
             console.log("disconnect");

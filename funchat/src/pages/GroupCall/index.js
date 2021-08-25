@@ -37,7 +37,7 @@ const GroupCall = (props) => {
             .then(stream => {
                 userVideo.current.srcObject = stream;
                 updateUserList();
-                socket.emit('joinRoom', { callID, userInfo: { ...loggedUserInfo, socketID: socket.id } });
+                socket.emit('joinRoom', { callID, userInfo: { ...loggedUserInfo, socketID: socket.id, audioType: 'mute', video: 'play' } });
 
                 socket.on("joinedUserInfo", userInfo => {
                     updateJoinedUserInfo(userInfo, stream);
@@ -46,6 +46,23 @@ const GroupCall = (props) => {
                 socket.on('userList', users => {
                     setUsers(users);
                 });
+
+                socket.on('receivingAudioType', ({ audioType, userID }) => {
+                    setPeers(prevPeers => {
+                        let peers = prevPeers.slice();
+                        let peerIndex = peers.findIndex(({ userInfo }) => userInfo._id === userID);
+                        if (peerIndex > -1) {
+                            peers[peerIndex] = {
+                                ...peers[peerIndex],
+                                userInfo: {
+                                    ...peers[peerIndex].userInfo,
+                                    audioType
+                                }
+                            }
+                        }
+                        return peers;
+                    })
+                })
 
                 socket.on("userJoined", ({ signal, callerID, userInfo }) => {
                     const peer = addPeer(signal, callerID, stream);
@@ -99,7 +116,9 @@ const GroupCall = (props) => {
             let users = JSON.parse(JSON.stringify(prevUsers));
             const userData = {
                 ...loggedUserInfo,
-                socketID: socket.id
+                socketID: socket.id,
+                audioType: 'unMute',
+                video: 'play',
             }
             users = [
                 userData
@@ -115,7 +134,7 @@ const GroupCall = (props) => {
             stream,
         });
         peer.on("signal", signal => {
-            socket.emit("sendingSignal", { userToSignal, callerID, signal, userInfo: loggedUserInfo })
+            socket.emit("sendingSignal", { userToSignal, callerID, signal, userInfo: { ...loggedUserInfo, socketID: socket.id, audioType: 'mute', video: 'play' } })
         })
         return peer;
     }
@@ -151,22 +170,13 @@ const GroupCall = (props) => {
                                     <Suspense fallback={<div>Loading...</div>}>
                                         <LoggedUserVideo
                                             ref={userVideo}
+                                            callID={callID}
                                         />
                                     </Suspense>
                                 </div>
-                                {
-                                    peers.map((info, index) => {
-                                        return (
-                                            <Fragment key={index}>
-                                                <div className="col-md-4">
-                                                    <UserVideos
-                                                        info={info}
-                                                    />
-                                                </div>
-                                            </Fragment>
-                                        );
-                                    })
-                                }
+                                <UserVideos
+                                    peers={peers}
+                                />
                             </div>
                         </div>
                     </div>

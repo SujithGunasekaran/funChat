@@ -1,14 +1,19 @@
 import React, { Fragment, useState, forwardRef } from 'react';
 import { useSelector } from 'react-redux';
 import { MicIcon, VideoIcon, MutedMicIcon, VideoOff } from '../../UI/Icons';
+import io from 'socket.io-client';
 
+let socket = io('localhost:5000');
 
 const LoggedUserVideo = forwardRef((props, ref) => {
 
 
     // state
-    const [isVideoMuted, setIsVideoMuted] = useState(true);
+    const [audioType, setAudioType] = useState(true);
     const [isVideoPaused, setIsVideoPaused] = useState(false);
+
+    // props  
+    const { callID } = props;
 
     // redux-state
     const { loggedUserInfo } = useSelector(state => state.userReducer);
@@ -25,19 +30,29 @@ const LoggedUserVideo = forwardRef((props, ref) => {
         }
     }
 
+    const handleAudio = (input) => {
+        socket.emit('updateAudio', { callID, userID: loggedUserInfo._id, audioType: input });
+        if (input === 'unMute') {
+            setAudioType(false);
+        }
+        else {
+            setAudioType(true);
+        }
+    }
+
     return (
         <Fragment>
             <div className="group_call_video_body">
-                <video className="group_call_video_item" muted={isVideoMuted} ref={ref} autoPlay playsInline id="loggedUser_video" />
+                <video className="group_call_video_item" muted={audioType} ref={ref} autoPlay playsInline id="loggedUser_video" />
                 <div className="group_call_video_footer">
                     <div className="group_call_user_info_container">
                         <img src={loggedUserInfo.profile} className="profile" loading="lazy" alt={loggedUserInfo.username} />
                         <div className="name">{loggedUserInfo.username}</div>
                         <div className="group_call_user_option_container">
                             {
-                                isVideoMuted ?
-                                    <MutedMicIcon cssClass="group_call_user_option_mic" handleEvent={() => setIsVideoMuted(false)} /> :
-                                    <MicIcon cssClass="group_call_user_option_mic" handleEvent={() => setIsVideoMuted(true)} />
+                                audioType ?
+                                    <MutedMicIcon cssClass="group_call_user_option_mic" handleEvent={() => handleAudio('unMute')} /> :
+                                    <MicIcon cssClass="group_call_user_option_mic" handleEvent={() => handleAudio('mute')} />
                             }
                             {
                                 isVideoPaused ?
