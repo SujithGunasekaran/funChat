@@ -101,6 +101,10 @@ exports.connectSocket = (app, corsOptions) => {
 
         socket.on('updateAudio', ({ callID, userID, audioType }) => {
             socket.broadcast.to(callID).emit('receivingAudioType', { userID, audioType });
+        });
+
+        socket.on('updateVideo', ({ callID, userID, videoType }) => {
+            socket.broadcast.to(callID).emit('receivingVideoType', { userID, videotype });
         })
 
         socket.on('disconnect', () => {

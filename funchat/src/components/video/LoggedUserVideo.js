@@ -20,6 +20,7 @@ const LoggedUserVideo = forwardRef((props, ref) => {
 
     const handleVideo = (input) => {
         const userVideoElement = document.querySelector('#loggedUser_video');
+        socket.emit('updateVideo', { callID, userID: loggedUserInfo._id, videoType: input });
         if (input === 'stop') {
             setIsVideoPaused(true);
             userVideoElement.pause();

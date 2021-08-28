@@ -62,6 +62,22 @@ const GroupCall = (props) => {
                         }
                         return peers;
                     })
+                });
+
+                socket.on('receivingVideoType', ({ videoType, userID }) => {
+                    setPeers(prevPeers => {
+                        let peers = prevPeers.slice();
+                        let peerIndex = peers.findIndex(({ userInfo }) => userInfo._id === userID);
+                        if (peerIndex > -1) {
+                            peers[peerIndex] = {
+                                ...peers[peerIndex],
+                                userInfo: {
+                                    ...peers[peerIndex].userInfo,
+                                    video: videoType
+                                }
+                            }
+                        }
+                    })
                 })
 
                 socket.on("userJoined", ({ signal, callerID, userInfo }) => {
