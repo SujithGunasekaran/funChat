@@ -3,6 +3,7 @@ import io from "socket.io-client";
 import Peer from "simple-peer";
 import { useSelector } from 'react-redux';
 import UserVideos from '../../components/video/UserVideo';
+// import { VideoChatIcon, CallCancelIcon } from '../../UI/Icons';
 
 const LoggedUserVideo = lazy(() => import('../../components/video/LoggedUserVideo'));
 
@@ -77,6 +78,7 @@ const GroupCall = (props) => {
                                 }
                             }
                         }
+                        return peers;
                     })
                 })
 
@@ -197,6 +199,22 @@ const GroupCall = (props) => {
                         </div>
                     </div>
                 </div>
+                {/* <div className="row">
+                    <div className="col-md-12">
+                        <div className="group_video_call_option_bottom_container">
+                            <div className="group_video_call_option_sub_container">
+                                <VideoChatIcon
+                                    cssClass="group_video_call_option_chat"
+                                />
+                            </div>
+                            <div className="group_video_call_option_sub_container">
+                                <CallCancelIcon
+                                    cssClass="group_video_call_option_cut"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div> */}
             </div>
         </Fragment>
     );

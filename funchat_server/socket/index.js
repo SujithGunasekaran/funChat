@@ -104,7 +104,7 @@ exports.connectSocket = (app, corsOptions) => {
         });
 
         socket.on('updateVideo', ({ callID, userID, videoType }) => {
-            socket.broadcast.to(callID).emit('receivingVideoType', { userID, videotype });
+            socket.broadcast.to(callID).emit('receivingVideoType', { userID, videoType });
         })
 
         socket.on('disconnect', () => {

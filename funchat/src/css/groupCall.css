@@ -63,7 +63,7 @@
 }
 .group_call_user_option_mic
 {
-    margin-right: 12px;
+    margin-right: 15px;
     width: 20px;
     height: 20px;
     color: var(--text-color-seven);
@@ -74,15 +74,53 @@
     cursor: pointer;
     color: var(--text-highlight);
 }
-.group_call_user_option_video
+.group_call_user_option_video:hover
 {
+    cursor: pointer;
+    color: var(--text-highlight);
+}
+.group_call_user_option_cancel, .group_call_user_option_video
+{
+    margin-right: 15px;
     width: 20px;
     height: 20px;
     color: var(--text-color-seven);
     transition: 0.4s all ease-in-out;
 }
-.group_call_user_option_video:hover
+.group_call_user_option_cancel:hover
 {
     cursor: pointer;
-    color: var(--text-highlight);
+    color: var(--error-alert-text)
+}
+.group_video_call_option_bottom_container
+{
+    position: fixed;
+    bottom: 10px;
+    padding: 10px;
+    left: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 6px;
+    background-color: var(--box-bg);
+    transform: translate(0%, -50%);
+    box-shadow: 0 16px 32px rgba(1,4,9,0.85);
+}
+.group_video_call_option_sub_container
+{
+    border-radius: 6px;
+    padding: 10px 15px;
+    margin: 0px 10px;
+}
+.group_video_call_option_chat
+{
+    width: 20px;
+    height: 20px;
+    color: var(--text-color-four);
+}
+.group_video_call_option_cut
+{
+    width: 20px;
+    height: 20px;
+    color: var(--text-color-four);
 }

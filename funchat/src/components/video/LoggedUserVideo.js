@@ -1,6 +1,6 @@
 import React, { Fragment, useState, forwardRef } from 'react';
 import { useSelector } from 'react-redux';
-import { MicIcon, VideoIcon, MutedMicIcon, VideoOff } from '../../UI/Icons';
+import { MicIcon, VideoIcon, MutedMicIcon, VideoOff, CallCancelIcon } from '../../UI/Icons';
 import io from 'socket.io-client';
 
 let socket = io('localhost:5000');
@@ -57,9 +57,12 @@ const LoggedUserVideo = forwardRef((props, ref) => {
                             }
                             {
                                 isVideoPaused ?
-                                    <VideoOff cssClass="group_call_user_option_video" handleEvent={() => handleVideo('start')} /> :
+                                    <VideoOff cssClass="group_call_user_option_video" handleEvent={() => handleVideo('play')} /> :
                                     <VideoIcon cssClass="group_call_user_option_video" handleEvent={() => handleVideo('stop')} />
                             }
+                            <CallCancelIcon
+                                cssClass="group_call_user_option_cancel"
+                            />
                         </div>
                     </div>
                 </div>
