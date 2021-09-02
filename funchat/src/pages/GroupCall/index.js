@@ -3,6 +3,8 @@ import io from "socket.io-client";
 import Peer from "simple-peer";
 import { useSelector } from 'react-redux';
 import UserVideos from '../../components/video/UserVideo';
+import { withRouter } from 'react-router-dom';
+import withAuth from '../../hoc/withAuth';
 // import { VideoChatIcon, CallCancelIcon } from '../../UI/Icons';
 
 const LoggedUserVideo = lazy(() => import('../../components/video/LoggedUserVideo'));
@@ -18,6 +20,9 @@ const GroupCall = (props) => {
     // ref
     const userVideo = useRef();
     const peersRef = useRef([]);
+
+    // props
+    const { history } = props;
 
     // redux-state
     const { loggedUserInfo } = useSelector(state => state.userReducer);
@@ -77,6 +82,18 @@ const GroupCall = (props) => {
                                     video: videoType
                                 }
                             }
+                        }
+                        return peers;
+                    })
+                })
+
+
+                socket.on('removeUserFromCall', ({ userID }) => {
+                    setPeers(prevPeers => {
+                        let peers = prevPeers.slice();
+                        let peerIndex = peers.findIndex(({ userInfo }) => userInfo._id === userID);
+                        if (peerIndex > -1) {
+                            peers.splice(peerIndex, 1);
                         }
                         return peers;
                     })
@@ -189,6 +206,7 @@ const GroupCall = (props) => {
                                         <LoggedUserVideo
                                             ref={userVideo}
                                             callID={callID}
+                                            history={history}
                                         />
                                     </Suspense>
                                 </div>
@@ -220,4 +238,4 @@ const GroupCall = (props) => {
     );
 };
 
-export default GroupCall;
+export default withRouter(withAuth({ Component: GroupCall, name: 'GroupCall' }));

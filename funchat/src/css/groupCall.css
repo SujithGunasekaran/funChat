@@ -61,9 +61,9 @@
 {
     margin-left: auto;
 }
-.group_call_user_option_mic
+.group_call_user_option_mic, .group_call_user_option_video
 {
-    margin-right: 15px;
+    margin-right: 19px;
     width: 20px;
     height: 20px;
     color: var(--text-color-seven);
@@ -79,9 +79,8 @@
     cursor: pointer;
     color: var(--text-highlight);
 }
-.group_call_user_option_cancel, .group_call_user_option_video
+.group_call_user_option_cancel
 {
-    margin-right: 15px;
     width: 20px;
     height: 20px;
     color: var(--text-color-seven);

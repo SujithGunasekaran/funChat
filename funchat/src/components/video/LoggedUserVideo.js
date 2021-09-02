@@ -13,7 +13,7 @@ const LoggedUserVideo = forwardRef((props, ref) => {
     const [isVideoPaused, setIsVideoPaused] = useState(false);
 
     // props  
-    const { callID } = props;
+    const { callID, history } = props;
 
     // redux-state
     const { loggedUserInfo } = useSelector(state => state.userReducer);
@@ -41,6 +41,11 @@ const LoggedUserVideo = forwardRef((props, ref) => {
         }
     }
 
+    const leaveFromGroupCall = () => {
+        socket.emit('leaveGroupCall', { callID, userID: loggedUserInfo._id });
+        history.push('/home');
+    }
+
     return (
         <Fragment>
             <div className="group_call_video_body">
@@ -62,6 +67,7 @@ const LoggedUserVideo = forwardRef((props, ref) => {
                             }
                             <CallCancelIcon
                                 cssClass="group_call_user_option_cancel"
+                                handleEvent={leaveFromGroupCall}
                             />
                         </div>
                     </div>
