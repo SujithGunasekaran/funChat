@@ -97,7 +97,12 @@ export const getCommaSeperatedName = (valueArray = [], valueKey) => {
 }
 
 
-
+/**
+ * CopyToClipboard 
+ * It accepts one parameter text, Which need to be copied
+ * @param {*} text 
+ * @returns 
+*/
 
 export const copyToClipboard = (text) => {
     let result = false;
@@ -109,4 +114,32 @@ export const copyToClipboard = (text) => {
     if (textAreaElement.value) result = true;
     document.body.removeChild(textAreaElement);
     return result;
+}
+
+
+/**
+ * Function used to find id and update the value.
+ * Parameter id - used to find the id
+ * Parameter keyName - keyname to be updated in object
+ * Parameter keyValue - updated value
+ * parameter updateKeyName - keyName from the object to be updated 
+ * @param {setState callback} setter 
+ * @param { id, keyName, keyValue, updatedKeyName } param1 
+ */
+
+export const findIndexAndUpdateValue = (setter, { id, keyName, keyValue, updateKeyName }) => {
+    setter(prevValue => {
+        let peers = (typeof prevValue === 'object' && Array.isArray(prevValue)) ? prevValue.slice() : JSON.parse(JSON.stringify(prevValue));
+        let peerIndex = peers.findIndex(peer => peer[updateKeyName]._id === id);
+        if (peerIndex > -1) {
+            peers[peerIndex] = {
+                ...peers[peerIndex],
+                [updateKeyName]: {
+                    ...peers[peerIndex][updateKeyName],
+                    [keyName]: keyValue
+                }
+            }
+        }
+        return peers;
+    })
 }

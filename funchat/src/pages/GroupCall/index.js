@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import UserVideos from '../../components/video/UserVideo';
 import { withRouter } from 'react-router-dom';
 import withAuth from '../../hoc/withAuth';
+import { findIndexAndUpdateValue } from '../../utils';
 // import { VideoChatIcon, CallCancelIcon } from '../../UI/Icons';
 
 const LoggedUserVideo = lazy(() => import('../../components/video/LoggedUserVideo'));
@@ -54,37 +55,11 @@ const GroupCall = (props) => {
                 });
 
                 socket.on('receivingAudioType', ({ audioType, userID }) => {
-                    setPeers(prevPeers => {
-                        let peers = prevPeers.slice();
-                        let peerIndex = peers.findIndex(({ userInfo }) => userInfo._id === userID);
-                        if (peerIndex > -1) {
-                            peers[peerIndex] = {
-                                ...peers[peerIndex],
-                                userInfo: {
-                                    ...peers[peerIndex].userInfo,
-                                    audioType
-                                }
-                            }
-                        }
-                        return peers;
-                    })
+                    findIndexAndUpdateValue(setPeers, { id: userID, keyName: 'audioType', keyValue: audioType, updateKeyName: 'userInfo' });
                 });
 
                 socket.on('receivingVideoType', ({ videoType, userID }) => {
-                    setPeers(prevPeers => {
-                        let peers = prevPeers.slice();
-                        let peerIndex = peers.findIndex(({ userInfo }) => userInfo._id === userID);
-                        if (peerIndex > -1) {
-                            peers[peerIndex] = {
-                                ...peers[peerIndex],
-                                userInfo: {
-                                    ...peers[peerIndex].userInfo,
-                                    video: videoType
-                                }
-                            }
-                        }
-                        return peers;
-                    })
+                    findIndexAndUpdateValue(setPeers, { id: userID, keyName: 'video', keyValue: videoType, updateKeyName: 'userInfo' });
                 })
 
 
