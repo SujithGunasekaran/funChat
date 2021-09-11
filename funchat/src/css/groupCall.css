@@ -1,15 +1,61 @@
 .group_call_header_container
 {
+    display: flex;
+    align-items: center;
     padding: 5px 0px;
 }
 .group_call_header_name
 {
     padding: 0px 0px 15px 0px;
     font-family: var(--ff-san);
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     letter-spacing: 0.010rem;
     font-weight: 700;
     color: var(--text-color-four);
+}
+.group_call_icons_container
+{
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+}
+.group_call_people_icon_container
+{
+    position: relative;
+}
+.group_call_people_badge
+{
+    position: absolute;
+    width: 17px;
+    height: 17px;
+    background-color: var(--text-highlight);
+    border-radius: 50%;
+    top: -5px;
+    right: -5px;
+    font-size: .7rem;
+    font-weight: 500;
+    color: var(--text-color-one);
+}
+.group_call_people_badge.right-padding
+{
+    padding: 0px 5px;
+}
+.group_call_people_badge.left-padding
+{
+    padding: 0px;
+}
+.group_call_people_icon
+{
+    width: 26px;
+    height: 26px;
+    color: var(--text-color-six);
+}
+.group_call_chat_icon
+{
+    margin-left: 22px;
+    width: 26px;
+    height: 26px;
+    color: var(--text-color-six);
 }
 .group_call_video_container
 {
