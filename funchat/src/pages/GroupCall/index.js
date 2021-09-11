@@ -6,9 +6,9 @@ import UserVideos from '../../components/video/UserVideo';
 import { withRouter } from 'react-router-dom';
 import withAuth from '../../hoc/withAuth';
 import { findIndexAndUpdateValue } from '../../utils';
-// import { VideoChatIcon, CallCancelIcon } from '../../UI/Icons';
 
 const LoggedUserVideo = lazy(() => import('../../components/video/LoggedUserVideo'));
+const GroupCallHeader = lazy(() => import('../../components/video/GroupCallHeader'));
 
 let socket = io('localhost:5000');
 
@@ -167,16 +167,17 @@ const GroupCall = (props) => {
             <div className="container-fluid">
                 <div className="row">
                     <div className="col-md-12">
-                        <div className="group_call_header_container">
-                            <div className="group_call_header_name">{groupName} Group Call</div>
-                        </div>
+                        <GroupCallHeader
+                            groupName={groupName}
+                            noOfUser={peers.length}
+                        />
                     </div>
                 </div>
                 <div className="row">
                     <div className="col-md-12">
                         <div className="group_call_video_container">
                             <div className="row">
-                                <div className="col-md-4">
+                                <div className="col-md-3">
                                     <Suspense fallback={<div>Loading...</div>}>
                                         <LoggedUserVideo
                                             ref={userVideo}
@@ -192,22 +193,6 @@ const GroupCall = (props) => {
                         </div>
                     </div>
                 </div>
-                {/* <div className="row">
-                    <div className="col-md-12">
-                        <div className="group_video_call_option_bottom_container">
-                            <div className="group_video_call_option_sub_container">
-                                <VideoChatIcon
-                                    cssClass="group_video_call_option_chat"
-                                />
-                            </div>
-                            <div className="group_video_call_option_sub_container">
-                                <CallCancelIcon
-                                    cssClass="group_video_call_option_cut"
-                                />
-                            </div>
-                        </div>
-                    </div>
-                </div> */}
             </div>
         </Fragment>
     );

@@ -12,7 +12,7 @@ const UserVideos = (props) => {
                 peers.map((info, index) => {
                     return (
                         <Fragment key={index}>
-                            <div className="col-md-4">
+                            <div className="col-md-3">
                                 <UserVideoItem
                                     info={info}
                                 />
