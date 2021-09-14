@@ -9,6 +9,7 @@ import { findIndexAndUpdateValue } from '../../utils';
 
 const LoggedUserVideo = lazy(() => import('../../components/video/LoggedUserVideo'));
 const GroupCallHeader = lazy(() => import('../../components/video/GroupCallHeader'));
+const UserListPanel = lazy(() => import('../../UI/SidePanelModel/UserListPanel'));
 
 let socket = io('localhost:5000');
 
@@ -17,6 +18,7 @@ const GroupCall = (props) => {
     // states
     const [peers, setPeers] = useState([]);
     const [users, setUsers] = useState([]);
+    const [modelView, setModelView] = useState({ modelName: '', view: false });
 
     // ref
     const userVideo = useRef();
@@ -191,6 +193,15 @@ const GroupCall = (props) => {
                                 />
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div className="overlay">
+                    <div className="group_call_user_list_container">
+                        <Suspense fallback={<div>Loading...</div>}>
+                            <UserListPanel
+                                peers={peers}
+                            />
+                        </Suspense>
                     </div>
                 </div>
             </div>

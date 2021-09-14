@@ -169,3 +169,77 @@
     height: 20px;
     color: var(--text-color-four);
 }
+
+
+/* user info side panel */
+
+.group_call_user_list_container
+{
+    position: fixed;
+    right: 0px;
+    top: 57px;
+    width: 350px;
+    height: 100vh;
+    background-color: var(--box-bg);
+    padding: 15px;
+    z-index: 250;
+    overflow-x: scroll;
+}
+.group_call_user_list_container::-webkit-scrollbar 
+{
+    width: 7px;
+    border-radius: 6px;
+    background-color: var(--box-bg);
+}
+
+.group_call_user_list_container::-webkit-scrollbar-track 
+{
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+    -webkit-border-radius: 10px;
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    border-radius: 10px;
+}
+
+.group_call_user_list_container::-webkit-scrollbar-thumb 
+{
+    -webkit-border-radius: 10px;
+    border-radius: 20px;
+    background: var(--text-color-eight); 
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+}
+.group_call_user_list_header
+{
+    padding: 15px 7px;
+    display: flex;
+    align-items: center;
+}
+.group_call_user_list_header_name
+{
+    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: 0.010rem;
+    color: var(--text-color-four);
+}
+.group_call_user_list_header_close_icon
+{
+    margin-left: auto;
+    color: var(--text-color-six);
+    width: 15px;
+    height: 15px;
+    transition: 0.4s all ease-in-out;
+}
+.group_call_user_list_header_close_icon:hover
+{
+    cursor: pointer;
+}
+
+.group_call_user_list_body
+{
+    padding: 15px 7px;
+}
+.group_call_user_list_item
+{
+    display: flex;
+    align-items: center;
+}
