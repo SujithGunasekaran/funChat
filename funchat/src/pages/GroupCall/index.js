@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, Fragment, lazy, Suspense } from "react";
+import React, { useEffect, useRef, useState, useCallback, Fragment, lazy, Suspense } from "react";
 import io from "socket.io-client";
 import Peer from "simple-peer";
 import { useSelector } from 'react-redux';
@@ -164,6 +164,20 @@ const GroupCall = (props) => {
         return peer;
     }
 
+    const handleLeftpanelView = useCallback((modelName = modelView.modelName) => {
+        setModelView(prevModelView => {
+            let modelView = JSON.parse(JSON.stringify(prevModelView));
+            if (modelView.modelName === modelName) modelView.view = !modelView.view
+            else {
+                modelView.modelName = modelName;
+                modelView.view = true;
+            }
+            return modelView;
+        })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [modelView])
+
+
     return (
         <Fragment>
             <div className="container-fluid">
@@ -172,6 +186,7 @@ const GroupCall = (props) => {
                         <GroupCallHeader
                             groupName={groupName}
                             noOfUser={peers.length}
+                            handleLeftpanelView={handleLeftpanelView}
                         />
                     </div>
                 </div>
@@ -195,15 +210,19 @@ const GroupCall = (props) => {
                         </div>
                     </div>
                 </div>
-                <div className="overlay">
-                    <div className="group_call_user_list_container">
-                        <Suspense fallback={<div>Loading...</div>}>
-                            <UserListPanel
-                                peers={peers}
-                            />
-                        </Suspense>
+                {
+                    modelView.modelName === 'people' && modelView.view &&
+                    <div className={`overlay-panel ${modelView.modelName === 'people' && modelView.view && 'active'}`}>
+                        <div className="group_call_user_list_container">
+                            <Suspense fallback={<div>Loading...</div>}>
+                                <UserListPanel
+                                    peers={peers}
+                                    handleLeftpanelView={handleLeftpanelView}
+                                />
+                            </Suspense>
+                        </div>
                     </div>
-                </div>
+                }
             </div>
         </Fragment>
     );
