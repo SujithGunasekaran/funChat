@@ -39,9 +39,9 @@ export const LogoutIcon = ({ cssClass }) => {
     )
 }
 
-export const CancelIcon = ({ cssClass, handleEvent }) => {
+export const CancelIcon = ({ cssClass, handleEvent, input }) => {
     return (
-        <svg xmlns="http://www.w3.org/2000/svg" onClick={() => handleEvent()} fill="currentColor" className={`bi bi-x-lg ${cssClass}`} viewBox="0 0 16 16">
+        <svg xmlns="http://www.w3.org/2000/svg" onClick={() => handleEvent(input || '')} fill="currentColor" className={`bi bi-x-lg ${cssClass}`} viewBox="0 0 16 16">
             <path d="M1.293 1.293a1 1 0 0 1 1.414 0L8 6.586l5.293-5.293a1 1 0 1 1 1.414 1.414L9.414 8l5.293 5.293a1 1 0 0 1-1.414 1.414L8 9.414l-5.293 5.293a1 1 0 0 1-1.414-1.414L6.586 8 1.293 2.707a1 1 0 0 1 0-1.414z" />
         </svg>
     )
@@ -49,7 +49,7 @@ export const CancelIcon = ({ cssClass, handleEvent }) => {
 
 export const PeoplesIcon = ({ cssClass, handleEvent }) => {
     return (
-        <svg xmlns="http://www.w3.org/2000/svg" onClick={() => handleEvent('people')} fill="currentColor" className={`bi bi-people-fill ${cssClass}`} viewBox="0 0 16 16">
+        <svg xmlns="http://www.w3.org/2000/svg" onClick={() => handleEvent('people', 'active')} fill="currentColor" className={`bi bi-people-fill ${cssClass}`} viewBox="0 0 16 16">
             <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
             <path fillRule="evenodd" d="M5.216 14A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216z" />
             <path d="M4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z" />

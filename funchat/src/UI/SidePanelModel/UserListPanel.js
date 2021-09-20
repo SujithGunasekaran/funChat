@@ -18,6 +18,7 @@ const UserListPanel = (props) => {
                 <CancelIcon
                     cssClass="group_call_user_list_header_close_icon"
                     handleEvent={handleLeftpanelView}
+                    input="people"
                 />
             </div>
             <div className="group_call_user_list_body">

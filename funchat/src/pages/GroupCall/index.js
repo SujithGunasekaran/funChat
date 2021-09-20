@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback, Fragment, lazy, Suspense } from "react";
+import React, { useEffect, useRef, useState, Fragment, lazy, Suspense } from "react";
 import io from "socket.io-client";
 import Peer from "simple-peer";
 import { useSelector } from 'react-redux';
@@ -18,11 +18,11 @@ const GroupCall = (props) => {
     // states
     const [peers, setPeers] = useState([]);
     const [users, setUsers] = useState([]);
-    const [modelView, setModelView] = useState({ modelName: '', view: false });
 
     // ref
     const userVideo = useRef();
     const peersRef = useRef([]);
+    const peopleRef = useRef();
 
     // props
     const { history } = props;
@@ -164,18 +164,10 @@ const GroupCall = (props) => {
         return peer;
     }
 
-    const handleLeftpanelView = useCallback((modelName = modelView.modelName) => {
-        setModelView(prevModelView => {
-            let modelView = JSON.parse(JSON.stringify(prevModelView));
-            if (modelView.modelName === modelName) modelView.view = !modelView.view
-            else {
-                modelView.modelName = modelName;
-                modelView.view = true;
-            }
-            return modelView;
-        })
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [modelView])
+    const handleLeftpanelView = (modelName, view) => {
+        peopleRef.current.classList.remove('active');
+        if (modelName === 'people' && view === 'active') peopleRef.current.classList.add('active');
+    }
 
 
     return (
@@ -211,8 +203,7 @@ const GroupCall = (props) => {
                     </div>
                 </div>
                 {
-                    modelView.modelName === 'people' && modelView.view &&
-                    <div className={`overlay-panel ${modelView.modelName === 'people' && modelView.view && 'active'}`}>
+                    <div className="overlay-panel" ref={peopleRef}>
                         <div className="group_call_user_list_container">
                             <Suspense fallback={<div>Loading...</div>}>
                                 <UserListPanel
