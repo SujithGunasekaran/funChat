@@ -38,7 +38,7 @@ const UserVideoItem = (props) => {
         <Fragment>
             <div className="group_call_video_body">
                 <video id="user-video" className="group_call_video_item" muted={info.userInfo.audioType === 'mute' ? true : false} playsInline autoPlay ref={ref} />
-                <div className="group_call_video_footer">
+                <div className="group_call_user_video_footer">
                     <div className="group_call_user_info_container">
                         <img src={info.userInfo.profile} className="profile" loading="lazy" alt={info.userInfo.username} />
                         <div className="name">{info.userInfo.username}</div>
