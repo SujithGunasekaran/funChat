@@ -10,6 +10,7 @@ import { findIndexAndUpdateValue } from '../../utils';
 const LoggedUserVideo = lazy(() => import('../../components/video/LoggedUserVideo'));
 const GroupCallHeader = lazy(() => import('../../components/video/GroupCallHeader'));
 const UserListPanel = lazy(() => import('../../UI/SidePanelModel/UserListPanel'));
+const UserChatPanel = lazy(() => import('../../UI/SidePanelModel/UserChatPanel'));
 
 let socket = io('localhost:5000');
 
@@ -18,11 +19,12 @@ const GroupCall = (props) => {
     // states
     const [peers, setPeers] = useState([]);
     const [users, setUsers] = useState([]);
+    const [chatView, setChatView] = useState(false);
+    const [userView, setUserView] = useState(false);
 
     // ref
     const userVideo = useRef();
     const peersRef = useRef([]);
-    const peopleRef = useRef();
 
     // props
     const { history } = props;
@@ -164,9 +166,12 @@ const GroupCall = (props) => {
         return peer;
     }
 
-    const handleLeftpanelView = (modelName, view) => {
-        peopleRef.current.classList.remove('active');
-        if (modelName === 'people' && view === 'active') peopleRef.current.classList.add('active');
+    const handleUserPanelView = (value) => {
+        setUserView(value);
+    }
+
+    const handleChatPanelView = (value) => {
+        setChatView(value);
     }
 
 
@@ -178,7 +183,8 @@ const GroupCall = (props) => {
                         <GroupCallHeader
                             groupName={groupName}
                             noOfUser={peers.length}
-                            handleLeftpanelView={handleLeftpanelView}
+                            handleUserPanelView={handleUserPanelView}
+                            handleChatPanelView={handleChatPanelView}
                         />
                     </div>
                 </div>
@@ -203,12 +209,27 @@ const GroupCall = (props) => {
                     </div>
                 </div>
                 {
-                    <div className="overlay-panel" ref={peopleRef}>
+                    userView &&
+                    <div className={`overlay-panel ${userView ? 'active' : ''}`}>
                         <div className="group_call_user_list_container">
                             <Suspense fallback={<div>Loading...</div>}>
                                 <UserListPanel
                                     peers={peers}
-                                    handleLeftpanelView={handleLeftpanelView}
+                                    handleView={handleUserPanelView}
+                                />
+                            </Suspense>
+                        </div>
+                    </div>
+                }
+                {
+                    chatView &&
+                    <div className={`overlay-panel ${chatView ? 'active' : ''}`}>
+                        <div className="group_call_chat_container">
+                            <Suspense fallback={<div>Loading...</div>}>
+                                <UserChatPanel
+                                    groupName={groupName}
+                                    callID={callID}
+                                    handleView={handleChatPanelView}
                                 />
                             </Suspense>
                         </div>

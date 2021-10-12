@@ -109,7 +109,17 @@ exports.connectSocket = (app, corsOptions) => {
 
         socket.on('leaveGroupCall', ({ callID, userID }) => {
             socket.broadcast.to(callID).emit('removeUserFromCall', { userID });
-        })
+        });
+
+        socket.on('sendGroupCallMessage', ({ callID, userId, userName, message }, callback) => {
+            try {
+                socket.broadcast.to(callID).emit('receiveGroupCallMessage', { type: 'Normal', user: userName, userId, text: message, date: Date.now() });
+                callback(null);
+            }
+            catch (err) {
+                callback(err.message);
+            }
+        });
 
         socket.on('disconnect', () => {
             console.log("disconnect");

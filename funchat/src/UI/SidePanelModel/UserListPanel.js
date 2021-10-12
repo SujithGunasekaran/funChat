@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 const UserListPanel = (props) => {
 
     // props
-    const { peers, handleLeftpanelView } = props;
+    const { peers, handleView } = props;
 
     // redux-state
     const { loggedUserInfo } = useSelector(state => state.userReducer);
@@ -17,8 +17,8 @@ const UserListPanel = (props) => {
                 <div className="group_call_user_list_header_name">UserList</div>
                 <CancelIcon
                     cssClass="group_call_user_list_header_close_icon"
-                    handleEvent={handleLeftpanelView}
-                    input="people"
+                    handleEvent={handleView}
+                    input={false}
                 />
             </div>
             <div className="group_call_user_list_body">
