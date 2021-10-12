@@ -295,11 +295,11 @@
     position: absolute;
     padding: 10px 10px;
     bottom: 0px;
-    width: 100%;
+    width: 92%;
     left: 0px;
     background-color: var(--box-bg);
-    display: flex;
-    align-items: center;
+    /* display: flex;
+    align-items: center; */
 }
 .message_chat_input
 {
