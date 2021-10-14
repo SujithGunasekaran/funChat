@@ -4,7 +4,7 @@ import { PeoplesIcon, ChatCoverIcon } from '../../UI/Icons';
 const GroupCallHeader = (props) => {
 
     // props
-    const { groupName, noOfUser, handleUserPanelView, handleChatPanelView } = props;
+    const { groupName, noOfUser, handleUserPanelView, handleChatPanelView, isNewMessage } = props;
 
     return (
         <Fragment>
@@ -20,10 +20,15 @@ const GroupCallHeader = (props) => {
                             handleEvent={handleUserPanelView}
                         />
                     </div>
-                    <ChatCoverIcon
-                        cssClass="group_call_chat_icon"
-                        handleEvent={handleChatPanelView}
-                    />
+                    <div className="group_call_chat_icon_container">
+                        {
+                            isNewMessage && <div className={`group_call_chat_badge`}></div>
+                        }
+                        <ChatCoverIcon
+                            cssClass="group_call_chat_icon"
+                            handleEvent={handleChatPanelView}
+                        />
+                    </div>
                 </div>
             </div>
         </Fragment>

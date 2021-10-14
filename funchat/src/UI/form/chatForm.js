@@ -6,7 +6,7 @@ import SendIcon from '@material-ui/icons/Send';
 
 const ChatForm = (props) => {
 
-    const { sendMessage } = props;
+    const { sendMessage, cssClass } = props;
 
     const { formData, handleFormData, resetForm, setFormError } = useForm();
 
@@ -22,7 +22,7 @@ const ChatForm = (props) => {
     return (
         <Fragment>
             <form onSubmit={(e) => handleFormSubmit(e)}>
-                <div className="message_chat_input_container">
+                <div className={cssClass}>
                     <div className="container_fluid" style={{ width: '100%' }}>
                         <div className="row">
                             <div className="col-10 col-sm-10 col-md-11">

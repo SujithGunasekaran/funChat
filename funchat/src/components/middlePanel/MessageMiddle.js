@@ -78,6 +78,7 @@ const MessageMiddle = (props) => {
                 }
                 <Suspense fallback={<div>Loading...</div>}>
                     <ChatForm
+                        cssClass="message_chat_input_container"
                         sendMessage={sendMessage}
                     />
                 </Suspense>

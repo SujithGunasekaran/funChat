@@ -1,41 +1,23 @@
-import React, { Fragment, Suspense, lazy, useEffect } from 'react';
+import React, { Fragment, Suspense, lazy } from 'react';
 import { CancelIcon } from '../Icons';
 import io from 'socket.io-client';
 import { useSelector } from 'react-redux';
 
 const ChatForm = lazy(() => import('../form/chatForm'));
+const MessageList = lazy(() => import('../card/Message/MessageList'));
 
 let socket = io('localhost:5000');
 
 const UserChatPanel = (props) => {
 
     // props
-    const { groupName, callID, handleView, } = props;
-
+    const { groupName, callID, handleView, messageList } = props;
 
     // redux-state
     const { loggedUserInfo } = useSelector(state => state.userReducer);
 
-    useEffect(() => {
-        initialize();
-    }, [])
-
-    const initialize = () => {
-        socket.on('receiveGroupCallMessage', message => {
-            console.log("message", message);
-        })
-    }
-
     const sendMessage = (messageInput) => {
-
-        try {
-            socket.emit('sendGroupCallMessage', { callID, userId: loggedUserInfo._id, userName: loggedUserInfo.username, message: messageInput }, (err) => {
-                if (err) throw new Error('Error while sending message');
-            })
-        }
-        catch (err) {
-            console.log(err);
-        }
+        socket.emit('sendGroupCallMessage', { callID, userId: loggedUserInfo._id, userName: loggedUserInfo.username, message: messageInput });
     }
 
     return (
@@ -49,8 +31,17 @@ const UserChatPanel = (props) => {
                 />
             </div>
             <div className="group_call_middle_chat_container">
+                {
+                    messageList.length > 0 &&
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <MessageList
+                            chatList={messageList}
+                        />
+                    </Suspense>
+                }
                 <Suspense fallback={<div>Loading...</div>}>
                     <ChatForm
+                        cssClass="group_call_middle_input_container"
                         sendMessage={sendMessage}
                     />
                 </Suspense>

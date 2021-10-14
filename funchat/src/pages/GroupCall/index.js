@@ -19,8 +19,10 @@ const GroupCall = (props) => {
     // states
     const [peers, setPeers] = useState([]);
     const [users, setUsers] = useState([]);
+    const [message, setMessage] = useState([]);
     const [chatView, setChatView] = useState(false);
     const [userView, setUserView] = useState(false);
+    const [newMessage, setNewMessage] = useState(false);
 
     // ref
     const userVideo = useRef();
@@ -76,6 +78,18 @@ const GroupCall = (props) => {
                         }
                         return peers;
                     })
+                })
+
+                socket.on('receiveGroupCallMessage', messageInput => {
+                    if (!chatView) setNewMessage(true);
+                    setMessage(prevMessage => {
+                        let message = prevMessage.slice();
+                        message = [
+                            ...message,
+                            messageInput
+                        ];
+                        return message;
+                    });
                 })
 
                 socket.on("userJoined", ({ signal, callerID, userInfo }) => {
@@ -171,6 +185,7 @@ const GroupCall = (props) => {
     }
 
     const handleChatPanelView = (value) => {
+        setNewMessage(false);
         setChatView(value);
     }
 
@@ -183,6 +198,7 @@ const GroupCall = (props) => {
                         <GroupCallHeader
                             groupName={groupName}
                             noOfUser={peers.length}
+                            isNewMessage={newMessage}
                             handleUserPanelView={handleUserPanelView}
                             handleChatPanelView={handleChatPanelView}
                         />
@@ -229,6 +245,7 @@ const GroupCall = (props) => {
                                 <UserChatPanel
                                     groupName={groupName}
                                     callID={callID}
+                                    messageList={message}
                                     handleView={handleChatPanelView}
                                 />
                             </Suspense>
