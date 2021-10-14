@@ -50,6 +50,20 @@
     color: var(--text-color-six);
     cursor: pointer;
 }
+.group_call_chat_icon_container
+{
+    position: relative;
+}
+.group_call_chat_badge
+{
+    position: absolute;
+    background-color: var(--text-highlight);
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    right: -6px;
+    top: -7px;
+}
 .group_call_chat_icon
 {
     margin-left: 30px;
@@ -334,12 +348,11 @@
 }
 .group_call_middle_chat_container
 {
-    position: relative;
-    margin: 35px 0px;
-    padding: 15px 20px 60px 20px;
+    margin: 0px 0px 0px 0px;
+    padding: 15px 10px 80px 10px;
     background-color: var(--box-bg);
     border-radius: 6px;
-    height: 90vh;
+    height: 100vh;
     overflow-y: scroll;
 }
 .group_call_middle_chat_container::-webkit-scrollbar 
@@ -364,4 +377,13 @@
     background: var(--text-color-eight); 
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
     box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+}
+.group_call_middle_input_container
+{
+    position: absolute;
+    padding: 10px 10px;
+    bottom: -68px;
+    width: 92%;
+    left: 0px;
+    background-color: var(--box-bg);
 }

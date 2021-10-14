@@ -295,11 +295,9 @@
     position: absolute;
     padding: 10px 10px;
     bottom: 0px;
-    width: 92%;
+    width: 100%;
     left: 0px;
     background-color: var(--box-bg);
-    /* display: flex;
-    align-items: center; */
 }
 .message_chat_input
 {
